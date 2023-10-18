@@ -1,19 +1,30 @@
+[![CI](https://github.com/ordzaar/ordit-sdk/actions/workflows/ci.yml/badge.svg)](https://github.com/ordzaar/ordit-sdk/actions/workflows/ci.yml)
+
 # Ordit
 
 Ordit is an SDK project for Bitcoin Wallet, Ordinals and Inscriptions
 
-### Pre-Requisites
+## Setup
 
-This project uses PNPM to manage dependencies.
+This project is setup with [pnpm workspaces](https://pnpm.io/workspaces) and [turbo](https://turbo.build/). It follows a monorepo architecture for all its applications.
 
-```shell
-$ npm i -g pnpm
+In this workspace, you can refer to [pnpm-workspace.yaml](pnpm-workspace.yaml) on how the project is structured.
+
+```txt
+packages/
+├─ sdk/
 ```
 
-### Setup
+### Developing & Contributing
 
-Install and build dependencies across all project folders:
+Thanks for contributing, appreciate all the help we can get. Feel free to make a pull-request, we will guide you along
+the way to make it mergeable.
 
-```sh
-$ pnpm install
+### Prerequisites
+
+You'll need to have `pnpm` installed on your system. If it's not yet installed, you can get it via npm using:
+
+```bash
+npm install -g pnpm
+pnpm i
 ```
