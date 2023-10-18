@@ -28,3 +28,7 @@ You'll need to have `pnpm` installed on your system. If it's not yet installed, 
 npm install -g pnpm
 pnpm i
 ```
+
+## License & Disclaimer
+
+By using `Ordit` (this repo), you (the user) agree to be bound by [the terms of this license](LICENSE).

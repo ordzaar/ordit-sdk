@@ -2,7 +2,6 @@
   "name": "@ordzaar/ordit-sdk",
   "version": "0.0.0",
   "description": "SDK for simplified interaction with wallet APIs and inscription service",
-  "license": "MIT",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "files": [

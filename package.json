@@ -4,7 +4,6 @@
   "private": true,
   "repository": "https://github.com/ordzaar/ordit-sdk",
   "bugs": "https://github.com/ordzaar/ordit-sdk/issues",
-  "license": "MIT",
   "scripts": {
     "prepare": "husky install",
     "build": "turbo run build",
