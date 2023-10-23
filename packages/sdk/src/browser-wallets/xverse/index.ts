@@ -1,4 +1,4 @@
-import { BrowserWallet } from "../types";
+import type { BrowserWallet } from "../types";
 
 async function isInstalled() {
   return false;
@@ -10,11 +10,11 @@ async function signPsbt() {}
 
 async function signMessage() {}
 
-const wallet: BrowserWallet = {
+const xverse: BrowserWallet = {
   isInstalled,
   getAddresses,
   signPsbt,
   signMessage,
 };
 
-export { wallet };
+export { xverse };
