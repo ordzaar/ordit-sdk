@@ -1,26 +1,8 @@
 {
-  "$schema": "https://json.schemastore.org/tsconfig",
-  "display": "Default",
+  "extends": "../../tsconfig-base.json",
   "compilerOptions": {
-    "lib": ["DOM", "DOM.Iterable", "ESNext"],
-    "module": "ESNext",
-    "target": "ESNext",
-    "strict": true,
-    "esModuleInterop": true,
-    "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true,
-    "moduleResolution": "node",
-    "composite": false,
-    "declaration": true,
-    "declarationMap": true,
-    "inlineSources": false,
-    "isolatedModules": true,
-    "noUnusedLocals": false,
-    "noUnusedParameters": false,
-    "preserveWatchOutput": true,
     "rootDir": "./src",
     "outDir": "./dist",
-    "sourceMap": true
   },
   "include": ["./src", "./src/types"],
   "exclude": ["node_modules", "dist"]
