@@ -12,9 +12,14 @@
       "dependsOn": ["^build"]
     },
     "build": {
-      "inputs": ["tsconfig.json", "tsconfig.build.json", "src/**"],
+      "inputs": [
+        "tsconfig.json",
+        "tsconfig.build.json",
+        "vite.config.ts",
+        "src/**"
+      ],
       "outputs": ["dist/**"],
-      "dependsOn": ["^build"]
+      "dependsOn": ["^clean", "^build"]
     },
     "test": {
       "inputs": ["src/**", "**/*.unit.ts"],
@@ -23,6 +28,11 @@
     "format": {},
     "lint": {
       "outputs": []
+    },
+    "dev": {
+      "cache": false,
+      "dependsOn": ["^build"],
+      "persistent": true
     }
   }
 }

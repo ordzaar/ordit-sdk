@@ -2,10 +2,22 @@
   "name": "@ordzaar/ordit-sdk",
   "version": "0.0.0",
   "description": "SDK for simplified interaction with wallet APIs and inscription service",
+  "type": "module",
   "main": "./dist/index.js",
-  "types": "./dist/index.d.ts",
+  "module": "./dist/index.js",
+  "types": "./index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js"
+    },
+    "./browser-wallets": {
+      "import": "./dist/browser-wallets.js"
+    }
+  },
   "files": [
-    "dist"
+    "dist/*",
+    "index.d.ts",
+    "browser-wallets.d.ts"
   ],
   "keywords": [
     "ordit",
@@ -13,10 +25,11 @@
     "sdk"
   ],
   "scripts": {
-    "dev": "vite",
+    "dev": "tsc && vite build --watch",
     "build": "tsc && vite build",
     "build:watch": "tsc && vite build --watch",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "clean": "rimraf dist"
   },
   "dependencies": {
     "@bitcoinerlab/secp256k1": "1.0.5",
@@ -32,6 +45,7 @@
     "sats-connect": "^1.1.1"
   },
   "devDependencies": {
-    "@types/node": "^20.8.6"
+    "@types/node": "^20.8.6",
+    "vite-plugin-dts": "^3.6.0"
   }
 }

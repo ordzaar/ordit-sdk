@@ -1,0 +1,17 @@
+{
+  "name": "@ordzaar/ordit-sdk-browser-tests",
+  "private": true,
+  "version": "0.0.0",
+  "description": "Browser SDK tests for simplified interaction with wallet APIs and inscription service",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "build:watch": "tsc && vite build --watch",
+    "preview": "vite preview",
+    "clean": "rimraf dist"
+  },
+  "dependencies": {
+    "@ordzaar/ordit-sdk": "workspace:*"
+  }
+}
