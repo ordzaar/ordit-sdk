@@ -19,7 +19,7 @@
         "src/**"
       ],
       "outputs": ["dist/**"],
-      "dependsOn": ["^build"]
+      "dependsOn": ["^clean", "^build"]
     },
     "test": {
       "inputs": ["src/**", "**/*.unit.ts"],
