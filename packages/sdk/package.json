@@ -2,10 +2,24 @@
   "name": "@ordzaar/ordit-sdk",
   "version": "0.0.0",
   "description": "SDK for simplified interaction with wallet APIs and inscription service",
-  "main": "./dist/index.js",
-  "types": "./dist/index.d.ts",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    },
+    "./browser-wallets": {
+      "import": "./dist/browser-wallets.js",
+      "require": "./dist/browser-wallets.cjs"
+    }
+  },
   "files": [
-    "dist"
+    "dist/*",
+    "index.d.ts",
+    "browser-wallets.d.ts"
   ],
   "keywords": [
     "ordit",
@@ -13,10 +27,11 @@
     "sdk"
   ],
   "scripts": {
-    "dev": "vite",
-    "build": "tsc && vite build",
-    "build:watch": "tsc && vite build --watch",
-    "preview": "vite preview"
+    "dev": "pnpm clean && tsc && vite build --watch",
+    "build": "pnpm clean && tsc && vite build",
+    "build:watch": "pnpm clean && tsc && vite build --watch",
+    "preview": "vite preview",
+    "clean": "rm -rf dist"
   },
   "dependencies": {
     "@bitcoinerlab/secp256k1": "1.0.5",
@@ -32,6 +47,7 @@
     "sats-connect": "^1.1.1"
   },
   "devDependencies": {
-    "@types/node": "^20.8.6"
+    "@types/node": "^20.8.6",
+    "vite-plugin-dts": "^3.6.0"
   }
 }

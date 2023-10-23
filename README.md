@@ -29,6 +29,14 @@ npm install -g pnpm
 pnpm i
 ```
 
+### Running in Development Mode
+
+Execute the following command below and it will run the build process in watch mode.
+
+```bash
+pnpm dev
+```
+
 ## License & Disclaimer
 
 By using `Ordit` (this repo), you (the user) agree to be bound by [the terms of this license](LICENSE).

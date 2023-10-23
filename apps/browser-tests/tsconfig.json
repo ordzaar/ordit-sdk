@@ -18,10 +18,10 @@
     "noUnusedLocals": false,
     "noUnusedParameters": false,
     "preserveWatchOutput": true,
-    "rootDir": "./src",
+    "rootDir": "./",
     "outDir": "./dist",
     "sourceMap": true
   },
-  "include": ["./src", "./src/types"],
+  "include": ["./src", "./tests", "./src/types"],
   "exclude": ["node_modules", "dist"]
 }
