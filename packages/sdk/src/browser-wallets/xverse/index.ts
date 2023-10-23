@@ -4,11 +4,17 @@ function isInstalled() {
   return false;
 }
 
-async function getAddresses() {}
+async function getAddresses() {
+  return [];
+}
 
-async function signPsbt() {}
+async function signPsbt() {
+  // TODO
+}
 
-async function signMessage() {}
+async function signMessage() {
+  // TODO
+}
 
 const xverse: BrowserWallet = {
   isInstalled,

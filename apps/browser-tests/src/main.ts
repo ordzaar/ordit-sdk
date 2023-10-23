@@ -6,6 +6,8 @@ async function connectToUnisat() {
     return;
   }
   console.log("Unisat is installed");
+  const addresses = await unisat.getAddresses("testnet");
+  console.log("Addresses:", addresses);
 }
 
 const unisatConnectButton = document.getElementById("unisat-connect");

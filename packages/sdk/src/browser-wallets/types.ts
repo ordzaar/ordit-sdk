@@ -1,3 +1,6 @@
+import type { AddressFormats } from "../addresses/formats";
+import type { Network } from "../networks/types";
+
 export interface BrowserWallet {
   /**
    * Checks if the browser wallet extension is installed.
@@ -5,7 +8,13 @@ export interface BrowserWallet {
    * @returns `true` if installed, `false` otherwise.
    */
   isInstalled: () => boolean;
-  getAddresses: () => Promise<void>;
+  getAddresses: (network: Network) => Promise<WalletAddress[]>;
   signPsbt: () => Promise<void>;
   signMessage: () => Promise<void>;
 }
+
+export type WalletAddress = {
+  pub: string;
+  address: string;
+  format: AddressFormats;
+};
