@@ -3,17 +3,15 @@
   "version": "0.0.0",
   "description": "SDK for simplified interaction with wallet APIs and inscription service",
   "type": "module",
-  "main": "./dist/index.cjs",
+  "main": "./dist/index.js",
   "module": "./dist/index.js",
   "types": "./index.d.ts",
   "exports": {
     ".": {
-      "import": "./dist/index.js",
-      "require": "./dist/index.cjs"
+      "import": "./dist/index.js"
     },
     "./browser-wallets": {
-      "import": "./dist/browser-wallets.js",
-      "require": "./dist/browser-wallets.cjs"
+      "import": "./dist/browser-wallets.js"
     }
   },
   "files": [

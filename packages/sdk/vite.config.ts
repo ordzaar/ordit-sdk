@@ -11,7 +11,7 @@ export default defineConfig({
         index: resolve(__dirname, "src/index.ts"),
         "browser-wallets": resolve(__dirname, "src/browser-wallets/index.ts"),
       },
-      formats: ["es", "cjs"],
+      formats: ["es"],
     },
     rollupOptions: {
       external: Object.keys(packageJson.dependencies),
