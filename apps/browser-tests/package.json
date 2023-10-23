@@ -1,17 +1,9 @@
 {
   "name": "@ordzaar/ordit-sdk-browser-tests",
+  "private": true,
   "version": "0.0.0",
-  "description": "SDK tests for simplified interaction with wallet APIs and inscription service",
-  "license": "MIT",
-  "types": "./dist/index.d.ts",
-  "files": [
-    "dist"
-  ],
-  "keywords": [
-    "ordit",
-    "ordit-sdk",
-    "sdk"
-  ],
+  "description": "Browser SDK tests for simplified interaction with wallet APIs and inscription service",
+  "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
