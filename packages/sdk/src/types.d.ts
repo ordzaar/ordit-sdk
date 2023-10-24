@@ -19,5 +19,5 @@ type Unisat = {
 
 type MetaMask = {
   isMetaMask: boolean;
-  request: (options: { method: string; params?: any }) => Promise<any>;
+  request: (options: { method: string; params?: unknown }) => Promise<unknown>;
 };
