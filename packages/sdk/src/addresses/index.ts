@@ -11,7 +11,9 @@ export function getAddressFormat(
 ): AddressFormat {
   const addressTypeToRegex = NETWORK_TO_ADDRESS_TYPE_TO_REGEX[network];
   const addressTypes = Object.keys(addressTypeToRegex) as AddressType[];
-  const targetAddressType = addressTypes.find((addressType) =>
+
+  // findLast because taproot addresses are being marked as segwit.
+  const targetAddressType = addressTypes.findLast((addressType) =>
     addressTypeToRegex[addressType].test(address),
   );
 
