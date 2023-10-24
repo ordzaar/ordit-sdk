@@ -3,7 +3,7 @@ import { OrditSDKError } from "../../errors";
 import type {
   BrowserWallet,
   BrowserWalletSignPSBTOptions,
-  BrowserWalletSignPSBTResponse,
+  BrowserWalletSignResponse,
 } from "../types";
 
 function isInstalled() {
@@ -17,13 +17,13 @@ async function getAddresses() {
 async function signPsbt(
   _psbt: Psbt,
   _options: BrowserWalletSignPSBTOptions = {},
-): Promise<BrowserWalletSignPSBTResponse> {
+): Promise<BrowserWalletSignResponse> {
   throw new OrditSDKError("Method not implemented");
 }
 
 async function signMessage(
   _message: string,
-): Promise<BrowserWalletSignPSBTResponse> {
+): Promise<BrowserWalletSignResponse> {
   throw new OrditSDKError("Method not implemented");
 }
 

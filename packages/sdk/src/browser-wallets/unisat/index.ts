@@ -5,7 +5,7 @@ import { NETWORK_TO_UNISAT_NETWORK } from "./constants";
 import type { Network } from "../../networks/types";
 import type {
   BrowserWallet,
-  BrowserWalletSignPSBTResponse,
+  BrowserWalletSignResponse,
   WalletAddress,
 } from "../types";
 import type { UnisatSignPSBTOptions } from "./types";
@@ -55,11 +55,13 @@ async function getAddresses(network: Network): Promise<WalletAddress[]> {
 
 async function signPsbt(
   psbt: Psbt,
-  { finalize = true, extractTx = true }: UnisatSignPSBTOptions = {},
-): Promise<BrowserWalletSignPSBTResponse> {
+  options: UnisatSignPSBTOptions = {},
+): Promise<BrowserWalletSignResponse> {
   if (!isInstalled()) {
     throw new OrditSDKError("Unisat not installed.");
   }
+
+  const { finalize = true, extractTx = true } = options;
 
   const psbtHex = psbt.toHex();
   const signedPsbtHex = await window.unisat.signPsbt(psbtHex, {
@@ -87,7 +89,7 @@ async function signPsbt(
 
 async function signMessage(
   message: string,
-): Promise<BrowserWalletSignPSBTResponse> {
+): Promise<BrowserWalletSignResponse> {
   if (!isInstalled()) {
     throw new OrditSDKError("Unisat not installed.");
   }

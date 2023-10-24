@@ -13,7 +13,7 @@ export interface BrowserWalletSignPSBTOptions {
   extractTx?: boolean;
 }
 
-export interface BrowserWalletSignPSBTResponse {
+export interface BrowserWalletSignResponse {
   hex: string;
   base64: string | null;
 }
@@ -25,10 +25,33 @@ export interface BrowserWallet {
    * @returns `true` if installed, `false` otherwise.
    */
   isInstalled: () => boolean;
+
+  /**
+   * Gets addresses from the browser wallet.
+   *
+   * @param network Network
+   * @returns An array of WalletAddress objects.
+   */
   getAddresses: (network: Network) => Promise<WalletAddress[]>;
+
+  /**
+   * Signs a Partially Signed Bitcoin Transaction (PSBT).
+   * To learn more, visit https://github.com/bitcoin/bitcoin/blob/master/doc/psbt.md
+   *
+   * @param psbt Partially Signed Bitcoin Transaction
+   * @param options Options for signing.
+   * @returns An object containing `base64` and `hex` if the transaction is not extracted, or `hex` if the transaction is extracted.
+   */
   signPsbt: (
     psbt: Psbt,
     options: BrowserWalletSignPSBTOptions,
-  ) => Promise<BrowserWalletSignPSBTResponse>;
-  signMessage: (message: string) => Promise<BrowserWalletSignPSBTResponse>;
+  ) => Promise<BrowserWalletSignResponse>;
+
+  /**
+   * Signs a message.
+   *
+   * @param message Message to be signed
+   * @returns An object containing `base64` and `hex`.
+   */
+  signMessage: (message: string) => Promise<BrowserWalletSignResponse>;
 }
