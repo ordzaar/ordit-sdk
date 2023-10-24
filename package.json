@@ -11,7 +11,8 @@
     "format": "prettier --write .",
     "lint": "turbo run lint -- --fix",
     "test": "turbo run test",
-    "dev": "turbo run dev"
+    "dev": "turbo run dev",
+    "dev:docs": "cd apps/website && pnpm run start"
   },
   "devDependencies": {
     "@changesets/changelog-github": "0.4.8",
