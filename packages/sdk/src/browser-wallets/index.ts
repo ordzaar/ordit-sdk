@@ -1,2 +1,2 @@
-export { wallet as unisat } from "./unisat";
-export { wallet as xverse } from "./xverse";
+export { unisat } from "./unisat";
+export { xverse } from "./xverse";

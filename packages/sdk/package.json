@@ -3,9 +3,6 @@
   "version": "0.0.0",
   "description": "SDK for simplified interaction with wallet APIs and inscription service",
   "type": "module",
-  "main": "./dist/index.js",
-  "module": "./dist/index.js",
-  "types": "./index.d.ts",
   "exports": {
     ".": {
       "import": "./dist/index.js"
@@ -14,6 +11,7 @@
       "import": "./dist/browser-wallets.js"
     }
   },
+  "types": "./index.d.ts",
   "files": [
     "dist/*",
     "index.d.ts",
@@ -25,11 +23,11 @@
     "sdk"
   ],
   "scripts": {
-    "dev": "pnpm clean && tsc && vite build --watch",
-    "build": "pnpm clean && tsc && vite build",
-    "build:watch": "pnpm clean && tsc && vite build --watch",
+    "dev": "tsc && vite build --watch",
+    "build": "tsc && vite build",
+    "build:watch": "tsc && vite build --watch",
     "preview": "vite preview",
-    "clean": "rm -rf dist"
+    "clean": "rimraf dist"
   },
   "dependencies": {
     "@bitcoinerlab/secp256k1": "1.0.5",
@@ -46,6 +44,7 @@
   },
   "devDependencies": {
     "@types/node": "^20.8.6",
-    "vite-plugin-dts": "^3.6.0"
+    "vite-plugin-dts": "^3.6.0",
+    "vite-plugin-eslint": "^1.8.1"
   }
 }
