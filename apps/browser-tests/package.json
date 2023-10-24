@@ -13,5 +13,8 @@
   },
   "dependencies": {
     "@ordzaar/ordit-sdk": "workspace:*"
+  },
+  "devDependencies": {
+    "vite-plugin-node-polyfills": "^0.15.0"
   }
 }
