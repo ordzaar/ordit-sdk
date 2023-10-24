@@ -1,27 +1,21 @@
 import {
-  ADDRESS_FORMATS,
-  AddressTypes,
-  ADDRESS_TYPE_TO_NAME,
-  AddressFormats,
-} from "./formats";
+  ADDRESS_TYPE_TO_FORMAT,
+  NETWORK_TO_ADDRESS_TYPE_TO_REGEX,
+} from "./constants";
+import type { AddressFormat, AddressType } from "./types";
 import type { Network } from "../networks/types";
 
 export function getAddressFormat(
   address: string,
   network: Network,
-): AddressFormats {
-  const addressTypes = ADDRESS_FORMATS[network];
-  const addressTypesList = Object.keys(addressTypes);
+): AddressFormat {
+  const addressTypeToRegex = NETWORK_TO_ADDRESS_TYPE_TO_REGEX[network];
+  const addressTypes = Object.keys(addressTypeToRegex) as AddressType[];
+  const targetAddressType = addressTypes.find((addressType) =>
+    addressTypeToRegex[addressType].test(address),
+  );
 
-  for (let i = 0; i < addressTypesList.length; i += 1) {
-    const addressType = addressTypesList[i] as AddressTypes;
-    const addressTypeRegex = addressTypes[addressType];
-    const addressName = ADDRESS_TYPE_TO_NAME[addressType];
-
-    if (addressTypeRegex.test(address)) {
-      return addressName;
-    }
-  }
-
-  return "unknown";
+  return targetAddressType
+    ? ADDRESS_TYPE_TO_FORMAT[targetAddressType]
+    : "unknown";
 }

@@ -1,11 +1,11 @@
 import type { Psbt } from "bitcoinjs-lib";
-import type { AddressFormats } from "../addresses/formats";
+import type { AddressFormat } from "../addresses/types";
 import type { Network } from "../networks/types";
 
 export type WalletAddress = {
   pub: string;
   address: string;
-  format: AddressFormats;
+  format: AddressFormat;
 };
 
 export interface BrowserWalletSignPSBTOptions {
