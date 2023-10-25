@@ -10,7 +10,10 @@ export default defineConfig({
     lib: {
       entry: {
         index: resolve(__dirname, "src/index.ts"),
-        "browser-wallets": resolve(__dirname, "src/browser-wallets/index.ts"),
+        "browser-wallets-unisat": resolve(
+          __dirname,
+          "src/browser-wallets/unisat/index.ts",
+        ),
       },
       formats: ["es"],
     },

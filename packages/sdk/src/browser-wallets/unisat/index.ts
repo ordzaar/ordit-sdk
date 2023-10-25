@@ -1,15 +1,16 @@
-import { Psbt } from "bitcoinjs-lib";
 import { getAddressFormat } from "../../addresses";
 import { OrditSDKError } from "../../errors";
 import { NETWORK_TO_UNISAT_NETWORK } from "./constants";
+import type { Psbt as PsbtType } from "bitcoinjs-lib";
 import type { Network } from "../../networks/types";
-import type {
-  BrowserWallet,
-  BrowserWalletSignResponse,
-  WalletAddress,
-} from "../types";
+import type { BrowserWalletSignResponse, WalletAddress } from "../types";
 import type { UnisatSignPSBTOptions } from "./types";
 
+/**
+ * Checks if the browser wallet extension is installed.
+ *
+ * @returns `true` if installed, `false` otherwise.
+ */
 function isInstalled() {
   if (typeof window === "undefined") {
     throw new OrditSDKError("Cannot call this function outside a browser.");
@@ -17,6 +18,12 @@ function isInstalled() {
   return typeof window.unisat !== "undefined";
 }
 
+/**
+ * Gets addresses from the browser wallet.
+ *
+ * @param network Network
+ * @returns An array of WalletAddress objects.
+ */
 async function getAddresses(network: Network): Promise<WalletAddress[]> {
   if (!isInstalled()) {
     throw new OrditSDKError("Unisat not installed.");
@@ -53,8 +60,16 @@ async function getAddresses(network: Network): Promise<WalletAddress[]> {
   ];
 }
 
+/**
+ * Signs a Partially Signed Bitcoin Transaction (PSBT).
+ * To learn more, visit https://github.com/bitcoin/bitcoin/blob/master/doc/psbt.md
+ *
+ * @param psbt Partially Signed Bitcoin Transaction
+ * @param options Options for signing
+ * @returns An object containing `base64` and `hex` if the transaction is not extracted, or `hex` if the transaction is extracted.
+ */
 async function signPsbt(
-  psbt: Psbt,
+  psbt: PsbtType,
   options: UnisatSignPSBTOptions = {},
 ): Promise<BrowserWalletSignResponse> {
   if (!isInstalled()) {
@@ -75,6 +90,7 @@ async function signPsbt(
     throw new OrditSDKError("Psbt has already been signed.");
   }
 
+  const Psbt = (await import("bitcoinjs-lib")).Psbt;
   const signedPsbt = Psbt.fromHex(signedPsbtHex);
   return extractTx
     ? {
@@ -87,6 +103,12 @@ async function signPsbt(
       };
 }
 
+/**
+ * Signs a message.
+ *
+ * @param message Message to be signed
+ * @returns An object containing `base64` and `hex`.
+ */
 async function signMessage(
   message: string,
 ): Promise<BrowserWalletSignResponse> {
@@ -106,11 +128,4 @@ async function signMessage(
   };
 }
 
-const unisat: BrowserWallet = {
-  isInstalled,
-  getAddresses,
-  signPsbt,
-  signMessage,
-};
-
-export { unisat };
+export { isInstalled, getAddresses, signPsbt, signMessage };

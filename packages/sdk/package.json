@@ -7,15 +7,15 @@
     ".": {
       "import": "./dist/index.js"
     },
-    "./browser-wallets": {
-      "import": "./dist/browser-wallets.js"
+    "./browser-wallets/unisat": {
+      "import": "./dist/browser-wallets-unisat.js"
     }
   },
   "types": "./index.d.ts",
   "files": [
     "dist/*",
     "index.d.ts",
-    "browser-wallets.d.ts"
+    "browser-wallets-unisat.d.ts"
   ],
   "keywords": [
     "ordit",

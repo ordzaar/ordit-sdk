@@ -1,12 +1,15 @@
-import { unisat } from "@ordzaar/ordit-sdk/browser-wallets";
+import {
+  isInstalled as isUnisatInstalled,
+  getAddresses as getUnisatAddresses,
+} from "@ordzaar/ordit-sdk/browser-wallets/unisat";
 
 async function connectToUnisat() {
-  if (!unisat.isInstalled()) {
+  if (!isUnisatInstalled()) {
     console.error("Can't connect to Unisat because it is not installed.");
     return;
   }
   console.log("Unisat is installed");
-  const addresses = await unisat.getAddresses("testnet");
+  const addresses = await getUnisatAddresses("testnet");
   console.log("Addresses:", addresses);
 }
 

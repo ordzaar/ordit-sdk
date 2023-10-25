@@ -1,5 +1,5 @@
 // @vitest-environment happy-dom
-import { unisat } from "..";
+import { isInstalled } from "..";
 
 describe("Unisat Wallet", () => {
   describe("isInstalled", () => {
@@ -10,12 +10,12 @@ describe("Unisat Wallet", () => {
     test("should return true if installed", () => {
       vi.stubGlobal("unisat", {});
       expect(typeof window).not.toBeUndefined();
-      expect(unisat.isInstalled()).toBeTruthy();
+      expect(isInstalled()).toBeTruthy();
     });
 
     test("should return false if not installed", () => {
       expect(typeof window).not.toBeUndefined();
-      expect(unisat.isInstalled()).toBeFalsy();
+      expect(isInstalled()).toBeFalsy();
     });
   });
 });
