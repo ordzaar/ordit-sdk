@@ -3,7 +3,9 @@ import type { Psbt as PsbtType } from "bitcoinjs-lib";
 import type {
   BrowserWalletSignPSBTOptions,
   BrowserWalletSignResponse,
+  WalletAddress,
 } from "../types";
+import type { Network } from "../../networks/types";
 
 /**
  * Checks if the browser wallet extension is installed.
@@ -20,7 +22,9 @@ function isInstalled() {
  * @param network Network
  * @returns An array of WalletAddress objects.
  */
-async function getAddresses() {
+async function getAddresses(
+  _network: Network = "mainnet",
+): Promise<WalletAddress[]> {
   return [];
 }
 

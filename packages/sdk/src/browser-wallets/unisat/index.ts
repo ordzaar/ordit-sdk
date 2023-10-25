@@ -24,7 +24,9 @@ function isInstalled() {
  * @param network Network
  * @returns An array of WalletAddress objects.
  */
-async function getAddresses(network: Network): Promise<WalletAddress[]> {
+async function getAddresses(
+  network: Network = "mainnet",
+): Promise<WalletAddress[]> {
   if (!isInstalled()) {
     throw new OrditSDKError("Unisat not installed.");
   }
