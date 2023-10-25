@@ -8,4 +8,15 @@ module.exports = {
     "./node_modules/@waveshq/standard-prettier",
   ],
   parser: "@typescript-eslint/parser",
+  rules: {
+    "object-shorthand": 2,
+    "@typescript-eslint/no-unused-vars": [
+      "error",
+      {
+        argsIgnorePattern: "^_",
+        varsIgnorePattern: "^_",
+        caughtErrorsIgnorePattern: "^_",
+      },
+    ],
+  },
 };

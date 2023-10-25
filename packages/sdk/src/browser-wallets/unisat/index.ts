@@ -1,7 +1,11 @@
+import { OrditSDKError } from "../../errors";
 import type { BrowserWallet } from "../types";
 
-async function isInstalled() {
-  return false;
+function isInstalled() {
+  if (typeof window === "undefined") {
+    throw new OrditSDKError("Cannot call this function outside a browser.");
+  }
+  return typeof window.unisat !== "undefined";
 }
 
 async function getAddresses() {}

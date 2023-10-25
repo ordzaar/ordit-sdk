@@ -1,6 +1,6 @@
 import type { BrowserWallet } from "../types";
 
-async function isInstalled() {
+function isInstalled() {
   return false;
 }
 
