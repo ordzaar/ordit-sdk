@@ -14,7 +14,7 @@
     "build": {
       "inputs": [
         "tsconfig.json",
-        "tsconfig.build.json",
+        "tsconfig.base.json",
         "vite.config.ts",
         "src/**"
       ],
@@ -22,7 +22,7 @@
       "dependsOn": ["^clean", "^build"]
     },
     "test": {
-      "inputs": ["src/**", "**/*.unit.ts"],
+      "inputs": ["src/**", "**/__tests__/*.spec.ts"],
       "dependsOn": ["^build"]
     },
     "format": {},

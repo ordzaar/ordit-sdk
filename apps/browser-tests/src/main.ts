@@ -1,16 +1,14 @@
 import { unisat } from "@ordzaar/ordit-sdk/browser-wallets";
 
-async function main() {
-  const appRoot = document.getElementById("app");
-
-  if (!appRoot) {
+async function connectToUnisat() {
+  if (!unisat.isInstalled()) {
+    console.error("Can't connect to Unisat because it is not installed.");
     return;
   }
-
-  appRoot.innerHTML = "Browser Test";
-
-  const isUnisatInstalled = await unisat.isInstalled();
-  console.log("Is Unisat Installed:", isUnisatInstalled);
+  console.log("Unisat is installed");
 }
 
-main();
+const unisatConnectButton = document.getElementById("unisat-connect");
+if (unisatConnectButton) {
+  unisatConnectButton.addEventListener("click", connectToUnisat);
+}

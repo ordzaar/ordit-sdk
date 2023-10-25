@@ -40,7 +40,7 @@ jobs:
           cache: pnpm
 
       - run: pnpm install --frozen-lockfile
-      - run: pnpm test -- -- --maxWorkers=100% --coverage
+      - run: pnpm test -- -- --coverage
 
   # TODO(thedoublejay): add when there are test cases
   #      - uses: codecov/codecov-action@d9f34f8cd5cb3b3eb79b3e4b5dae3a16df499a70 # tag=v3.1.1

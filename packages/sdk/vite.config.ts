@@ -27,4 +27,8 @@ export default defineConfig({
     }),
     eslint(),
   ],
+  test: {
+    globals: true,
+    watch: false,
+  },
 });
