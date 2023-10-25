@@ -24,9 +24,9 @@ describe("addresses", () => {
       [REGTEST]: {
         legacy: "mipcBbFg9gMiCh81Kj8tqqdgoZub1ZJRfn",
         "nested-segwit": "2MzQwSSnBHWHqSAqtTVQ6v47XtaisrJa1Vc",
-        segwit: "tb1qw508d6qejxtdg4y5r3zarvary0c5xw7kxpjzsx",
+        segwit: "bcrt1q3v3tujtu443ukyhvzsqmnjgxfv4yevvhcqyqak",
         taproot:
-          "tb1p3gqcaq2xs0qzm5wvkht64xppcz9h5k0q2q97kf6n80gu7v037dksatsuhz",
+          "bcrt1p0xlxvlhemja6c4dqv22uapctqupfhlxm9h8z3k2e72q4k9hcz7vqc8gma6",
       },
     };
 

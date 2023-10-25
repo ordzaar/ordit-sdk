@@ -1,23 +1,49 @@
+import { ADDRESS_TYPE_TO_FORMAT } from "./constants";
 import {
-  ADDRESS_TYPE_TO_FORMAT,
-  NETWORK_TO_ADDRESS_TYPE_TO_REGEX,
-} from "./constants";
-import type { AddressFormat, AddressType } from "./types";
+  validate,
+  getAddressInfo,
+  Network as NetworkEnum,
+} from "bitcoin-address-validation";
+import type { AddressFormat } from "./types";
 import type { Network } from "../networks/types";
+
+function getAddressFormatForRegTest(address: string): AddressFormat {
+  try {
+    const { type, network: validatedNetwork, bech32 } = getAddressInfo(address);
+    if (
+      (!bech32 && validatedNetwork !== "testnet") ||
+      (bech32 && validatedNetwork !== "regtest")
+    ) {
+      throw new Error("Invalid address");
+    }
+
+    if (type === "p2wsh") {
+      // p2wsh is not supported by wallets
+      return "unknown";
+    }
+    return ADDRESS_TYPE_TO_FORMAT[type];
+  } catch (err) {
+    return "unknown";
+  }
+}
 
 export function getAddressFormat(
   address: string,
   network: Network,
 ): AddressFormat {
-  const addressTypeToRegex = NETWORK_TO_ADDRESS_TYPE_TO_REGEX[network];
-  const addressTypes = Object.keys(addressTypeToRegex) as AddressType[];
+  if (network === "regtest") {
+    // Separate regtest handling as the library treats non-bech32 addresses as testnet addresses.
+    return getAddressFormatForRegTest(address);
+  }
 
-  // findLast because taproot addresses are being marked as segwit.
-  const targetAddressType = addressTypes.findLast((addressType) =>
-    addressTypeToRegex[addressType].test(address),
-  );
+  if (!validate(address, network as NetworkEnum)) {
+    return "unknown";
+  }
 
-  return targetAddressType
-    ? ADDRESS_TYPE_TO_FORMAT[targetAddressType]
-    : "unknown";
+  const { type } = getAddressInfo(address);
+  if (type === "p2wsh") {
+    // p2wsh is not supported by wallets
+    return "unknown";
+  }
+  return ADDRESS_TYPE_TO_FORMAT[type];
 }
