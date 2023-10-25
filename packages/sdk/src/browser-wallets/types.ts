@@ -39,7 +39,7 @@ export interface BrowserWallet {
    * To learn more, visit https://github.com/bitcoin/bitcoin/blob/master/doc/psbt.md
    *
    * @param psbt Partially Signed Bitcoin Transaction
-   * @param options Options for signing.
+   * @param options Options for signing
    * @returns An object containing `base64` and `hex` if the transaction is not extracted, or `hex` if the transaction is extracted.
    */
   signPsbt: (
