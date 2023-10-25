@@ -44,7 +44,7 @@ export interface BrowserWallet {
    */
   signPsbt: (
     psbt: Psbt,
-    options: BrowserWalletSignPSBTOptions,
+    options?: BrowserWalletSignPSBTOptions,
   ) => Promise<BrowserWalletSignResponse>;
 
   /**
