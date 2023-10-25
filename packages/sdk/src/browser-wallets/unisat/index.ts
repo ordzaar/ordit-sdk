@@ -5,7 +5,6 @@ function isInstalled() {
   if (typeof window === "undefined") {
     throw new OrditSDKError("Cannot call this function outside a browser.");
   }
-
   return typeof window.unisat !== "undefined";
 }
 
