@@ -37,6 +37,10 @@ Execute the following command below and it will run the build process in watch m
 pnpm dev
 ```
 
+### Documentation
+
+Documentation is done using [Docusaurus](https://docusaurus.io/). When adding new features or modifying existing ones, please include all documentation updates within the same pull-request.
+
 ## License & Disclaimer
 
 By using `Ordit` (this repo), you (the user) agree to be bound by [the terms of this license](LICENSE).
