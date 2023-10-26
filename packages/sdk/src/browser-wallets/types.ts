@@ -1,7 +1,7 @@
 import type { AddressFormat } from "../addresses/types";
 
 export type WalletAddress = {
-  pub: string;
+  publicKey: string;
   address: string;
   format: AddressFormat;
 };
