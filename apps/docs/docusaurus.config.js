@@ -98,7 +98,7 @@ const config = {
               },
               {
                 label: "Twitter",
-                href: "https://twitter.com/ordzaar",
+                href: "https://x.com/ordzaar",
               },
               {
                 label: "Medium",
