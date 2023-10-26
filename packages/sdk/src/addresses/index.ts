@@ -26,7 +26,7 @@ function getAddressFormatForRegTest(address: string): AddressFormat {
       throw new Error("Invalid address");
     }
     return getAddressFormatFromType(type);
-  } catch (err) {
+  } catch (_) {
     return "unknown";
   }
 }

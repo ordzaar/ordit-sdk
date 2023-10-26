@@ -72,13 +72,11 @@ async function getAddresses(
  */
 async function signPsbt(
   psbt: PsbtType,
-  options: UnisatSignPSBTOptions = {},
+  { finalize = true, extractTx = true }: UnisatSignPSBTOptions = {},
 ): Promise<BrowserWalletSignResponse> {
   if (!isInstalled()) {
     throw new OrditSDKError("Unisat not installed");
   }
-
-  const { finalize = true, extractTx = true } = options;
 
   const psbtHex = psbt.toHex();
   const signedPsbtHex = await window.unisat.signPsbt(psbtHex, {
