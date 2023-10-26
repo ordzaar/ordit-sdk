@@ -88,10 +88,6 @@ async function signPsbt(
     throw new OrditSDKError("Failed to sign psbt hex using Unisat");
   }
 
-  if (psbtHex === signedPsbtHex) {
-    throw new OrditSDKError("Psbt has already been signed");
-  }
-
   const Psbt = (await import("bitcoinjs-lib")).Psbt;
   const signedPsbt = Psbt.fromHex(signedPsbtHex);
   return extractTx
