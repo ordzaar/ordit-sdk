@@ -1,4 +1,4 @@
-import type { Network } from "../../networks/types";
+import type { Network } from "../../config/types";
 
 export const NETWORK_TO_UNISAT_NETWORK: Record<Network, UnisatNetwork | ""> = {
   mainnet: "livenet",

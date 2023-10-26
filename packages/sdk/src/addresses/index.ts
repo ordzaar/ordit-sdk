@@ -1,17 +1,18 @@
-import { ADDRESS_TYPE_TO_FORMAT } from "./constants";
 import {
   validate,
   getAddressInfo,
   Network as NetworkEnum,
   AddressType as AddressTypeEnum,
 } from "bitcoin-address-validation";
+import { ADDRESS_TYPE_TO_FORMAT } from "./constants";
+import { OrditSDKError } from "../errors";
 import type { AddressFormat } from "./types";
-import type { Network } from "../networks/types";
+import type { Network } from "../config/types";
 
 function getAddressFormatFromType(type: AddressTypeEnum): AddressFormat {
   if (type === AddressTypeEnum.p2wsh) {
     // p2wsh is not supported by browser wallets
-    return "unknown";
+    throw new OrditSDKError("Invalid address");
   }
   return ADDRESS_TYPE_TO_FORMAT[type];
 }
@@ -23,11 +24,12 @@ function getAddressFormatForRegTest(address: string): AddressFormat {
       (!bech32 && validatedNetwork !== "testnet") ||
       (bech32 && validatedNetwork !== "regtest")
     ) {
+      // This type Error is intentional, we'll forward the top-level one anyway
       throw new Error("Invalid address");
     }
     return getAddressFormatFromType(type);
   } catch (_) {
-    return "unknown";
+    throw new OrditSDKError("Invalid address");
   }
 }
 export function getAddressFormat(
@@ -41,7 +43,7 @@ export function getAddressFormat(
   }
 
   if (!validate(address, network as NetworkEnum)) {
-    return "unknown";
+    throw new OrditSDKError("Invalid address");
   }
 
   const { type } = getAddressInfo(address);

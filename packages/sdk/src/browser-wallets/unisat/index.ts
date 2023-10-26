@@ -1,8 +1,8 @@
 import { getAddressFormat } from "../../addresses";
 import { OrditSDKError } from "../../errors";
 import { NETWORK_TO_UNISAT_NETWORK } from "./constants";
-import type { Psbt as PsbtType } from "bitcoinjs-lib";
-import type { Network } from "../../networks/types";
+import { Psbt } from "bitcoinjs-lib";
+import type { Network } from "../../config/types";
 import type { BrowserWalletSignResponse, WalletAddress } from "../types";
 import type { UnisatSignPSBTOptions } from "./types";
 
@@ -71,7 +71,7 @@ async function getAddresses(
  * @returns An object containing `base64` and `hex` if the transaction is not extracted, or `hex` if the transaction is extracted.
  */
 async function signPsbt(
-  psbt: PsbtType,
+  psbt: Psbt,
   { finalize = true, extractTx = true }: UnisatSignPSBTOptions = {},
 ): Promise<BrowserWalletSignResponse> {
   if (!isInstalled()) {
@@ -86,7 +86,6 @@ async function signPsbt(
     throw new OrditSDKError("Failed to sign psbt hex using Unisat");
   }
 
-  const Psbt = (await import("bitcoinjs-lib")).Psbt;
   const signedPsbt = Psbt.fromHex(signedPsbtHex);
   return extractTx
     ? {

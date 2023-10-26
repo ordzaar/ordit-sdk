@@ -3,7 +3,7 @@ import type { AddressType, AddressFormat } from "./types";
 
 export const ADDRESS_TYPE_TO_FORMAT: Record<AddressType, AddressFormat> = {
   p2pkh: "legacy",
-  p2sh: "nested-segwit",
+  p2sh: "p2sh-p2wpkh",
   p2wpkh: "segwit",
   p2tr: "taproot",
 } as const;
