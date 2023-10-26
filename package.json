@@ -12,8 +12,9 @@
     "lint": "turbo run lint -- --fix",
     "test": "turbo run test",
     "dev": "turbo run dev",
-    "dev:docs": "turbo run dev --filter=docs",
-    "build:docs": "turbo run build --filter=docs"
+    "docs:dev": "turbo run dev --filter=docs",
+    "docs:build": "turbo run build --filter=docs",
+    "docs:clean": "turbo run clean --filter=docs"
   },
   "devDependencies": {
     "@changesets/changelog-github": "0.4.8",
