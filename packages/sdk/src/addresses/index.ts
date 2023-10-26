@@ -3,9 +3,18 @@ import {
   validate,
   getAddressInfo,
   Network as NetworkEnum,
+  AddressType as AddressTypeEnum,
 } from "bitcoin-address-validation";
 import type { AddressFormat } from "./types";
 import type { Network } from "../networks/types";
+
+function getAddressFormatFromType(type: AddressTypeEnum): AddressFormat {
+  if (type === AddressTypeEnum.p2wsh) {
+    // p2wsh is not supported by browser wallets
+    return "unknown";
+  }
+  return ADDRESS_TYPE_TO_FORMAT[type];
+}
 
 function getAddressFormatForRegTest(address: string): AddressFormat {
   try {
@@ -16,23 +25,18 @@ function getAddressFormatForRegTest(address: string): AddressFormat {
     ) {
       throw new Error("Invalid address");
     }
-
-    if (type === "p2wsh") {
-      // p2wsh is not supported by wallets
-      return "unknown";
-    }
-    return ADDRESS_TYPE_TO_FORMAT[type];
+    return getAddressFormatFromType(type);
   } catch (err) {
     return "unknown";
   }
 }
-
 export function getAddressFormat(
   address: string,
   network: Network,
 ): AddressFormat {
+  // Separate regtest handling because bitcoin-address-validation treats non-bech32 addresses as testnet addresses,
+  // which fail in the validate function.
   if (network === "regtest") {
-    // Separate regtest handling as the library treats non-bech32 addresses as testnet addresses.
     return getAddressFormatForRegTest(address);
   }
 
@@ -41,9 +45,5 @@ export function getAddressFormat(
   }
 
   const { type } = getAddressInfo(address);
-  if (type === "p2wsh") {
-    // p2wsh is not supported by wallets
-    return "unknown";
-  }
-  return ADDRESS_TYPE_TO_FORMAT[type];
+  return getAddressFormatFromType(type);
 }
