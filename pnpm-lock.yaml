@@ -101,37 +101,37 @@ importers:
         specifier: 1.0.5
         version: 1.0.5
       bignumber.js:
-        specifier: ^9.1.2
+        specifier: 9.1.2
         version: 9.1.2
       bip32:
-        specifier: ^4.0.0
+        specifier: 4.0.0
         version: 4.0.0
       bip39:
-        specifier: ^3.1.0
+        specifier: 3.1.0
         version: 3.1.0
       bitcoin-address-validation:
-        specifier: ^2.2.3
+        specifier: 2.2.3
         version: 2.2.3
       bitcoinjs-lib:
-        specifier: ^6.1.5
+        specifier: 6.1.5
         version: 6.1.5
       bitcoinjs-message:
-        specifier: ^2.2.0
+        specifier: 2.2.0
         version: 2.2.0
       buffer-reverse:
-        specifier: ^1.0.1
+        specifier: 1.0.1
         version: 1.0.1
       cross-fetch:
-        specifier: ^4.0.0
+        specifier: 4.0.0
         version: 4.0.0
       ecpair:
-        specifier: ^2.1.0
+        specifier: 2.1.0
         version: 2.1.0
       ethers:
-        specifier: ^6.8.0
+        specifier: 6.8.0
         version: 6.8.0
       sats-connect:
-        specifier: ^1.1.1
+        specifier: 1.1.1
         version: 1.1.1
     devDependencies:
       '@types/node':
