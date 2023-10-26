@@ -1,7 +1,7 @@
+import { Psbt } from "bitcoinjs-lib";
 import { getAddressFormat } from "../../addresses";
 import { OrditSDKError } from "../../errors";
 import { NETWORK_TO_UNISAT_NETWORK } from "./constants";
-import { Psbt } from "bitcoinjs-lib";
 import type { Network } from "../../config/types";
 import type { BrowserWalletSignResponse, WalletAddress } from "../types";
 import type { UnisatSignPSBTOptions } from "./types";

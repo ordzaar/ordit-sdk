@@ -1,5 +1,5 @@
-import { OrditSDKError } from "../../errors";
 import { Psbt } from "bitcoinjs-lib";
+import { OrditSDKError } from "../../errors";
 import type {
   BrowserWalletSignPSBTOptions,
   BrowserWalletSignResponse,
