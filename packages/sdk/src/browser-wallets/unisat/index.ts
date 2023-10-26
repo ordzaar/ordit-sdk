@@ -13,7 +13,7 @@ import type { UnisatSignPSBTOptions } from "./types";
  */
 function isInstalled() {
   if (typeof window === "undefined") {
-    throw new OrditSDKError("Cannot call this function outside a browser.");
+    throw new OrditSDKError("Cannot call this function outside a browser");
   }
   return typeof window.unisat !== "undefined";
 }
@@ -28,16 +28,16 @@ async function getAddresses(
   network: Network = "mainnet",
 ): Promise<WalletAddress[]> {
   if (!isInstalled()) {
-    throw new OrditSDKError("Unisat not installed.");
+    throw new OrditSDKError("Unisat not installed");
   }
 
   if (!network) {
-    throw new OrditSDKError("Invalid options provided.");
+    throw new OrditSDKError("Invalid options provided");
   }
 
   const targetNetwork = NETWORK_TO_UNISAT_NETWORK[network];
   if (!targetNetwork) {
-    throw new OrditSDKError("Unsupported network.");
+    throw new OrditSDKError("Unsupported network");
   }
 
   const connectedNetwork = await window.unisat.getNetwork();
@@ -75,7 +75,7 @@ async function signPsbt(
   options: UnisatSignPSBTOptions = {},
 ): Promise<BrowserWalletSignResponse> {
   if (!isInstalled()) {
-    throw new OrditSDKError("Unisat not installed.");
+    throw new OrditSDKError("Unisat not installed");
   }
 
   const { finalize = true, extractTx = true } = options;
@@ -85,11 +85,11 @@ async function signPsbt(
     autoFinalized: finalize,
   });
   if (!signedPsbtHex) {
-    throw new OrditSDKError("Failed to sign psbt hex using Unisat.");
+    throw new OrditSDKError("Failed to sign psbt hex using Unisat");
   }
 
   if (psbtHex === signedPsbtHex) {
-    throw new OrditSDKError("Psbt has already been signed.");
+    throw new OrditSDKError("Psbt has already been signed");
   }
 
   const Psbt = (await import("bitcoinjs-lib")).Psbt;
@@ -115,13 +115,13 @@ async function signMessage(
   message: string,
 ): Promise<BrowserWalletSignResponse> {
   if (!isInstalled()) {
-    throw new OrditSDKError("Unisat not installed.");
+    throw new OrditSDKError("Unisat not installed");
   }
 
   const signature = await window.unisat.signMessage(message);
 
   if (!signature) {
-    throw new OrditSDKError("Failed to sign message using Unisat.");
+    throw new OrditSDKError("Failed to sign message using Unisat");
   }
 
   return {

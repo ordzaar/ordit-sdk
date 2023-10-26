@@ -5,8 +5,7 @@ import {
 
 async function connectToUnisat() {
   if (!isUnisatInstalled()) {
-    console.error("Can't connect to Unisat because it is not installed.");
-    return;
+    throw new Error("Can't connect to Unisat because it is not installed");
   }
   console.log("Unisat is installed");
   const addresses = await getUnisatAddresses("testnet");
