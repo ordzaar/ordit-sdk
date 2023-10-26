@@ -18,7 +18,7 @@
         "vite.config.ts",
         "src/**"
       ],
-      "outputs": ["dist/**"],
+      "outputs": ["dist/**", "build/**"],
       "dependsOn": ["^clean", "^build"]
     },
     "test": {
