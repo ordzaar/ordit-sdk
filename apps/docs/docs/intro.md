@@ -5,7 +5,7 @@ sidebar_position: 1
 
 # Introduction
 
-Welcome to the Ordit SDK Documentation section. Our aim is to provide you with extensive documentation to aid in your efforts to develop Ordinal based solutions and services using the Ordit SDK. Whether you want to study our protocol, use our tools to search for Ordinals and inscriptions, or trade digital artifacts. Sado documentation has you covered.
+Welcome to the Ordit SDK Documentation section. Our aim is to provide you with extensive documentation to aid in your efforts to develop Ordinal based solutions and services using the Ordit SDK. Whether you want to study our protocol, use our tools to search for Ordinals and inscriptions, or trade digital artifacts. Ordit SDK documentation has you covered.
 
 ---
 
