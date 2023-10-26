@@ -55,7 +55,7 @@ async function getAddresses(
   const format = getAddressFormat(address, network);
   return [
     {
-      pub: publicKey,
+      publicKey,
       address,
       format,
     },
