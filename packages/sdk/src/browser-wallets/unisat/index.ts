@@ -2,7 +2,7 @@ import { Psbt } from "bitcoinjs-lib";
 import { getAddressFormat } from "../../addresses";
 import { OrditSDKError } from "../../errors";
 import { NETWORK_TO_UNISAT_NETWORK } from "./constants";
-import type { Network } from "../../config/types";
+import type { BrowserWalletNetwork } from "../../config/types";
 import type { BrowserWalletSignResponse, WalletAddress } from "../types";
 import type { UnisatSignPSBTOptions } from "./types";
 
@@ -25,7 +25,7 @@ function isInstalled() {
  * @returns An array of WalletAddress objects.
  */
 async function getAddresses(
-  network: Network = "mainnet",
+  network: BrowserWalletNetwork = "mainnet",
 ): Promise<WalletAddress[]> {
   if (!isInstalled()) {
     throw new OrditSDKError("Unisat not installed");
@@ -35,12 +35,8 @@ async function getAddresses(
     throw new OrditSDKError("Invalid options provided");
   }
 
-  const targetNetwork = NETWORK_TO_UNISAT_NETWORK[network];
-  if (!targetNetwork) {
-    throw new OrditSDKError("Unsupported network");
-  }
-
   const connectedNetwork = await window.unisat.getNetwork();
+  const targetNetwork = NETWORK_TO_UNISAT_NETWORK[network];
   if (connectedNetwork !== targetNetwork) {
     await window.unisat.switchNetwork(targetNetwork);
   }

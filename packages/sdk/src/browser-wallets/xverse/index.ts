@@ -5,7 +5,7 @@ import type {
   BrowserWalletSignResponse,
   WalletAddress,
 } from "../types";
-import type { Network } from "../../config/types";
+import type { BrowserWalletNetwork } from "../../config/types";
 
 /**
  * Checks if the browser wallet extension is installed.
@@ -23,7 +23,7 @@ function isInstalled() {
  * @returns An array of WalletAddress objects.
  */
 async function getAddresses(
-  _network: Network = "mainnet",
+  _network: BrowserWalletNetwork = "mainnet",
 ): Promise<WalletAddress[]> {
   return [];
 }
