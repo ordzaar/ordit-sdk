@@ -1,4 +1,6 @@
+import * as _ from "sats-connect";
 import { Psbt } from "bitcoinjs-lib";
+
 import { OrditSDKError } from "../../errors";
 import type {
   BrowserWalletSignPSBTOptions,
@@ -13,7 +15,11 @@ import type { BrowserWalletNetwork } from "../../config/types";
  * @returns `true` if installed, `false` otherwise.
  */
 function isInstalled() {
-  return false;
+  if (typeof window === "undefined") {
+    throw new OrditSDKError("Cannot call this function outside a browser");
+  }
+
+  return typeof window.BitcoinProvider !== "undefined";
 }
 
 /**
@@ -24,9 +30,16 @@ function isInstalled() {
  * @returns An array of WalletAddress objects.
  */
 async function getAddresses(
-  _network: BrowserWalletNetwork = "mainnet",
-  _readOnly?: boolean,
+  network: BrowserWalletNetwork = "mainnet",
 ): Promise<WalletAddress[]> {
+  if (!isInstalled()) {
+    throw new OrditSDKError("Xverse not installed");
+  }
+
+  if (!network) {
+    throw new OrditSDKError("Invalid options provided");
+  }
+
   return [];
 }
 

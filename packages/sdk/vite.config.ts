@@ -14,6 +14,10 @@ export default defineConfig({
           __dirname,
           "src/browser-wallets/unisat/index.ts",
         ),
+        "browser-wallets-xverse": resolve(
+          __dirname,
+          "src/browser-wallets/xverse/index.ts",
+        ),
       },
       formats: ["es"],
     },
