@@ -16,7 +16,8 @@
         "tsconfig.json",
         "tsconfig.base.json",
         "vite.config.ts",
-        "src/**"
+        "src/**",
+        "docs/**"
       ],
       "outputs": ["dist/**", "build/**"],
       "dependsOn": ["^clean", "^build"]
@@ -44,7 +45,8 @@
         "tsconfig.json",
         "tsconfig.base.json",
         "vite.config.ts",
-        "src/**"
+        "src/**",
+        "docs/**"
       ],
       "outputs": ["dist/**", "build/**"],
       "dependsOn": ["^clean", "^build"]
