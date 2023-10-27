@@ -94,11 +94,15 @@ Output Example: `true | false`
 
 Gets a list of addresses for the browser wallet if authorized.
 
+Parameters:
+
+- `network` : `"mainnet" | "testnet"` (defaults to `mainnet`)
+
 Returns: `Promise<WalletAddress[]>`
 
 Output Example:
 
-```js
+```bash
 [
   {
     publicKey:
@@ -109,6 +113,47 @@ Output Example:
 ];
 ```
 
+### signPsbt
+
+`signPsbt(psbt[, options])`
+
+Signs a Partially Signed Bitcoin Transaction (PSBT) and returns a signature.
+
 Parameters:
 
-- `network` : `"mainnet" | "testnet"`
+- `psbt` : `string` in hex or base64 format
+- `options` : `object` (optional)
+  - `extractTx` : Extract transaction (defaults to `true`)
+  - `finalize` : Finalize signing (defaults to `true`)
+
+Returns: `Promise<BrowserWalletSignResponse>`
+
+Output Example:
+
+```bash
+{
+  base64: "cHNidP8BAAoCAAAAAAAAAAAAAAAA",
+  hex: "70736274ff01000a02000000000000000000000000",
+}
+```
+
+### signMessage
+
+`signMessage(message)`
+
+Signs a message and returns a signature.
+
+Parameters:
+
+- `message` : `string`
+
+Returns: `Promise<BrowserWalletSignResponse>`
+
+Output Example:
+
+```bash
+{
+  base64: "cHNidP8BAAoCAAAAAAAAAAAAAAAA",
+  hex: "70736274ff01000a02000000000000000000000000",
+}
+```
