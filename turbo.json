@@ -33,6 +33,24 @@
       "cache": false,
       "dependsOn": ["^build"],
       "persistent": true
+    },
+    "docs:dev": {
+      "cache": false,
+      "dependsOn": ["docs:build"],
+      "persistent": true
+    },
+    "docs:build": {
+      "inputs": [
+        "tsconfig.json",
+        "tsconfig.base.json",
+        "vite.config.ts",
+        "src/**"
+      ],
+      "outputs": ["dist/**", "build/**"],
+      "dependsOn": ["^clean", "^build"]
+    },
+    "docs:clean": {
+      "cache": false
     }
   }
 }
