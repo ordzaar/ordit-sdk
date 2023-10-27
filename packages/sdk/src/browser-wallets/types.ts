@@ -1,11 +1,17 @@
-export interface BrowserWallet {
-  /**
-   * Checks if the browser wallet extension is installed.
-   *
-   * @returns `true` if installed, `false` otherwise.
-   */
-  isInstalled: () => boolean;
-  getAddresses: () => Promise<void>;
-  signPsbt: () => Promise<void>;
-  signMessage: () => Promise<void>;
+import type { AddressFormat } from "../addresses/types";
+
+export type WalletAddress = {
+  publicKey: string;
+  address: string;
+  format: AddressFormat;
+};
+
+export interface BrowserWalletSignPSBTOptions {
+  finalize?: boolean;
+  extractTx?: boolean;
+}
+
+export interface BrowserWalletSignResponse {
+  hex: string;
+  base64: string | null;
 }

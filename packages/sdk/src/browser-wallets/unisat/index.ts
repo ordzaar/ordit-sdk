@@ -1,24 +1,122 @@
+import { Psbt } from "bitcoinjs-lib";
+import { getAddressFormat } from "../../addresses";
 import { OrditSDKError } from "../../errors";
-import type { BrowserWallet } from "../types";
+import { NETWORK_TO_UNISAT_NETWORK } from "./constants";
+import type { BrowserWalletNetwork } from "../../config/types";
+import type { BrowserWalletSignResponse, WalletAddress } from "../types";
+import type { UnisatSignPSBTOptions } from "./types";
 
+/**
+ * Checks if the browser wallet extension is installed.
+ *
+ * @returns `true` if installed, `false` otherwise.
+ */
 function isInstalled() {
   if (typeof window === "undefined") {
-    throw new OrditSDKError("Cannot call this function outside a browser.");
+    throw new OrditSDKError("Cannot call this function outside a browser");
   }
   return typeof window.unisat !== "undefined";
 }
 
-async function getAddresses() {}
+/**
+ * Gets addresses from the browser wallet.
+ *
+ * @param network Network
+ * @returns An array of WalletAddress objects.
+ */
+async function getAddresses(
+  network: BrowserWalletNetwork = "mainnet",
+): Promise<WalletAddress[]> {
+  if (!isInstalled()) {
+    throw new OrditSDKError("Unisat not installed");
+  }
 
-async function signPsbt() {}
+  if (!network) {
+    throw new OrditSDKError("Invalid options provided");
+  }
 
-async function signMessage() {}
+  const connectedNetwork = await window.unisat.getNetwork();
+  const targetNetwork = NETWORK_TO_UNISAT_NETWORK[network];
+  if (connectedNetwork !== targetNetwork) {
+    await window.unisat.switchNetwork(targetNetwork);
+  }
 
-const unisat: BrowserWallet = {
-  isInstalled,
-  getAddresses,
-  signPsbt,
-  signMessage,
-};
+  const accounts = await window.unisat.requestAccounts();
+  const publicKey = await window.unisat.getPublicKey();
 
-export { unisat };
+  const address = accounts[0];
+  if (!address) {
+    return [];
+  }
+  const format = getAddressFormat(address, network);
+  return [
+    {
+      publicKey,
+      address,
+      format,
+    },
+  ];
+}
+
+/**
+ * Signs a Partially Signed Bitcoin Transaction (PSBT).
+ * To learn more, visit https://github.com/bitcoin/bitcoin/blob/master/doc/psbt.md
+ *
+ * @param psbt Partially Signed Bitcoin Transaction
+ * @param options Options for signing
+ * @returns An object containing `base64` and `hex` if the transaction is not extracted, or `hex` if the transaction is extracted.
+ */
+async function signPsbt(
+  psbt: Psbt,
+  { finalize = true, extractTx = true }: UnisatSignPSBTOptions = {},
+): Promise<BrowserWalletSignResponse> {
+  if (!isInstalled()) {
+    throw new OrditSDKError("Unisat not installed");
+  }
+
+  const psbtHex = psbt.toHex();
+  const signedPsbtHex = await window.unisat.signPsbt(psbtHex, {
+    autoFinalized: finalize,
+  });
+  if (!signedPsbtHex) {
+    throw new OrditSDKError("Failed to sign psbt hex using Unisat");
+  }
+
+  const signedPsbt = Psbt.fromHex(signedPsbtHex);
+  return extractTx
+    ? {
+        base64: null,
+        hex: signedPsbt.extractTransaction().toHex(),
+      }
+    : {
+        base64: signedPsbt.toBase64(),
+        hex: signedPsbt.toHex(),
+      };
+}
+
+/**
+ * Signs a message.
+ *
+ * @param message Message to be signed
+ * @returns An object containing `base64` and `hex`.
+ */
+async function signMessage(
+  message: string,
+): Promise<BrowserWalletSignResponse> {
+  if (!isInstalled()) {
+    throw new OrditSDKError("Unisat not installed");
+  }
+
+  const signature = await window.unisat.signMessage(message);
+
+  if (!signature) {
+    throw new OrditSDKError("Failed to sign message using Unisat");
+  }
+
+  return {
+    base64: signature,
+    hex: Buffer.from(signature, "base64").toString("hex"),
+  };
+}
+
+export { isInstalled, getAddresses, signPsbt, signMessage };
