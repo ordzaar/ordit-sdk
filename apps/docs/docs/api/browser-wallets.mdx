@@ -1,0 +1,159 @@
+---
+description: This is the API documentation for Browser Wallets.
+---
+
+import Tabs from "@theme/Tabs";
+import TabItem from "@theme/TabItem";
+
+# Browser Wallets
+
+Browser Wallets supports the following wallets:
+
+- [Unisat](https://unisat.io/)
+- [Xverse](https://www.xverse.app/)
+
+## Connecting to Browser Wallets
+
+You may interface with the wallets above by importing the API as follows:
+
+<Tabs>
+  <TabItem value="Unisat">
+
+```js
+import {
+  isInstalled,
+  getAddresses,
+  signPsbt,
+  signMessage,
+} from "@ordzaar/ordit-sdk/browser-wallets/unisat";
+```
+
+  </TabItem>
+  <TabItem value="Xverse">
+
+```js
+import {
+  isInstalled,
+  getAddresses,
+  signPsbt,
+  signMessage,
+} from "@ordzaar/ordit-sdk/browser-wallets/xverse";
+```
+
+  </TabItem>
+</Tabs>
+
+:::tip
+
+Importing the functions individually ensures that [tree-shaking](https://developer.mozilla.org/en-US/docs/Glossary/Tree_shaking) is applied when bundling your application.
+
+:::
+
+### Example
+
+The following snippet checks if the browser wallet is installed and returns a list of addresses, if authorized by the wallet.
+
+```js
+async function connectToWallet() {
+  if (!isInstalled()) {
+    throw new Error("Wallet is not installed");
+  }
+
+  const addresses = await getAddresses("mainnet"); // mainnet or testnet
+  console.log(addresses);
+  // Example output of addresses:
+  //
+  // [{
+  //   publicKey:
+  //     "0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798",
+  //   address: "bc1qw508d6qejxtdg4y5r3zarvary0c5xw7kv8f3t4",
+  //   format: "segwit",
+  // }]
+  //
+  // or an error is thrown by the wallet provider.
+}
+
+connectToWallet();
+```
+
+## API Reference
+
+### isInstalled
+
+`isInstalled()`
+
+Indicates whether the browser wallet extension is installed.
+
+Returns: `boolean`
+
+Output Example: `true | false`
+
+### getAddresses
+
+`getAddresses(network)`
+
+Gets a list of addresses for the browser wallet if authorized.
+
+Parameters:
+
+- `network` : `"mainnet" | "testnet"` (defaults to `mainnet`)
+
+Returns: `Promise<WalletAddress[]>`
+
+Output Example:
+
+```bash
+[
+  {
+    publicKey:
+      "0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798",
+    address: "bc1qw508d6qejxtdg4y5r3zarvary0c5xw7kv8f3t4",
+    format: "segwit",
+  },
+];
+```
+
+### signPsbt
+
+`signPsbt(psbt[, options])`
+
+Signs a Partially Signed Bitcoin Transaction (PSBT) and returns a signature.
+
+Parameters:
+
+- `psbt` : `string` in hex or base64 format
+- `options` : `object` (optional)
+  - `extractTx` : Extract transaction (defaults to `true`)
+  - `finalize` : Finalize signing (defaults to `true`)
+
+Returns: `Promise<BrowserWalletSignResponse>`
+
+Output Example:
+
+```bash
+{
+  base64: "cHNidP8BAAoCAAAAAAAAAAAAAAAA",
+  hex: "70736274ff01000a02000000000000000000000000",
+}
+```
+
+### signMessage
+
+`signMessage(message)`
+
+Signs a message and returns a signature.
+
+Parameters:
+
+- `message` : `string`
+
+Returns: `Promise<BrowserWalletSignResponse>`
+
+Output Example:
+
+```bash
+{
+  base64: "cHNidP8BAAoCAAAAAAAAAAAAAAAA",
+  hex: "70736274ff01000a02000000000000000000000000",
+}
+```

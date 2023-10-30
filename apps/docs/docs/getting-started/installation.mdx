@@ -1,0 +1,47 @@
+---
+description: How to install Ordit SDK locally, and start a project with Ordit SDK.
+---
+
+import Tabs from "@theme/Tabs";
+import TabItem from "@theme/TabItem";
+
+# Installation
+
+Ordit SDK is a JavaScript package published on NPM, with TypeScript definitions already included.
+
+## Requirements {#requirements}
+
+- [Node.js](https://nodejs.org/en/download/) version 18 or above (which can be checked by running `node -v`). You can use [nvm](https://github.com/nvm-sh/nvm) for managing multiple Node versions on a single machine installed.
+  - When installing Node.js, you are recommended to check all checkboxes related to dependencies.
+
+## Install the project
+
+Install Ordit SDK using your preferred package manager:
+
+<Tabs>
+  <TabItem value="npm">
+
+```bash
+npm i --save @ordzaar/ordit-sdk
+```
+
+  </TabItem>
+  <TabItem value="pnpm">
+
+```bash
+pnpm i @ordzaar/ordit-sdk
+```
+
+  </TabItem>
+  <TabItem value="yarn">
+
+```bash
+yarn add @ordzaar/ordit-sdk
+```
+
+  </TabItem>
+</Tabs>
+
+## Connect to a wallet
+
+Refer to the [Browser Wallets API](../api/browser-wallets) for more information on connecting to a wallet.

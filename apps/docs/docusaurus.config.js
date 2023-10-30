@@ -68,7 +68,7 @@ const config = {
             type: "docSidebar",
             sidebarId: "tutorialSidebar",
             position: "left",
-            label: "Getting Started",
+            label: "Docs",
           },
           {
             href: "https://github.com/ordzaar/ordit-sdk",
@@ -84,7 +84,7 @@ const config = {
             title: "Docs",
             items: [
               {
-                label: "Getting Started",
+                label: "Docs",
                 to: "/",
               },
             ],
