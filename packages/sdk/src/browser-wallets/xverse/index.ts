@@ -108,18 +108,17 @@ async function getAddresses(
  */
 async function signPsbt(
   psbt: Psbt,
-  options: XverseSignPSBTOptions = {
-    finalize: true,
-    extractTx: true,
-    network: "mainnet",
-    inputsToSign: [],
-  },
+  {
+    finalize = true,
+    extractTx = true,
+    network,
+    inputsToSign,
+  }: XverseSignPSBTOptions = { network: "mainnet", inputsToSign: [] },
 ): Promise<BrowserWalletSignResponse> {
-  throw new OrditSDKError("Method not implemented");
   if (!isInstalled()) {
     throw new OrditSDKError("Xverse not installed");
   }
-  if (!psbt || !options.network || !options.inputsToSign.length) {
+  if (!psbt || !network || !inputsToSign.length) {
     throw new OrditSDKError("Invalid options provided");
   }
 
@@ -133,11 +132,11 @@ async function signPsbt(
     }
 
     const signedPsbt = Psbt.fromBase64(psbtBase64);
-    if (options.finalize) {
-      if (!options.inputsToSign.length) {
+    if (finalize) {
+      if (!inputsToSign.length) {
         signedPsbt.finalizeAllInputs();
       } else {
-        options.inputsToSign.forEach((input) => {
+        inputsToSign.forEach((input) => {
           input.signingIndexes.forEach((index) => {
             signedPsbt.finalizeInput(index);
           });
@@ -145,10 +144,10 @@ async function signPsbt(
       }
     }
 
-    hex = options.extractTx
+    hex = extractTx
       ? signedPsbt.extractTransaction().toHex()
       : signedPsbt.toHex();
-    base64 = !options.extractTx ? signedPsbt.toBase64() : null;
+    base64 = !extractTx ? signedPsbt.toBase64() : null;
   };
 
   const handleOnCancel = () => {
@@ -158,15 +157,15 @@ async function signPsbt(
   const xverseOptions = {
     payload: {
       network: {
-        type: fromBrowserWalletNetworkToBitcoinNetworkType(options.network),
+        type: fromBrowserWalletNetworkToBitcoinNetworkType(network),
       },
       message: "Sign transaction",
       psbtBase64: psbt.toBase64(),
       broadcast: false,
-      inputsToSign: options.inputsToSign,
+      inputsToSign,
     },
     onFinish: handleOnFinish,
-    onCancel: () => handleOnCancel(),
+    onCancel: handleOnCancel,
   };
 
   await signTransaction(xverseOptions);
