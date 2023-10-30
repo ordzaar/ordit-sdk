@@ -84,9 +84,13 @@ connectToWallet();
 
 Indicates whether the browser wallet extension is installed.
 
-Returns: `boolean`
+**Returns**: `boolean`
 
-Output Example: `true | false`
+**Output Example**: `true | false`
+
+**Throws**:
+
+- `OrditSDKError` Function is called outside a browser without `window` object
 
 ### getAddresses
 
@@ -94,13 +98,13 @@ Output Example: `true | false`
 
 Gets a list of addresses for the browser wallet if authorized.
 
-Parameters:
+**Parameters**:
 
 - `network` : `"mainnet" | "testnet"` (defaults to `mainnet`)
 
-Returns: `Promise<WalletAddress[]>`
+**Returns**: `Promise<WalletAddress[]>`
 
-Output Example:
+**Output Example**:
 
 ```bash
 [
@@ -113,22 +117,26 @@ Output Example:
 ];
 ```
 
+**Throws**:
+
+- `BrowserWalletNotInstalledError` Wallet is not installed
+
 ### signPsbt
 
 `signPsbt(psbt[, options])`
 
 Signs a Partially Signed Bitcoin Transaction (PSBT) and returns a signature.
 
-Parameters:
+**Parameters**:
 
 - `psbt` : `string` in hex or base64 format
 - `options` : `object` (optional)
   - `extractTx` : Extract transaction (defaults to `true`)
   - `finalize` : Finalize signing (defaults to `true`)
 
-Returns: `Promise<BrowserWalletSignResponse>`
+**Returns**: `Promise<BrowserWalletSignResponse>`
 
-Output Example:
+**Output Example**:
 
 ```bash
 {
@@ -136,6 +144,11 @@ Output Example:
   hex: "70736274ff01000a02000000000000000000000000",
 }
 ```
+
+**Throws**:
+
+- `BrowserWalletNotInstalledError` Wallet is not installed
+- `BrowserWalletSigningError` Signing failed
 
 ### signMessage
 
@@ -143,13 +156,13 @@ Output Example:
 
 Signs a message and returns a signature.
 
-Parameters:
+**Parameters**:
 
 - `message` : `string`
 
-Returns: `Promise<BrowserWalletSignResponse>`
+**Returns**: `Promise<BrowserWalletSignResponse>`
 
-Output Example:
+**Output Example**:
 
 ```bash
 {
@@ -157,3 +170,8 @@ Output Example:
   hex: "70736274ff01000a02000000000000000000000000",
 }
 ```
+
+**Throws**:
+
+- `BrowserWalletNotInstalledError` Wallet is not installed
+- `BrowserWalletSigningError` Signing failed
