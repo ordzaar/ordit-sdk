@@ -63,9 +63,8 @@ async function getAddresses(
     response.addresses.forEach((addressObj) => {
       const format = getAddressFormat(addressObj.address, network);
 
-      // let xKey;
       if (format === "taproot") {
-        // xKey = addressObj.publicKey // tr publicKey returned by XVerse is already xOnlyPubKey
+        // For taproot addresses, Xverse returns the x-only public key.
         addressObj.publicKey = fromXOnlyToFullPubkey(addressObj.publicKey);
       }
 
@@ -84,7 +83,7 @@ async function getAddresses(
   const xVerseOptions = {
     payload: {
       purposes: ["ordinals", "payment"] as AddressPurpose[],
-      message: "Provide access to 2 address formats", // Message is hardcodd for now
+      message: "Provide access to payment Address and Ordinals address", // Message is hardcoded for now
       network: {
         type: fromBrowserWalletNetworkToBitcoinNetworkType(network),
       },
