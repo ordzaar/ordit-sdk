@@ -47,7 +47,7 @@
   "devDependencies": {
     "@types/node": "^20.8.6",
     "happy-dom": "^12.9.1",
-    "vite-plugin-dts": "^3.6.2",
+    "vite-plugin-dts": "^3.6.3",
     "vite-plugin-eslint": "^1.8.1"
   }
 }
