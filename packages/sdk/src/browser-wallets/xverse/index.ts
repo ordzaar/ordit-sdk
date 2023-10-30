@@ -1,4 +1,4 @@
-import { AddressPurpose, getAddress } from "sats-connect";
+import { AddressPurpose, getAddress, signTransaction } from "sats-connect";
 import { Psbt } from "bitcoinjs-lib";
 import { getAddressFormat } from "../../addresses";
 import { OrditSDKError } from "../../errors";
@@ -6,13 +6,13 @@ import {
   fromXOnlyToFullPubkey,
   fromBrowserWalletNetworkToBitcoinNetworkType,
 } from "./utils";
-import type {
-  BrowserWalletSignPSBTOptions,
-  BrowserWalletSignResponse,
-  WalletAddress,
-} from "../types";
+import type { BrowserWalletSignResponse, WalletAddress } from "../types";
 import type { BrowserWalletNetwork } from "../../config/types";
-import type { XverseOnFinishResponse } from "./types";
+import type {
+  XverseOnFinishResponse,
+  XverseSignPSBTOptions,
+  XverseSignPSBTResponse,
+} from "./types";
 import { AddressFormat } from "../../addresses/types";
 
 /**
@@ -107,10 +107,71 @@ async function getAddresses(
  * @returns An object containing `base64` and `hex` if the transaction is not extracted, or `hex` if the transaction is extracted.
  */
 async function signPsbt(
-  _psbt: Psbt,
-  _options: BrowserWalletSignPSBTOptions = {},
+  psbt: Psbt,
+  options: XverseSignPSBTOptions = {
+    finalize: true,
+    extractTx: true,
+    network: "mainnet",
+    inputsToSign: [],
+  },
 ): Promise<BrowserWalletSignResponse> {
   throw new OrditSDKError("Method not implemented");
+  if (!isInstalled()) {
+    throw new OrditSDKError("Xverse not installed");
+  }
+  if (!psbt || !options.network || !options.inputsToSign.length) {
+    throw new OrditSDKError("Invalid options provided");
+  }
+
+  let hex: string;
+  let base64: string | null = null;
+
+  const handleOnFinish = (response: XverseSignPSBTResponse) => {
+    const psbtBase64 = response.psbtBase64;
+    if (!psbtBase64) {
+      throw new Error("Failed to sign transaction using Xverse");
+    }
+
+    const signedPsbt = Psbt.fromBase64(psbtBase64);
+    if (options.finalize) {
+      if (!options.inputsToSign.length) {
+        signedPsbt.finalizeAllInputs();
+      } else {
+        options.inputsToSign.forEach((input) => {
+          input.signingIndexes.forEach((index) => {
+            signedPsbt.finalizeInput(index);
+          });
+        });
+      }
+    }
+
+    hex = options.extractTx
+      ? signedPsbt.extractTransaction().toHex()
+      : signedPsbt.toHex();
+    base64 = !options.extractTx ? signedPsbt.toBase64() : null;
+  };
+
+  const handleOnCancel = () => {
+    throw new Error(`Failed to sign transaction using xVerse`);
+  };
+
+  const xverseOptions = {
+    payload: {
+      network: {
+        type: fromBrowserWalletNetworkToBitcoinNetworkType(options.network),
+      },
+      message: "Sign transaction",
+      psbtBase64: psbt.toBase64(),
+      broadcast: false,
+      inputsToSign: options.inputsToSign,
+    },
+    onFinish: handleOnFinish,
+    onCancel: () => handleOnCancel(),
+  };
+
+  await signTransaction(xverseOptions);
+
+  return { hex: hex!, base64 };
 }
 
 /**

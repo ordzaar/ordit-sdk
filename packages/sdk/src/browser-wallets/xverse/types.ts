@@ -16,3 +16,17 @@ export type XverseOnFinishResponse = {
 };
 
 export type XverseNetwork = "Mainnet" | "Testnet";
+
+export type XverseSignPSBTOptions = {
+  finalize?: boolean;
+  extractTx?: boolean;
+  network: BrowserWalletNetwork;
+  inputsToSign: Array<{
+    address: string;
+    signingIndexes: number[];
+  }>;
+};
+
+export type XverseSignPSBTResponse = {
+  psbtBase64: string;
+};
