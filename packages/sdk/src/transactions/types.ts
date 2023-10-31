@@ -1,30 +1,119 @@
 import type { Inscription, Ordinal } from "../inscription/types";
 
+// Types are based on bitcoin RPC
+// Refer to https://bitcoincore.org/en/doc/25.0.0/rpc/rawtransactions/decoderawtransaction/
+
+/**
+ * Transaction output (Vout)
+ */
 export type Vout = {
+  /**
+   * Value in BTC
+   */
   value: number;
+
+  /**
+   * Index
+   */
   n: number;
+
+  /**
+   * Ordinals
+   */
   ordinals: Ordinal[];
+
+  /**
+   * Inscriptions
+   */
   inscriptions: Inscription[];
+
+  /**
+   * Is spent
+   */
   spent: string | false;
+
+  /**
+   * Public key script
+   */
   scriptPubKey: {
+    /**
+     * Diassembly of the public key script
+     */
     asm: string;
+
+    /**
+     * Inferred descriptor for the output
+     */
     desc: string;
+
+    /**
+     * The raw public key script bytes, hex-encoded
+     */
     hex: string;
+
+    /**
+     * Number of required signatures
+     *
+     * @deprecated since bitcoin-core 22.0.0 RPC - see https://github.com/bitcoin/bitcoin/pull/22650
+     */
     reqSigs?: number;
+
+    /**
+     * Type, for example, pubkeyhash
+     */
     type: string;
+
+    /**
+     * Array of bitcoin addresses
+     *
+     * @deprecated since bitcoin-core 22.0.0 RPC - see https://github.com/bitcoin/bitcoin/pull/22650
+     */
     addresses: string[];
+
+    /**
+     * Bitcoin address
+     */
     address?: string;
   };
 };
 
+/**
+ * Transaction input (Vin)
+ */
 export type Vin = {
+  /**
+   * Transaction id
+   */
   txid: string;
+
+  /**
+   * Output number
+   */
   vout: number;
+
+  /**
+   * Script that unlocks the input
+   */
   scriptSig: {
+    /**
+     * Assembly
+     */
     asm: string;
+
+    /**
+     * Hex
+     */
     hex: string;
   };
+
+  /**
+   * Hex-encoded witness data
+   */
   txinwitness: string[];
+
+  /**
+   * Script sequence number
+   */
   sequence: number;
 };
 
