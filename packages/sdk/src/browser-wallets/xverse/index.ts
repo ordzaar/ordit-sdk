@@ -1,4 +1,9 @@
-import { AddressPurpose, getAddress, signTransaction } from "sats-connect";
+import {
+  AddressPurpose,
+  getAddress,
+  signTransaction,
+  signMessage as xverseSignMessage,
+} from "sats-connect";
 import { Psbt } from "bitcoinjs-lib";
 import { getAddressFormat } from "../../addresses";
 import { OrditSDKError } from "../../errors";
@@ -180,9 +185,48 @@ async function signPsbt(
  * @returns An object containing `base64` and `hex`.
  */
 async function signMessage(
-  _message: string,
+  message: string,
+  network: BrowserWalletNetwork = "mainnet",
+  address: string,
 ): Promise<BrowserWalletSignResponse> {
-  throw new OrditSDKError("Method not implemented");
+  if (!isInstalled()) {
+    throw new OrditSDKError("Xverse not installed");
+  }
+  if (!message || !network || !address) {
+    throw new OrditSDKError("Invalid options provided");
+  }
+
+  let hex: string;
+  let base64: string | null = null;
+
+  const handleOnFinish = (response: string) => {
+    if (!response) {
+      throw new Error("Failed to sign message using Xverse");
+    }
+
+    hex = Buffer.from(response, "base64").toString("hex");
+    base64 = response;
+  };
+
+  const handleOnCancel = () => {
+    throw new Error(`Failed to sign message using xVerse`);
+  };
+
+  const xverseOptions = {
+    payload: {
+      network: {
+        type: fromBrowserWalletNetworkToBitcoinNetworkType(network),
+      },
+      message,
+      address,
+    },
+    onFinish: handleOnFinish,
+    onCancel: handleOnCancel,
+  };
+
+  await xverseSignMessage(xverseOptions);
+
+  return { hex: hex!, base64 };
 }
 
 export { isInstalled, getAddresses, signPsbt, signMessage };

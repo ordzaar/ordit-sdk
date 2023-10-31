@@ -1,3 +1,4 @@
+import { type } from "os";
 import type { BrowserWalletNetwork } from "../../config/types";
 
 export type XverseGetAddressOptions = {
