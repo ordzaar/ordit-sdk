@@ -24,8 +24,8 @@ importers:
         specifier: ^0.34.6
         version: 0.34.6(vitest@0.34.6)
       '@waveshq/standard-prettier':
-        specifier: ^2.20.0
-        version: 2.20.0(@typescript-eslint/eslint-plugin@6.9.0)(@typescript-eslint/parser@6.9.0)(eslint-plugin-import@2.29.0)(eslint-plugin-jsx-a11y@6.7.1)(eslint-plugin-react-hooks@4.6.0)(eslint-plugin-react@7.33.2)
+        specifier: ^2.23.0
+        version: 2.23.0(@typescript-eslint/eslint-plugin@6.9.0)(@typescript-eslint/parser@6.9.0)(eslint-plugin-import@2.29.0)(eslint-plugin-jsx-a11y@6.7.1)(eslint-plugin-react-hooks@4.6.0)(eslint-plugin-react@7.33.2)
       husky:
         specifier: ^8.0.3
         version: 8.0.3
@@ -4020,8 +4020,8 @@ packages:
       - typescript
     dev: true
 
-  /@waveshq/standard-prettier@2.20.0(@typescript-eslint/eslint-plugin@6.9.0)(@typescript-eslint/parser@6.9.0)(eslint-plugin-import@2.29.0)(eslint-plugin-jsx-a11y@6.7.1)(eslint-plugin-react-hooks@4.6.0)(eslint-plugin-react@7.33.2):
-    resolution: {integrity: sha512-lsLJkgg+1dcROTfyltQkhcrjCOeKaYlnneYT2FanFklRGfbsSY3nWF1JJDJr37ksTegCs9U7xzaavehG+7Gx4g==}
+  /@waveshq/standard-prettier@2.23.0(@typescript-eslint/eslint-plugin@6.9.0)(@typescript-eslint/parser@6.9.0)(eslint-plugin-import@2.29.0)(eslint-plugin-jsx-a11y@6.7.1)(eslint-plugin-react-hooks@4.6.0)(eslint-plugin-react@7.33.2):
+    resolution: {integrity: sha512-trdMCbD13jNFOOKbs6tdl7KdjUMTQczLwEw2LrX7nk7fsXZvl81+fDgprkc3rAsfgfKJBU77cy7ZmnOab1FcOw==}
     dependencies:
       eslint: 8.52.0
       eslint-config-airbnb: 19.0.4(eslint-plugin-import@2.29.0)(eslint-plugin-jsx-a11y@6.7.1)(eslint-plugin-react-hooks@4.6.0)(eslint-plugin-react@7.33.2)(eslint@8.52.0)
