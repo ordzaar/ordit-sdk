@@ -1,6 +1,7 @@
 import { Psbt } from "bitcoinjs-lib";
 import { Buffer } from "buffer";
 import { MAXIMUM_FEE } from "../constants";
+import { OrditSDKError } from "../errors";
 import { getNetwork, getScriptType } from "../utils";
 import type { AddressFormat } from "../addresses/types";
 import type { Network } from "../config/types";
@@ -17,7 +18,7 @@ class FeeEstimator {
 
   constructor({ feeRate, network, psbt, witness }: FeeEstimatorOptions) {
     if (feeRate < 0 || !Number.isSafeInteger(feeRate)) {
-      throw new Error("Invalid feeRate");
+      throw new OrditSDKError("Invalid feeRate");
     }
 
     this.feeRate = +feeRate; // convert decimal to whole number that might have passed Number.isSafeInteger check due to precision loss
@@ -36,7 +37,7 @@ class FeeEstimator {
 
   private sanityCheckFee() {
     if (this.fee > MAXIMUM_FEE) {
-      throw new Error("Error while calculating fees");
+      throw new OrditSDKError("Error while calculating fees");
     }
   }
 
@@ -54,11 +55,11 @@ class FeeEstimator {
     const outputTypes: AddressFormat[] = [];
 
     if (inputs.length === 0) {
-      throw new Error("PSBT must have at least one input");
+      throw new OrditSDKError("PSBT must have at least one input");
     }
 
     if (outputs.length === 0) {
-      throw new Error("PSBT must have at least one output");
+      throw new OrditSDKError("PSBT must have at least one output");
     }
 
     inputs.forEach((input) => {
@@ -68,7 +69,7 @@ class FeeEstimator {
           : null;
 
       if (!script) {
-        throw new Error("Invalid script");
+        throw new OrditSDKError("Invalid script");
       }
 
       inputTypes.push(getScriptType(script, this.network).format);
@@ -155,7 +156,7 @@ class FeeEstimator {
         return { input: 148, output: 34, txHeader: 10, witness: 0 };
 
       default:
-        throw new Error("Invalid type");
+        throw new OrditSDKError("Invalid type");
     }
   }
 }

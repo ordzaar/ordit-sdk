@@ -15,6 +15,7 @@ import {
 import { Buffer } from "buffer";
 import ECPairFactory from "ecpair";
 import { ADDRESS_TYPE_TO_FORMAT } from "../addresses/constants";
+import { OrditSDKError } from "../errors";
 import type { AddressFormat, AddressType } from "../addresses/types";
 import type { Network } from "../config/types";
 import type { UTXO } from "../transactions/types";
@@ -106,7 +107,7 @@ export function tweakSigner(
   // @ts-ignore
   let privateKey: Uint8Array | undefined = signer.privateKey!;
   if (!privateKey) {
-    throw new Error("Private key is required for tweaking signer!");
+    throw new OrditSDKError("Private key is required for tweaking signer!");
   }
   if (signer.publicKey[0] === 3) {
     privateKey = ecc.privateNegate(privateKey);
@@ -117,7 +118,7 @@ export function tweakSigner(
     tapTweakHash(toXOnly(signer.publicKey), opts.tweakHash),
   );
   if (!tweakedPrivateKey) {
-    throw new Error("Invalid tweaked private key!");
+    throw new OrditSDKError("Invalid tweaked private key!");
   }
 
   return ECPair.fromPrivateKey(Buffer.from(tweakedPrivateKey), {
@@ -143,7 +144,7 @@ function encodeDecodeObject(
   const maxDepth = 5;
 
   if (depth > maxDepth) {
-    throw new Error("Object too deep");
+    throw new OrditSDKError("Object too deep");
   }
 
   for (const key in obj) {
@@ -192,14 +193,14 @@ export function decodePSBT({ hex, base64, buffer }: OneOfAllDataFormats): Psbt {
   if (base64) return Psbt.fromBase64(base64);
   if (buffer) return Psbt.fromBuffer(buffer);
 
-  throw new Error("Invalid options");
+  throw new OrditSDKError("Invalid options");
 }
 
 export function decodeTx({ hex, buffer }: BufferOrHex): Transaction {
   if (hex) return Transaction.fromHex(hex);
   if (buffer) return Transaction.fromBuffer(buffer);
 
-  throw new Error("Invalid options");
+  throw new OrditSDKError("Invalid options");
 }
 
 function isPaymentFactory(payment: PaymentCreator, network: Network) {
@@ -298,7 +299,7 @@ export function getScriptType(
     };
   }
 
-  throw new Error("Unsupported input");
+  throw new OrditSDKError("Unsupported input");
 }
 
 export function getDummyP2TRInput(): UTXO {

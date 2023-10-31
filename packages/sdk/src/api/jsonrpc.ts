@@ -1,6 +1,7 @@
 import fetch from "cross-fetch";
 
 import { apiConfig } from "../config";
+import { OrditSDKError } from "../errors";
 
 class JsonRpc {
   constructor(readonly url: string) {}
@@ -54,11 +55,11 @@ class JsonRpc {
           typeof json.error.data === "string"
             ? json.error.data
             : json.error.message;
-        throw new Error(error);
+        throw new OrditSDKError(error);
       }
       return json.result;
     }
-    throw new Error(`Internal Server Error`);
+    throw new OrditSDKError(`Internal Server Error`);
   }
 }
 
