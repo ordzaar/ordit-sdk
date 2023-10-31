@@ -139,6 +139,8 @@ class FeeEstimator {
   }
 
   private getBaseSizeByType(type: AddressFormat) {
+    // Refer to BIP-0141 - https://github.com/bitcoin/bips/blob/master/bip-0141.mediawiki
+    // Calculator - https://bitcoinops.org/en/tools/calc-size/
     switch (type) {
       case "taproot":
         return { input: 42, output: 43, txHeader: 10.5, witness: 66 }; // witness size is different for non-default sigHash
