@@ -1,6 +1,6 @@
 import type { Psbt } from "bitcoinjs-lib";
-import type { Network } from "../config/types";
 import type { Buffer } from "buffer";
+import type { Network } from "../config/types";
 
 export interface FeeEstimatorOptions {
   feeRate: number;
