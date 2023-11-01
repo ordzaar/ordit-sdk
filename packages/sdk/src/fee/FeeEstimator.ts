@@ -35,15 +35,12 @@ class FeeEstimator {
     };
   }
 
-  private sanityCheckFee() {
+  calculateNetworkFee(): number {
+    this.fee = this.calculateVirtualSize() * this.feeRate;
+    // Prevents catastrophic calculations from happening
     if (this.fee > MAXIMUM_FEE) {
       throw new OrditSDKError("Error while calculating fees");
     }
-  }
-
-  calculateNetworkFee(): number {
-    this.fee = this.calculateVirtualSize() * this.feeRate;
-    this.sanityCheckFee();
 
     return this.fee;
   }
