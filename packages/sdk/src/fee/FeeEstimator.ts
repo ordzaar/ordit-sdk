@@ -21,7 +21,7 @@ class FeeEstimator {
       throw new OrditSDKError("Invalid feeRate");
     }
 
-    this.feeRate = +feeRate; // convert decimal to whole number that might have passed Number.isSafeInteger check due to precision loss
+    this.feeRate = feeRate;
     this.network = network;
     this.witness = witness || [];
     this.psbt = psbt || new Psbt({ network: getNetwork(this.network) });

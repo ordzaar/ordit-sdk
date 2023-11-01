@@ -27,7 +27,7 @@ describe("FeeEstimator", () => {
   });
 
   describe("calculateNetworkFee", () => {
-    test("should return estimated network fee for P2SH-P2WPKH psbt", () => {
+    test("should return network fee for P2SH-P2WPKH psbt", () => {
       const feeEstimator = new FeeEstimator({
         feeRate: 1,
         network: "mainnet",
@@ -36,7 +36,7 @@ describe("FeeEstimator", () => {
       expect(feeEstimator.calculateNetworkFee()).toBe(255);
     });
 
-    test("should return an estimated network fee for P2SH-P2WPKH psbt with a feeRate that would lose precision", () => {
+    test("should return network fee for P2SH-P2WPKH psbt with a feeRate that would lose precision", () => {
       const feeEstimator = new FeeEstimator({
         // eslint-disable-next-line @typescript-eslint/no-loss-of-precision
         feeRate: 1.000000000000000001,
