@@ -60,6 +60,7 @@ class FeeEstimator {
     }
 
     inputs.forEach((input) => {
+      // P2PKH (Legacy) is not supported as there is no witness script.
       const script =
         input.witnessUtxo && input.witnessUtxo.script
           ? input.witnessUtxo.script

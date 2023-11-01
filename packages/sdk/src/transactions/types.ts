@@ -18,17 +18,17 @@ export type Vout = {
   n: number;
 
   /**
-   * Ordinals
+   * Ordinals (Ordit RPC)
    */
   ordinals: Ordinal[];
 
   /**
-   * Inscriptions
+   * Inscriptions (Ordit RPC)
    */
   inscriptions: Inscription[];
 
   /**
-   * Is spent
+   * Is spent (Ordit RPC), can be Outpoint `{txid}:{vout}`, or `false` if not spent
    */
   spent: string | false;
 
