@@ -1,12 +1,8 @@
-// @ts-check
-// Note: type annotations allow type checking and IDEs autocompletion
+import { themes as prismThemes } from "prism-react-renderer";
+import type { Config } from "@docusaurus/types";
+import type * as Preset from "@docusaurus/preset-classic";
 
-const { themes } = require("prism-react-renderer");
-const lightCodeTheme = themes.light;
-const darkCodeTheme = themes.dracula;
-
-/** @type {import('@docusaurus/types').Config} */
-const config = {
+const config: Config = {
   title: "Ordit SDK",
   tagline: "A powerful Bitcoin Ordinals-aware library written in TypeScript",
   favicon: "img/favicon.ico",
@@ -36,11 +32,10 @@ const config = {
   presets: [
     [
       "classic",
-      /** @type {import('@docusaurus/preset-classic').Options} */
-      ({
+      {
         docs: {
           routeBasePath: "/",
-          sidebarPath: require.resolve("./sidebars.js"),
+          sidebarPath: "./sidebars.ts",
           // Please change this to your repo.
           // Remove this to remove the "edit this page" links.
           editUrl: "https://github.com/ordzaar/ordit-sdk/apps/docs/",
@@ -49,13 +44,13 @@ const config = {
         theme: {
           customCss: require.resolve("./src/css/custom.css"),
         },
-      }),
+      } satisfies Preset.Options,
     ],
   ],
 
   themeConfig:
     /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
-    ({
+    {
       // Replace with your project's social card
       image: "img/ordzaar-logo.gif",
       navbar: {
@@ -120,10 +115,10 @@ const config = {
         copyright: `Copyright © ${new Date().getFullYear()} Ordzaar.`,
       },
       prism: {
-        theme: lightCodeTheme,
-        darkTheme: darkCodeTheme,
+        theme: prismThemes.github,
+        darkTheme: prismThemes.dracula,
       },
-    }),
+    },
 };
 
-module.exports = config;
+export default config;
