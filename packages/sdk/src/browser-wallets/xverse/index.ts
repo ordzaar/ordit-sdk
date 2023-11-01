@@ -12,7 +12,12 @@ import {
 } from "sats-connect";
 import { Psbt } from "bitcoinjs-lib";
 import { getAddressFormat } from "../../addresses";
-import { OrditSDKError } from "../../errors";
+import {
+  OrditSDKError,
+  BrowserWalletNotInstalledError,
+  BrowserWalletSigningError,
+  BrowserWalletUserCancelledError,
+} from "../../errors";
 import {
   fromXOnlyToFullPubkey,
   fromBrowserWalletNetworkToBitcoinNetworkType,
@@ -46,11 +51,7 @@ async function getAddresses(
   network: BrowserWalletNetwork = "mainnet",
 ): Promise<WalletAddress[]> {
   if (!isInstalled()) {
-    throw new OrditSDKError("Xverse not installed");
-  }
-
-  if (!network) {
-    throw new OrditSDKError("Invalid options provided");
+    throw new BrowserWalletNotInstalledError("Xverse not installed");
   }
 
   const result: Array<{
@@ -64,7 +65,7 @@ async function getAddresses(
     network: BrowserWalletNetwork,
   ) => {
     if (!response || !response.addresses || response.addresses.length !== 2) {
-      throw new Error("Invalid address format");
+      throw new OrditSDKError("Invalid address format");
     }
 
     response.addresses.forEach((addressObj) => {
@@ -84,7 +85,7 @@ async function getAddresses(
   };
 
   const handleOnCancel = () => {
-    throw new Error("Request canceled by user.");
+    throw new BrowserWalletUserCancelledError("Request canceled by user.");
   };
 
   const xVerseOptions: GetAddressOptions = {
@@ -123,7 +124,7 @@ async function signPsbt(
   }: XverseSignPSBTOptions = { network: "mainnet", inputsToSign: [] },
 ): Promise<BrowserWalletSignResponse> {
   if (!isInstalled()) {
-    throw new OrditSDKError("Xverse not installed");
+    throw new BrowserWalletNotInstalledError("Xverse not installed");
   }
   if (!psbt || !network || !inputsToSign.length) {
     throw new OrditSDKError("Invalid options provided");
@@ -135,7 +136,7 @@ async function signPsbt(
   const handleOnFinish = (response: SignTransactionResponse) => {
     const psbtBase64 = response.psbtBase64;
     if (!psbtBase64) {
-      throw new Error("Failed to sign transaction using Xverse");
+      throw new BrowserWalletUserCancelledError("Request canceled by user.");
     }
 
     const signedPsbt = Psbt.fromBase64(psbtBase64);
@@ -158,7 +159,9 @@ async function signPsbt(
   };
 
   const handleOnCancel = () => {
-    throw new Error(`Failed to sign transaction using xVerse`);
+    throw new BrowserWalletUserCancelledError(
+      `Failed to sign transaction using xVerse`,
+    );
   };
 
   const xverseOptions: SignTransactionOptions = {
@@ -192,7 +195,7 @@ async function signMessage(
   address: string,
 ): Promise<BrowserWalletSignResponse> {
   if (!isInstalled()) {
-    throw new OrditSDKError("Xverse not installed");
+    throw new BrowserWalletNotInstalledError("Xverse not installed");
   }
   if (!message || !network || !address) {
     throw new OrditSDKError("Invalid options provided");
@@ -203,7 +206,9 @@ async function signMessage(
 
   const handleOnFinish = (response: XverseSignMessageResponse) => {
     if (!response) {
-      throw new Error("Failed to sign message using Xverse");
+      throw new BrowserWalletSigningError(
+        "Failed to sign message using Xverse",
+      );
     }
 
     hex = Buffer.from(response, "base64").toString("hex");
@@ -211,7 +216,7 @@ async function signMessage(
   };
 
   const handleOnCancel = () => {
-    throw new Error(`Failed to sign message using xVerse`);
+    throw new BrowserWalletUserCancelledError("Request canceled by user.");
   };
 
   const xverseOptions: XverseSignMessageOptions = {

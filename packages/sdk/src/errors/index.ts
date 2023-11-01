@@ -18,3 +18,10 @@ export class BrowserWalletSigningError extends Error {
     this.name = "BrowserWalletSigningError";
   }
 }
+
+export class BrowserWalletUserCancelledError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = "BrowserWallerUserCancelError";
+  }
+}
