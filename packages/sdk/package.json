@@ -45,10 +45,10 @@
     "sats-connect": "1.1.1"
   },
   "devDependencies": {
+    "@ordzaar/standard-typescript": "*",
     "@types/node": "^20.8.10",
     "happy-dom": "^12.10.3",
     "vite-plugin-dts": "^3.6.3",
-    "vite-plugin-eslint": "^1.8.1",
-    "typescript": "^5.2.2"
+    "vite-plugin-eslint": "^1.8.1"
   }
 }

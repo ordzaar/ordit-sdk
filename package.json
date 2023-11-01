@@ -25,7 +25,8 @@
     "semver": "^7.5.4",
     "turbo": "^1.10.16",
     "vite": "^4.5.0",
-    "vitest": "^0.34.6"
+    "vitest": "^0.34.6",
+    "typescript": "^5.2.2"
   },
   "lint-staged": {
     "*": "prettier --write --ignore-unknown"
