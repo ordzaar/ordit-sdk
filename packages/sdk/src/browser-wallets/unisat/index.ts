@@ -27,11 +27,13 @@ function isInstalled() {
  * Gets addresses from the browser wallet.
  *
  * @param network Network
+ * @param readOnly Read only (when set to true, the wallet modal appears)
  * @returns An array of WalletAddress objects.
  * @throws {BrowserWalletNotInstalledError} Wallet is not installed
  */
 async function getAddresses(
   network: BrowserWalletNetwork = "mainnet",
+  readOnly?: boolean,
 ): Promise<WalletAddress[]> {
   if (!isInstalled()) {
     throw new BrowserWalletNotInstalledError("Unisat not installed");
@@ -43,7 +45,9 @@ async function getAddresses(
     await window.unisat.switchNetwork(targetNetwork);
   }
 
-  const accounts = await window.unisat.requestAccounts();
+  const accounts = readOnly
+    ? await window.unisat.getAccounts()
+    : await window.unisat.requestAccounts();
   const publicKey = await window.unisat.getPublicKey();
 
   const address = accounts[0];
