@@ -49,9 +49,14 @@ function isInstalled() {
  */
 async function getAddresses(
   network: BrowserWalletNetwork = "mainnet",
+  readOnly?: boolean,
 ): Promise<WalletAddress[]> {
   if (!isInstalled()) {
     throw new BrowserWalletNotInstalledError("Xverse not installed");
+  }
+
+  if (readOnly) {
+    throw new OrditSDKError("Read only mode is not supported on Xverse");
   }
 
   const result: Array<{
