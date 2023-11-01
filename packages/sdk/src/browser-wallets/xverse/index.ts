@@ -1,8 +1,14 @@
 import {
   AddressPurpose,
   getAddress,
+  GetAddressOptions,
+  GetAddressResponse,
   signTransaction,
+  SignTransactionOptions,
+  SignTransactionResponse,
   signMessage as xverseSignMessage,
+  SignMessageOptions as XverseSignMessageOptions,
+  SignMessageResponse as XverseSignMessageResponse,
 } from "sats-connect";
 import { Psbt } from "bitcoinjs-lib";
 import { getAddressFormat } from "../../addresses";
@@ -13,11 +19,7 @@ import {
 } from "./utils";
 import type { BrowserWalletSignResponse, WalletAddress } from "../types";
 import type { BrowserWalletNetwork } from "../../config/types";
-import type {
-  XverseOnFinishResponse,
-  XverseSignPSBTOptions,
-  XverseSignPSBTResponse,
-} from "./types";
+import type { XverseSignPSBTOptions } from "./types";
 import { AddressFormat } from "../../addresses/types";
 
 /**
@@ -58,7 +60,7 @@ async function getAddresses(
   }> = [];
 
   const handleOnFinish = (
-    response: XverseOnFinishResponse,
+    response: GetAddressResponse,
     network: BrowserWalletNetwork,
   ) => {
     if (!response || !response.addresses || response.addresses.length !== 2) {
@@ -85,7 +87,7 @@ async function getAddresses(
     throw new Error("Request canceled by user.");
   };
 
-  const xVerseOptions = {
+  const xVerseOptions: GetAddressOptions = {
     payload: {
       purposes: ["ordinals", "payment"] as AddressPurpose[],
       message: "Provide access to payment Address and Ordinals address", // Message is hardcoded for now
@@ -93,7 +95,7 @@ async function getAddresses(
         type: fromBrowserWalletNetworkToBitcoinNetworkType(network),
       },
     },
-    onFinish: (response: XverseOnFinishResponse) =>
+    onFinish: (response: GetAddressResponse) =>
       handleOnFinish(response, network),
     onCancel: handleOnCancel,
   };
@@ -130,7 +132,7 @@ async function signPsbt(
   let hex: string;
   let base64: string | null = null;
 
-  const handleOnFinish = (response: XverseSignPSBTResponse) => {
+  const handleOnFinish = (response: SignTransactionResponse) => {
     const psbtBase64 = response.psbtBase64;
     if (!psbtBase64) {
       throw new Error("Failed to sign transaction using Xverse");
@@ -159,7 +161,7 @@ async function signPsbt(
     throw new Error(`Failed to sign transaction using xVerse`);
   };
 
-  const xverseOptions = {
+  const xverseOptions: SignTransactionOptions = {
     payload: {
       network: {
         type: fromBrowserWalletNetworkToBitcoinNetworkType(network),
@@ -199,7 +201,7 @@ async function signMessage(
   let hex: string;
   let base64: string | null = null;
 
-  const handleOnFinish = (response: string) => {
+  const handleOnFinish = (response: XverseSignMessageResponse) => {
     if (!response) {
       throw new Error("Failed to sign message using Xverse");
     }
@@ -212,7 +214,7 @@ async function signMessage(
     throw new Error(`Failed to sign message using xVerse`);
   };
 
-  const xverseOptions = {
+  const xverseOptions: XverseSignMessageOptions = {
     payload: {
       network: {
         type: fromBrowserWalletNetworkToBitcoinNetworkType(network),
