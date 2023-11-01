@@ -188,6 +188,24 @@ export function generateTxUniqueIdentifier(txId: string, index: number) {
   return `${txId}:${index}`;
 }
 
+/**
+ * Converts an outpoint to id format.
+ *
+ * An outpoint refers to a specific output.
+ *
+ * Reference: https://developer.bitcoin.org/reference/transactions.html#outpoint-the-specific-part-of-a-specific-output
+ *
+ * @param outpoint Outpoint in string format `{txid}:{vout}`
+ * @returns id formatted string, `{txid}i{vout}`
+ */
+export function outpointToIdFormat(outpoint: string) {
+  if (outpoint.includes(":")) {
+    return outpoint.replace(":", "i");
+  }
+
+  return outpoint.includes("i") ? outpoint : `${outpoint}i0`;
+}
+
 export function decodePSBT({ hex, base64, buffer }: OneOfAllDataFormats): Psbt {
   if (hex) return Psbt.fromHex(hex);
   if (base64) return Psbt.fromBase64(base64);

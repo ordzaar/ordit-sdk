@@ -1,8 +1,6 @@
 import { Transaction as BTCTransaction } from "bitcoinjs-lib";
+
 import { rpc } from "../api/jsonrpc";
-import { OrditSDKError } from "../errors";
-import { BaseDatasource } from "./BaseDatasource";
-import { DatasourceUtility } from "./DatasourceUtility";
 import type {
   GetBalanceOptions,
   GetInscriptionOptions,
@@ -15,8 +13,12 @@ import type {
   RelayOptions,
 } from "../api/types";
 import type { Network } from "../config/types";
-import type { Transaction, UTXO, UTXOLimited } from "../transactions/types";
+import { OrditSDKError } from "../errors";
 import type { Inscription } from "../inscription/types";
+import type { Transaction, UTXO, UTXOLimited } from "../transactions/types";
+import { outpointToIdFormat } from "../utils";
+import { BaseDatasource } from "./BaseDatasource";
+import { DatasourceUtility } from "./DatasourceUtility";
 import type { JsonRpcPagination } from "./types";
 
 interface JsonRpcDatasourceOptions {
@@ -40,16 +42,12 @@ class JsonRpcDatasource extends BaseDatasource {
     );
   }
 
-  async getInscription({ id, decodeMetadata }: GetInscriptionOptions) {
-    if (!id) {
+  async getInscription({ id: _id, decodeMetadata }: GetInscriptionOptions) {
+    if (!_id) {
       throw new OrditSDKError("Invalid request");
     }
 
-    id = id.includes(":")
-      ? id.replace(":", "i")
-      : !id.includes("i")
-      ? `${id}i0`
-      : id;
+    const id = outpointToIdFormat(_id);
 
     let inscription = await rpc[this.network].call<Inscription>(
       "Ordinals.GetInscription",
@@ -63,16 +61,12 @@ class JsonRpcDatasource extends BaseDatasource {
     return inscription;
   }
 
-  async getInscriptionUTXO({ id }: GetInscriptionUTXOOptions) {
-    if (!id) {
+  async getInscriptionUTXO({ id: _id }: GetInscriptionUTXOOptions) {
+    if (!_id) {
       throw new OrditSDKError("Invalid request");
     }
 
-    id = id.includes(":")
-      ? id.replace(":", "i")
-      : !id.includes("i")
-      ? `${id}i0`
-      : id;
+    const id = outpointToIdFormat;
 
     return rpc[this.network].call<UTXO>(
       "Ordinals.GetInscriptionUtxo",
