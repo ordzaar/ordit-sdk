@@ -48,77 +48,75 @@ const config: Config = {
     ],
   ],
 
-  themeConfig:
-    /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
-    {
-      // Replace with your project's social card
-      image: "img/ordzaar-logo.gif",
-      navbar: {
-        title: "Ordit SDK",
-        logo: {
-          alt: "Ordzaar Logo",
-          src: "img/ordzaar-256x256.png",
+  themeConfig: {
+    // Replace with your project's social card
+    image: "img/ordzaar-logo.gif",
+    navbar: {
+      title: "Ordit SDK",
+      logo: {
+        alt: "Ordzaar Logo",
+        src: "img/ordzaar-256x256.png",
+      },
+      items: [
+        {
+          type: "docSidebar",
+          sidebarId: "tutorialSidebar",
+          position: "left",
+          label: "Docs",
         },
-        items: [
-          {
-            type: "docSidebar",
-            sidebarId: "tutorialSidebar",
-            position: "left",
-            label: "Docs",
-          },
-          {
-            href: "https://github.com/ordzaar/ordit-sdk",
-            label: "GitHub",
-            position: "right",
-          },
-        ],
-      },
-      footer: {
-        style: "dark",
-        links: [
-          {
-            title: "Docs",
-            items: [
-              {
-                label: "Docs",
-                to: "/",
-              },
-            ],
-          },
-          {
-            title: "Community",
-            items: [
-              {
-                label: "Discord",
-                href: "https://discord.com/invite/ordzaar",
-              },
-              {
-                label: "Twitter",
-                href: "https://x.com/ordzaar",
-              },
-              {
-                label: "Medium",
-                href: "https://blog.ordzaar.com/",
-              },
-            ],
-          },
-          {
-            title: "More",
-            items: [
-              {
-                label: "GitHub",
-                href: "https://github.com/ordzaar/ordit-sdk",
-              },
-            ],
-          },
-        ],
-        copyright: `Copyright © ${new Date().getFullYear()} Ordzaar.`,
-      },
-      prism: {
-        theme: prismThemes.github,
-        darkTheme: prismThemes.dracula,
-      },
+        {
+          href: "https://github.com/ordzaar/ordit-sdk",
+          label: "GitHub",
+          position: "right",
+        },
+      ],
     },
+    footer: {
+      style: "dark",
+      links: [
+        {
+          title: "Docs",
+          items: [
+            {
+              label: "Docs",
+              to: "/",
+            },
+          ],
+        },
+        {
+          title: "Community",
+          items: [
+            {
+              label: "Discord",
+              href: "https://discord.com/invite/ordzaar",
+            },
+            {
+              label: "Twitter",
+              href: "https://x.com/ordzaar",
+            },
+            {
+              label: "Medium",
+              href: "https://blog.ordzaar.com/",
+            },
+          ],
+        },
+        {
+          title: "More",
+          items: [
+            {
+              label: "GitHub",
+              href: "https://github.com/ordzaar/ordit-sdk",
+            },
+          ],
+        },
+      ],
+      copyright: `Copyright © ${new Date().getFullYear()} Ordzaar.`,
+    },
+    prism: {
+      theme: prismThemes.github,
+      darkTheme: prismThemes.dracula,
+    },
+  },
 };
 
 export default config;
