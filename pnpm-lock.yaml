@@ -9,11 +9,11 @@ importers:
   .:
     devDependencies:
       '@ordzaar/standard-prettier':
-        specifier: ^0.1.4
-        version: 0.1.4(@typescript-eslint/eslint-plugin@6.9.1)(@typescript-eslint/parser@6.9.1)(eslint-plugin-import@2.29.0)(eslint-plugin-jsx-a11y@6.7.1)(eslint-plugin-react-hooks@4.6.0)(eslint-plugin-react@7.33.2)
+        specifier: ^0.1.5
+        version: 0.1.5(@typescript-eslint/eslint-plugin@6.9.1)(@typescript-eslint/parser@6.9.1)(eslint-plugin-import@2.29.0)(eslint-plugin-jsx-a11y@6.7.1)(eslint-plugin-react-hooks@4.6.0)(eslint-plugin-react@7.33.2)
       '@ordzaar/standard-typescript':
-        specifier: ^0.1.4
-        version: 0.1.4(typescript@5.2.2)
+        specifier: ^0.1.5
+        version: 0.1.5(typescript@5.2.2)
       '@vitest/coverage-v8':
         specifier: ^0.34.6
         version: 0.34.6(vitest@0.34.6)
@@ -2870,8 +2870,8 @@ packages:
       '@nodelib/fs.scandir': 2.1.5
       fastq: 1.15.0
 
-  /@ordzaar/standard-prettier@0.1.4(@typescript-eslint/eslint-plugin@6.9.1)(@typescript-eslint/parser@6.9.1)(eslint-plugin-import@2.29.0)(eslint-plugin-jsx-a11y@6.7.1)(eslint-plugin-react-hooks@4.6.0)(eslint-plugin-react@7.33.2):
-    resolution: {integrity: sha512-fjAqkyzoqS/VZIvNBpYNsYyqVsvTeeiXbdtwm1/2CCCLNT7jWnxCc3HJHYHqmBQuXFZYKQXFLDSxwnLnuxMSsw==}
+  /@ordzaar/standard-prettier@0.1.5(@typescript-eslint/eslint-plugin@6.9.1)(@typescript-eslint/parser@6.9.1)(eslint-plugin-import@2.29.0)(eslint-plugin-jsx-a11y@6.7.1)(eslint-plugin-react-hooks@4.6.0)(eslint-plugin-react@7.33.2):
+    resolution: {integrity: sha512-0a+YAuyxJvRTg4TCCT77wW7kxUlBFqB5K4OV2PLM8GczO5XA7bGQmzdunpApfs6CMRRKu/QAvibcR95uL5M9Ng==}
     dependencies:
       eslint: 8.52.0
       eslint-config-airbnb: 19.0.4(eslint-plugin-import@2.29.0)(eslint-plugin-jsx-a11y@6.7.1)(eslint-plugin-react-hooks@4.6.0)(eslint-plugin-react@7.33.2)(eslint@8.52.0)
@@ -2896,6 +2896,14 @@ packages:
 
   /@ordzaar/standard-typescript@0.1.4(typescript@5.2.2):
     resolution: {integrity: sha512-0PIY9FdwP7RHn0tDt20CVs+YCqtkEkZkVc1uCNUCf50OJ3CnN2QuB+4qE+B/CPtMN4VtPV7CW+579pYrBzn9EQ==}
+    peerDependencies:
+      typescript: 5.2.2
+    dependencies:
+      typescript: 5.2.2
+    dev: true
+
+  /@ordzaar/standard-typescript@0.1.5(typescript@5.2.2):
+    resolution: {integrity: sha512-JEun3t/mYUR4GTBcqt6vBHUaMoKD7qBp5JWG+CyqkC7aSXlPU9vGCZJLMZFSiBP7SXoQbVPmRwvt9W882iQy4Q==}
     peerDependencies:
       typescript: 5.2.2
     dependencies:
