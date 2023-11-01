@@ -5,7 +5,7 @@ module.exports = {
   extends: [
     "eslint:recommended",
     "plugin:@typescript-eslint/recommended",
-    "./node_modules/@waveshq/standard-prettier",
+    "./node_modules/@ordzaar/standard-prettier",
   ],
   parser: "@typescript-eslint/parser",
   rules: {
