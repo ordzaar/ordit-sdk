@@ -131,5 +131,19 @@ describe("Xverse Wallet", () => {
       expect(typeof window).not.toBeUndefined();
       expect(getAddresses("testnet")).resolves.toEqual(mockData);
     });
+
+    test("should throw error on user cancel", () => {
+      vi.stubGlobal("BitcoinProvider", {});
+
+      const getAddressSpy = vi.spyOn(satsConnect, "getAddress");
+
+      getAddressSpy.mockImplementation((options: GetAddressOptions) => {
+        options.onCancel();
+        return Promise.resolve();
+      });
+      expect(typeof window).not.toBeUndefined();
+      expect(getAddresses("mainnet")).rejects.toThrowError();
+      expect(getAddresses("testnet")).rejects.toThrowError();
+    });
   });
 });
