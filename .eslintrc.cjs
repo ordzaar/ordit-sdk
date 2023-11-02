@@ -5,18 +5,11 @@ module.exports = {
   extends: [
     "eslint:recommended",
     "plugin:@typescript-eslint/recommended",
-    "./node_modules/@ordzaar/standard-prettier",
+    "./node_modules/@ordzaar/standard-linter",
   ],
   parser: "@typescript-eslint/parser",
   rules: {
-    "object-shorthand": 2,
-    "@typescript-eslint/no-unused-vars": [
-      "error",
-      {
-        argsIgnorePattern: "^_",
-        varsIgnorePattern: "^_",
-        caughtErrorsIgnorePattern: "^_",
-      },
-    ],
+    // Allow better IDE import path resolution
+    "import/prefer-default-export": "off",
   },
 };
