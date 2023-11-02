@@ -13,7 +13,7 @@ import {
   payments,
 } from "bitcoinjs-lib";
 import { Buffer } from "buffer";
-import ECPairFactory from "ecpair";
+import ECPairFactory, { ECPairInterface } from "ecpair";
 import { ADDRESS_TYPE_TO_FORMAT } from "../addresses/constants";
 import { OrditSDKError } from "../errors";
 import type { AddressFormat, AddressType } from "../addresses/types";
@@ -98,13 +98,11 @@ export function toXOnly(pubkey: Buffer): Buffer {
 }
 
 export function tweakSigner(
-  signer: Signer,
+  signer: BIP32Interface | ECPairInterface,
   opts: { tweakHash?: Buffer; network?: BitcoinNetwork } = {},
 ): Signer {
   const ECPair = ECPairFactory(ecc);
 
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore
   let privateKey: Uint8Array | undefined = signer.privateKey!;
   if (!privateKey) {
     throw new OrditSDKError("Private key is required for tweaking signer!");
