@@ -1,23 +1,24 @@
 import * as ecc from "@bitcoinerlab/secp256k1";
 import { BIP32Interface } from "bip32";
 import {
+  crypto,
+  initEccLib,
   Network as BitcoinNetwork,
+  networks,
   Payment,
   PaymentCreator,
+  payments,
   Psbt,
   Signer,
   Transaction,
-  crypto,
-  initEccLib,
-  networks,
-  payments,
 } from "bitcoinjs-lib";
 import { Buffer } from "buffer";
 import ECPairFactory, { ECPairInterface } from "ecpair";
+
 import { ADDRESS_TYPE_TO_FORMAT } from "../addresses/constants";
-import { OrditSDKError } from "../errors";
 import type { AddressFormat, AddressType } from "../addresses/types";
 import type { Network } from "../config/types";
+import { OrditSDKError } from "../errors";
 import type { UTXO } from "../transactions/types";
 import type {
   BufferOrHex,
@@ -97,6 +98,13 @@ export function toXOnly(pubkey: Buffer): Buffer {
   return pubkey.subarray(1, 33);
 }
 
+export function tapTweakHash(pubKey: Buffer, h: Buffer | undefined): Buffer {
+  return crypto.taggedHash(
+    "TapTweak",
+    Buffer.concat(h ? [pubKey, h] : [pubKey]),
+  );
+}
+
 export function tweakSigner(
   signer: BIP32Interface | ECPairInterface,
   opts: { tweakHash?: Buffer; network?: BitcoinNetwork } = {},
@@ -124,13 +132,6 @@ export function tweakSigner(
   });
 }
 
-export function tapTweakHash(pubKey: Buffer, h: Buffer | undefined): Buffer {
-  return crypto.taggedHash(
-    "TapTweak",
-    Buffer.concat(h ? [pubKey, h] : [pubKey]),
-  );
-}
-
 export const isObject = (o: unknown) => o?.constructor === Object;
 export const isString = (s: unknown) =>
   s instanceof String || typeof s === "string";
@@ -145,17 +146,20 @@ function encodeDecodeObject(
     throw new OrditSDKError("Object too deep");
   }
 
+  // eslint-disable-next-line no-restricted-syntax
   for (const key in obj) {
-    // eslint-disable-next-line no-prototype-builtins
+    // eslint-disable-next-line no-prototype-builtins, no-continue
     if (!obj.hasOwnProperty(key)) continue;
 
     const value = obj[key];
     if (isObject(value)) {
+      // eslint-disable-next-line no-param-reassign
       obj[key] = encodeDecodeObject(value as NestedObject, {
         encode,
-        depth: depth++,
+        depth: depth + 1,
       });
     } else if (isString(value)) {
+      // eslint-disable-next-line no-param-reassign
       obj[key] = encode
         ? encodeURIComponent(value as string)
         : decodeURIComponent(value as string);
@@ -174,6 +178,7 @@ function encodeDecodeObject(
  * @returns The object is mutated.
  * @deprecated
  */
+// eslint-disable-next-line @typescript-eslint/naming-convention
 export function UNSTABLE_encodeObject(obj: NestedObject) {
   return encodeDecodeObject(obj, { encode: true });
 }
@@ -187,6 +192,7 @@ export function UNSTABLE_encodeObject(obj: NestedObject) {
  * @returns The object is mutated.
  * @deprecated
  */
+// eslint-disable-next-line @typescript-eslint/naming-convention
 export function UNSTABLE_decodeObject(obj: NestedObject) {
   return encodeDecodeObject(obj, { encode: false });
 }
@@ -197,7 +203,7 @@ export function convertSatoshisToBTC(satoshis: number) {
 }
 
 export function convertBTCToSatoshis(btc: number) {
-  return parseInt((btc * 10 ** 8).toString()); // remove floating point overflow by parseInt
+  return parseInt((btc * 10 ** 8).toString(), 10); // remove floating point overflow by parseInt
 }
 
 export function generateTxUniqueIdentifier(txId: string, index: number) {
@@ -304,7 +310,7 @@ export function getScriptType(
   const p2pkh = isP2PKH(script, network);
   if (p2pkh.payload) {
     return {
-      format: ADDRESS_TYPE_TO_FORMAT["p2pkh"],
+      format: ADDRESS_TYPE_TO_FORMAT.p2pkh,
       ...p2pkh,
     };
   }
@@ -312,7 +318,7 @@ export function getScriptType(
   const p2wpkh = isP2WPKH(script, network);
   if (p2wpkh.payload) {
     return {
-      format: ADDRESS_TYPE_TO_FORMAT["p2wpkh"],
+      format: ADDRESS_TYPE_TO_FORMAT.p2wpkh,
       ...p2wpkh,
     };
   }
@@ -320,7 +326,7 @@ export function getScriptType(
   const p2sh = isP2SHScript(script, network);
   if (p2sh.payload) {
     return {
-      format: ADDRESS_TYPE_TO_FORMAT["p2sh"],
+      format: ADDRESS_TYPE_TO_FORMAT.p2sh,
       ...p2sh,
     };
   }
@@ -328,7 +334,7 @@ export function getScriptType(
   const p2tr = isP2TR(script, network);
   if (p2tr.payload) {
     return {
-      format: ADDRESS_TYPE_TO_FORMAT["p2tr"],
+      format: ADDRESS_TYPE_TO_FORMAT.p2tr,
       ...p2tr,
     };
   }

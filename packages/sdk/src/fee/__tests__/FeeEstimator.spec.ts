@@ -8,7 +8,7 @@ describe("FeeEstimator", () => {
 
     test("should throw an error for negative fee rate", () => {
       expect(() => {
-        new FeeEstimator({
+        const _ = new FeeEstimator({
           feeRate: -1,
           network: "regtest",
           psbt: createMockPsbt("p2sh-p2wpkh"),
@@ -18,7 +18,7 @@ describe("FeeEstimator", () => {
 
     test("should throw an error for fee rates with decimals", () => {
       expect(() => {
-        new FeeEstimator({
+        const _ = new FeeEstimator({
           feeRate: 1.1,
           network: "regtest",
           psbt: createMockPsbt("p2sh-p2wpkh"),

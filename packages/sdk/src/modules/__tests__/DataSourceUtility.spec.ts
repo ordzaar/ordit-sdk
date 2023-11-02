@@ -34,7 +34,7 @@ describe("DatasourceUtility", () => {
         ]),
       ).toContainEqual(INSCRIPTION_DECODED_META);
       // TODO: Fix UNSTABLE_decodeObject to ensure immutability
-      //expect(INSCRIPTION_ENCODED_META_COPY).toEqual(INSCRIPTIONS_ENCODED_META);
+      // expect(INSCRIPTION_ENCODED_META_COPY).toEqual(INSCRIPTIONS_ENCODED_META);
     });
   });
   describe("segregateUTXOsBySpendStatus", () => {

@@ -1,7 +1,8 @@
 import * as ecc from "@bitcoinerlab/secp256k1";
-import { Psbt, networks, initEccLib } from "bitcoinjs-lib";
-import { P2SH_P2WPKH, P2TR, P2WPKH } from "./__fixtures__/psbt.fixture";
+import { initEccLib, networks, Psbt } from "bitcoinjs-lib";
+
 import { AddressFormat } from "../addresses/types";
+import { P2SH_P2WPKH, P2TR, P2WPKH } from "./__fixtures__/psbt.fixture";
 
 /**
  * Creates a mock Psbt for testing.

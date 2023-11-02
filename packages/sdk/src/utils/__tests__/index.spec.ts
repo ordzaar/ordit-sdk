@@ -1,7 +1,7 @@
 import {
+  outpointToIdFormat,
   UNSTABLE_decodeObject,
   UNSTABLE_encodeObject,
-  outpointToIdFormat,
 } from "..";
 
 describe("utils", () => {

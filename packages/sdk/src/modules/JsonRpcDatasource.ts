@@ -49,13 +49,13 @@ class JsonRpcDatasource extends BaseDatasource {
 
     const id = outpointToIdFormat(_id);
 
-    let inscription = await rpc[this.network].call<Inscription>(
+    const inscription = await rpc[this.network].call<Inscription>(
       "Ordinals.GetInscription",
       { id },
       rpc.id,
     );
     if (decodeMetadata) {
-      inscription = DatasourceUtility.transformInscriptions([inscription])[0];
+      return DatasourceUtility.transformInscriptions([inscription])[0];
     }
 
     return inscription;
@@ -84,10 +84,12 @@ class JsonRpcDatasource extends BaseDatasource {
     decodeMetadata,
     sort = "asc",
     limit = 25,
-    next = null,
+    next: _next = null,
   }: GetInscriptionsOptions) {
     let inscriptions: Inscription[] = [];
+    let next = _next;
     do {
+      // eslint-disable-next-line no-await-in-loop
       const { inscriptions: _inscriptions, pagination } = await rpc[
         this.network
       ].call<{
@@ -118,7 +120,7 @@ class JsonRpcDatasource extends BaseDatasource {
     limit = 200,
     type = "spendable",
   }: GetSpendablesOptions) {
-    if (!address || isNaN(value) || !value) {
+    if (!address || Number.isNaN(value) || !value) {
       throw new OrditSDKError("Invalid request");
     }
 
@@ -160,12 +162,12 @@ class JsonRpcDatasource extends BaseDatasource {
       rpc.id,
     );
 
-    tx.vout = tx.vout.map((vout) => {
-      vout.inscriptions = decodeMetadata
+    tx.vout = tx.vout.map((vout) => ({
+      ...vout,
+      inscriptions: decodeMetadata
         ? DatasourceUtility.transformInscriptions(vout.inscriptions)
-        : vout.inscriptions;
-      return vout;
-    });
+        : vout.inscriptions,
+    }));
 
     return {
       tx,
@@ -179,14 +181,16 @@ class JsonRpcDatasource extends BaseDatasource {
     rarity = ["common"],
     sort = "desc",
     limit = 50,
-    next = null,
+    next: _next = null,
   }: GetUnspentsOptions): Promise<GetUnspentsResponse> {
     if (!address) {
       throw new OrditSDKError("Invalid request");
     }
 
     let utxos: UTXO[] = [];
+    let next = _next;
     do {
+      // eslint-disable-next-line no-await-in-loop
       const { unspents, pagination } = await rpc[this.network].call<{
         unspents: UTXO[];
         pagination: JsonRpcPagination;
@@ -219,7 +223,7 @@ class JsonRpcDatasource extends BaseDatasource {
       throw new OrditSDKError("Invalid request");
     }
 
-    if (maxFeeRate && (maxFeeRate < 0 || isNaN(maxFeeRate))) {
+    if (maxFeeRate && (maxFeeRate < 0 || Number.isNaN(maxFeeRate))) {
       throw new OrditSDKError("Invalid max fee rate");
     }
 
