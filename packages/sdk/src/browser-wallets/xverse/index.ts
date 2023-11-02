@@ -1,32 +1,32 @@
+import { Psbt } from "bitcoinjs-lib";
 import {
   AddressPurpose,
   getAddress,
   GetAddressOptions,
   GetAddressResponse,
-  signTransaction,
-  SignTransactionOptions,
-  SignTransactionResponse,
   signMessage as xverseSignMessage,
   SignMessageOptions as XverseSignMessageOptions,
   SignMessageResponse as XverseSignMessageResponse,
+  signTransaction,
+  SignTransactionOptions,
+  SignTransactionResponse,
 } from "sats-connect";
-import { Psbt } from "bitcoinjs-lib";
 
-import type { BrowserWalletNetwork } from "../../config/types";
 import { getAddressFormat } from "../../addresses";
+import { AddressFormat } from "../../addresses/types";
+import type { BrowserWalletNetwork } from "../../config/types";
 import {
-  OrditSDKError,
   BrowserWalletNotInstalledError,
   BrowserWalletSigningError,
   BrowserWalletUserCancelledError,
+  OrditSDKError,
 } from "../../errors";
-import {
-  fromXOnlyToFullPubkey,
-  fromBrowserWalletNetworkToBitcoinNetworkType,
-} from "./utils";
 import type { BrowserWalletSignResponse, WalletAddress } from "../types";
 import type { XverseSignPSBTOptions } from "./types";
-import { AddressFormat } from "../../addresses/types";
+import {
+  fromBrowserWalletNetworkToBitcoinNetworkType,
+  fromXOnlyToFullPubkey,
+} from "./utils";
 
 /**
  * Checks if the browser wallet extension is installed.
@@ -66,10 +66,7 @@ async function getAddresses(
     format: AddressFormat;
   }> = [];
 
-  const handleOnFinish = (
-    response: GetAddressResponse,
-    network: BrowserWalletNetwork,
-  ) => {
+  const handleOnFinish = (response: GetAddressResponse) => {
     if (!response || !response.addresses || response.addresses.length !== 2) {
       throw new OrditSDKError("Invalid address format");
     }
@@ -77,13 +74,14 @@ async function getAddresses(
     response.addresses.forEach((addressObj) => {
       const format = getAddressFormat(addressObj.address, network);
 
+      let fullPubKey = addressObj.publicKey;
       if (format === "taproot") {
         // For taproot addresses, Xverse returns the x-only public key.
-        addressObj.publicKey = fromXOnlyToFullPubkey(addressObj.publicKey);
+        fullPubKey = fromXOnlyToFullPubkey(addressObj.publicKey);
       }
 
       result.push({
-        publicKey: addressObj.publicKey,
+        publicKey: fullPubKey,
         address: addressObj.address,
         format,
       });
@@ -102,8 +100,7 @@ async function getAddresses(
         type: fromBrowserWalletNetworkToBitcoinNetworkType(network),
       },
     },
-    onFinish: (response: GetAddressResponse) =>
-      handleOnFinish(response, network),
+    onFinish: (response: GetAddressResponse) => handleOnFinish(response),
     onCancel: handleOnCancel,
   };
 
@@ -140,7 +137,7 @@ async function signPsbt(
   let base64: string | null = null;
 
   const handleOnFinish = (response: SignTransactionResponse) => {
-    const psbtBase64 = response.psbtBase64;
+    const { psbtBase64 } = response;
     if (!psbtBase64) {
       throw new BrowserWalletUserCancelledError("Request canceled by user.");
     }
@@ -197,8 +194,8 @@ async function signPsbt(
  */
 async function signMessage(
   message: string,
-  network: BrowserWalletNetwork = "mainnet",
   address: string,
+  network: BrowserWalletNetwork = "mainnet",
 ): Promise<BrowserWalletSignResponse> {
   if (!isInstalled()) {
     throw new BrowserWalletNotInstalledError("Xverse not installed");
