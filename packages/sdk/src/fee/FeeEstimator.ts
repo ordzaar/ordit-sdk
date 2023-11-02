@@ -73,11 +73,9 @@ class FeeEstimator {
     return this.fee;
   }
 
-  private analyzePSBTComponents() {
+  private getInputAndOutputScriptTypes() {
     const { inputs } = this.psbt.data;
     const outputs = this.psbt.txOutputs;
-    const inputTypes: AddressFormat[] = [];
-    const outputTypes: AddressFormat[] = [];
 
     if (inputs.length === 0) {
       throw new OrditSDKError("PSBT must have at least one input");
@@ -87,32 +85,28 @@ class FeeEstimator {
       throw new OrditSDKError("PSBT must have at least one output");
     }
 
-    inputs.forEach((input) => {
-      // P2PKH (Legacy) is not supported as there is no witness script.
-      const script =
-        input.witnessUtxo && input.witnessUtxo.script
-          ? input.witnessUtxo.script
-          : null;
-
-      if (!script) {
-        throw new OrditSDKError("Invalid script");
-      }
-
-      inputTypes.push(getScriptType(script, this.network).format);
-    });
-
-    outputs.forEach((output) => {
-      outputTypes.push(getScriptType(output.script, this.network).format);
-    });
-
     return {
-      inputTypes,
-      outputTypes,
+      inputTypes: inputs.map((input) => {
+        // P2PKH (Legacy) is not supported as there is no witness script.
+        const script =
+          input.witnessUtxo && input.witnessUtxo.script
+            ? input.witnessUtxo.script
+            : null;
+
+        if (!script) {
+          throw new OrditSDKError("Invalid script");
+        }
+
+        return getScriptType(script, this.network).format;
+      }),
+      outputTypes: outputs.map(
+        (output) => getScriptType(output.script, this.network).format,
+      ),
     };
   }
 
   private calculateScriptWitnessSize() {
-    const { inputTypes } = this.analyzePSBTComponents();
+    const { inputTypes } = this.getInputAndOutputScriptTypes();
     if (inputTypes.includes("taproot") && this.witness?.length) {
       return this.witness.reduce((acc, witness) => acc + witness.byteLength, 0);
     }
@@ -120,7 +114,7 @@ class FeeEstimator {
   }
 
   private getBaseSize() {
-    const { inputTypes, outputTypes } = this.analyzePSBTComponents();
+    const { inputTypes, outputTypes } = this.getInputAndOutputScriptTypes();
     const witnessHeaderSize = 2;
     const inputVBytes = inputTypes.reduce(
       (acc, inputType) => {
