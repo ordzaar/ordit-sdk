@@ -1,4 +1,4 @@
-import { decodeObject } from "../utils";
+import { UNSTABLE_decodeObject } from "../utils";
 import type { GetUnspentsResponse } from "../api/types";
 import type { UTXO } from "../transactions/types";
 import type { Inscription } from "../inscription/types";
@@ -13,7 +13,7 @@ class DatasourceUtility {
 
     return inscriptions.map((inscription) => {
       inscription.meta = inscription.meta
-        ? decodeObject(inscription.meta)
+        ? UNSTABLE_decodeObject(inscription.meta)
         : inscription.meta;
       return inscription;
     });
@@ -30,9 +30,9 @@ class DatasourceUtility {
         return acc;
       },
       {
-        spendableUTXOs: [],
-        unspendableUTXOs: [],
-      } as Record<string, UTXO[]>,
+        spendableUTXOs: [] as UTXO[],
+        unspendableUTXOs: [] as UTXO[],
+      },
     );
 
     return {

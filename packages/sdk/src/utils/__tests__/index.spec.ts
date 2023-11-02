@@ -1,4 +1,8 @@
-import { outpointToIdFormat } from "..";
+import {
+  UNSTABLE_decodeObject,
+  UNSTABLE_encodeObject,
+  outpointToIdFormat,
+} from "..";
 
 describe("utils", () => {
   describe("outpointToIdFormat", () => {
@@ -20,6 +24,41 @@ describe("utils", () => {
       ).toBe(
         "87f4282652ef649c081d3f0d782394c56dbe0ffa6d2f3556426aa8a5d644bfdai0",
       );
+    });
+  });
+
+  describe("UNSTABLE_decodeObject", () => {
+    const ENCODED = {
+      nested: {
+        k: "%D1%88%D0%B5%D0%BB%D0%BB%D1%8B",
+      },
+      k: "test%3F",
+    };
+    const DECODED = {
+      nested: {
+        k: "шеллы",
+      },
+      k: "test?",
+    };
+    test("should decode all object properties into valid URI components", () => {
+      expect(UNSTABLE_decodeObject(ENCODED)).toEqual(DECODED);
+    });
+  });
+  describe("UNSTABLE_encodeObject", () => {
+    const ENCODED = {
+      nested: {
+        k: "%D1%88%D0%B5%D0%BB%D0%BB%D1%8B",
+      },
+      k: "test%3F",
+    };
+    const DECODED = {
+      nested: {
+        k: "шеллы",
+      },
+      k: "test?",
+    };
+    test("should decode all object properties into valid URI components", () => {
+      expect(UNSTABLE_encodeObject(DECODED)).toEqual(ENCODED);
     });
   });
 });

@@ -167,11 +167,29 @@ function encodeDecodeObject(
   return obj;
 }
 
-export function encodeObject(obj: NestedObject) {
+// TODO: Make this function immutable
+/**
+ * Encodes an object into [valid URI components](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/encodeURIComponent),
+ * modifying the object in the process.
+ *
+ * @param obj Object
+ * @returns The object is mutated.
+ * @deprecated
+ */
+export function UNSTABLE_encodeObject(obj: NestedObject) {
   return encodeDecodeObject(obj, { encode: true });
 }
 
-export function decodeObject(obj: NestedObject) {
+// TODO: Make this function immutable
+/**
+ * Decodes an object into [valid URI components](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/decodeURIComponent),
+ * modifying the object in the process.
+ *
+ * @param obj Object
+ * @returns The object is mutated.
+ * @deprecated
+ */
+export function UNSTABLE_decodeObject(obj: NestedObject) {
   return encodeDecodeObject(obj, { encode: false });
 }
 
