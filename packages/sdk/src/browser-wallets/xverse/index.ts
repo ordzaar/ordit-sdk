@@ -1,11 +1,12 @@
 import { Psbt } from "bitcoinjs-lib";
+
+import type { BrowserWalletNetwork } from "../../config/types";
 import { OrditSDKError } from "../../errors";
 import type {
   BrowserWalletSignPSBTOptions,
   BrowserWalletSignResponse,
   WalletAddress,
 } from "../types";
-import type { BrowserWalletNetwork } from "../../config/types";
 
 /**
  * Checks if the browser wallet extension is installed.
@@ -57,4 +58,4 @@ async function signMessage(
   throw new OrditSDKError("Method not implemented");
 }
 
-export { isInstalled, getAddresses, signPsbt, signMessage };
+export { getAddresses, isInstalled, signMessage, signPsbt };

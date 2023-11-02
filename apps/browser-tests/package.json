@@ -9,7 +9,8 @@
     "build": "tsc && vite build",
     "build:watch": "tsc && vite build --watch",
     "preview": "vite preview",
-    "clean": "rimraf dist"
+    "clean": "rimraf dist",
+    "lint": "eslint src --ext ts --report-unused-disable-directives"
   },
   "dependencies": {
     "@ordzaar/ordit-sdk": "workspace:*"

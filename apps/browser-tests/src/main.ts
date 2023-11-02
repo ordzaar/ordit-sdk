@@ -1,6 +1,6 @@
 import {
-  isInstalled as isUnisatInstalled,
   getAddresses as getUnisatAddresses,
+  isInstalled as isUnisatInstalled,
 } from "@ordzaar/ordit-sdk/browser-wallets/unisat";
 
 async function connectToUnisat() {
