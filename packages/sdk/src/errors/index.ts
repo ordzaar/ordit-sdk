@@ -25,3 +25,6 @@ export class BrowserWalletUserCancelledError extends Error {
     this.name = "BrowserWallerUserCancelError";
   }
 }
+export * from "./BrowserWalletNotInstalledError";
+export * from "./BrowserWalletSigningError";
+export * from "./OrditSDKError";

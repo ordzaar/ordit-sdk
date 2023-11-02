@@ -11,6 +11,8 @@ import {
   SignMessageResponse as XverseSignMessageResponse,
 } from "sats-connect";
 import { Psbt } from "bitcoinjs-lib";
+
+import type { BrowserWalletNetwork } from "../../config/types";
 import { getAddressFormat } from "../../addresses";
 import {
   OrditSDKError,
@@ -23,7 +25,6 @@ import {
   fromBrowserWalletNetworkToBitcoinNetworkType,
 } from "./utils";
 import type { BrowserWalletSignResponse, WalletAddress } from "../types";
-import type { BrowserWalletNetwork } from "../../config/types";
 import type { XverseSignPSBTOptions } from "./types";
 import { AddressFormat } from "../../addresses/types";
 
@@ -241,4 +242,4 @@ async function signMessage(
   return { hex: hex!, base64 };
 }
 
-export { isInstalled, getAddresses, signPsbt, signMessage };
+export { getAddresses, isInstalled, signMessage, signPsbt };

@@ -1,9 +1,10 @@
 // @vitest-environment happy-dom
-import { Psbt, networks } from "bitcoinjs-lib";
-import { getAddresses, isInstalled, signMessage, signPsbt } from "..";
-import { NETWORK_TO_UNISAT_NETWORK } from "../constants";
+import { networks, Psbt } from "bitcoinjs-lib";
+
 import { OrditSDKError } from "../../../errors";
 import { WalletAddress } from "../../types";
+import { getAddresses, isInstalled, signMessage, signPsbt } from "..";
+import { NETWORK_TO_UNISAT_NETWORK } from "../constants";
 
 describe("Unisat Wallet", () => {
   afterEach(() => {

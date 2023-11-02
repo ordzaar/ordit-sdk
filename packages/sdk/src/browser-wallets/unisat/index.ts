@@ -1,13 +1,14 @@
 import { Psbt } from "bitcoinjs-lib";
+
 import { getAddressFormat } from "../../addresses";
+import type { BrowserWalletNetwork } from "../../config/types";
 import {
   BrowserWalletNotInstalledError,
   BrowserWalletSigningError,
   OrditSDKError,
 } from "../../errors";
-import { NETWORK_TO_UNISAT_NETWORK } from "./constants";
-import type { BrowserWalletNetwork } from "../../config/types";
 import type { BrowserWalletSignResponse, WalletAddress } from "../types";
+import { NETWORK_TO_UNISAT_NETWORK } from "./constants";
 import type { UnisatSignPSBTOptions } from "./types";
 
 /**
@@ -129,4 +130,4 @@ async function signMessage(
   };
 }
 
-export { isInstalled, getAddresses, signPsbt, signMessage };
+export { getAddresses, isInstalled, signMessage, signPsbt };

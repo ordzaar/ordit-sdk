@@ -1,13 +1,14 @@
 import {
-  validate,
+  AddressType as AddressTypeEnum,
   getAddressInfo,
   Network as NetworkEnum,
-  AddressType as AddressTypeEnum,
+  validate,
 } from "bitcoin-address-validation";
-import { ADDRESS_TYPE_TO_FORMAT } from "./constants";
-import { OrditSDKError } from "../errors";
-import type { AddressFormat } from "./types";
+
 import type { Network } from "../config/types";
+import { OrditSDKError } from "../errors";
+import { ADDRESS_TYPE_TO_FORMAT } from "./constants";
+import type { AddressFormat } from "./types";
 
 function getAddressFormatFromType(type: AddressTypeEnum): AddressFormat {
   if (type === AddressTypeEnum.p2wsh) {

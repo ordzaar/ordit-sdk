@@ -32,7 +32,8 @@
     "build:watch": "tsc && vite build --watch",
     "preview": "vite preview",
     "clean": "rimraf dist",
-    "test": "vitest"
+    "test": "vitest",
+    "lint": "eslint src --ext ts --report-unused-disable-directives"
   },
   "dependencies": {
     "@bitcoinerlab/secp256k1": "1.0.5",
