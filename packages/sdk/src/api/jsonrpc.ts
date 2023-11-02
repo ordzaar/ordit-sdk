@@ -3,6 +3,37 @@ import fetch from "cross-fetch";
 import { apiConfig } from "../config";
 import { OrditSDKError } from "../errors";
 
+type JsonRpcId = string | number | null;
+
+export type Params = unknown[] | Record<string, unknown>;
+
+function isNumber(value: unknown): value is number {
+  return (
+    typeof value === "number" &&
+    value > Number.NEGATIVE_INFINITY &&
+    value < Number.POSITIVE_INFINITY
+  );
+}
+
+function isInteger(value: unknown): value is number {
+  return isNumber(value) && value % 1 === 0;
+}
+
+function isString(value: unknown): value is string {
+  return typeof value === "string";
+}
+
+function isJsonRpcId(value: unknown): value is JsonRpcId {
+  return isString(value) || isInteger(value) || value === null;
+}
+
+function getRpcUrl(value: string): string {
+  if (value[value.length - 1] === "/") {
+    return value.substring(0, value.length - 1);
+  }
+  return value;
+}
+
 class JsonRpc {
   constructor(readonly url: string) {}
 
@@ -12,8 +43,8 @@ class JsonRpc {
    * @param method - Method to call.
    * @param params - JSON-RPC 2.0 parameters.
    */
-  notify(method: string, params?: Params): void {
-    fetch(`${this.url}/rpc`, {
+  async notify(method: string, params?: Params) {
+    await fetch(`${this.url}/rpc`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -26,12 +57,17 @@ class JsonRpc {
     });
   }
 
-  async call<T>(method: string, id: Id): Promise<T>;
-  async call<T>(method: string, params: Params, id: Id): Promise<T>;
-  async call<T>(method: string, paramsOrId: Params | Id, id?: Id): Promise<T> {
+  async call<T>(method: string, id: JsonRpcId): Promise<T>;
+  async call<T>(method: string, params: Params, id: JsonRpcId): Promise<T>;
+  async call<T>(
+    method: string,
+    paramsOrId: Params | JsonRpcId,
+    id?: JsonRpcId,
+  ): Promise<T> {
     let params: Params = {};
+    let rpcId = id;
     if (isJsonRpcId(paramsOrId)) {
-      id = paramsOrId;
+      rpcId = paramsOrId;
     } else {
       params = paramsOrId;
     }
@@ -45,7 +81,7 @@ class JsonRpc {
         jsonrpc: "2.0",
         method,
         params,
-        id,
+        id: rpcId,
       }),
     });
     if (response.status === 200) {
@@ -63,12 +99,6 @@ class JsonRpc {
   }
 }
 
-/*
- |--------------------------------------------------------------------------------
- | RPC Clients
- |--------------------------------------------------------------------------------
- */
-
 export const rpc = {
   get id() {
     return Math.floor(Math.random() * 100000);
@@ -77,46 +107,3 @@ export const rpc = {
   testnet: new JsonRpc(getRpcUrl(apiConfig.apis.testnet.batter)),
   regtest: new JsonRpc(getRpcUrl(apiConfig.apis.regtest.batter)),
 } as const;
-
-/*
- |--------------------------------------------------------------------------------
- | Utilities
- |--------------------------------------------------------------------------------
- */
-
-function isJsonRpcId(value: unknown): value is Id {
-  return isString(value) || isInteger(value) || value === null;
-}
-
-function isInteger(value: unknown): value is number {
-  return isNumber(value) && value % 1 === 0;
-}
-
-function isNumber(value: unknown): value is number {
-  return (
-    typeof value === "number" &&
-    value > Number.NEGATIVE_INFINITY &&
-    value < Number.POSITIVE_INFINITY
-  );
-}
-
-function isString(value: unknown): value is string {
-  return typeof value === "string";
-}
-
-function getRpcUrl(value: string): string {
-  if (value[value.length - 1] === "/") {
-    return value.substring(0, value.length - 1);
-  }
-  return value;
-}
-
-/*
- |--------------------------------------------------------------------------------
- | Types
- |--------------------------------------------------------------------------------
- */
-
-type Id = string | number | null;
-
-export type Params = unknown[] | Record<string, unknown>;
