@@ -1,5 +1,5 @@
 import { invert } from "./helper";
-import type { AddressType, AddressFormat } from "./types";
+import type { AddressFormat, AddressType } from "./types";
 
 export const ADDRESS_TYPE_TO_FORMAT: Record<AddressType, AddressFormat> = {
   p2pkh: "legacy",

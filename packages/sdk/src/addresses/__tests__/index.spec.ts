@@ -1,6 +1,6 @@
-import { getAddressFormat } from "..";
 import { Network } from "../../config/types";
 import { OrditSDKError } from "../../errors";
+import { getAddressFormat } from "..";
 import { AddressFormat } from "../types";
 
 describe("addresses", () => {
