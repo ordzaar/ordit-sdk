@@ -1,4 +1,5 @@
 import { BitcoinNetworkType } from "sats-connect";
+
 import { BrowserWalletNetwork } from "../../config/types";
 
 export function fromXOnlyToFullPubkey(xOnly: string): string {

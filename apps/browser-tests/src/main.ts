@@ -2,10 +2,9 @@ import {
   getAddresses as getUnisatAddresses,
   isInstalled as isUnisatInstalled,
 } from "@ordzaar/ordit-sdk/browser-wallets/unisat";
-
 import {
-  isInstalled as isXverseInstalled,
   getAddresses as getXverseAddresses,
+  isInstalled as isXverseInstalled,
 } from "@ordzaar/ordit-sdk/browser-wallets/xverse";
 
 async function connectToUnisat() {

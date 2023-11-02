@@ -1,8 +1,9 @@
 // @vitest-environment happy-dom
-import * as satsConnect from "sats-connect";
-import { getAddresses, isInstalled } from "..";
-import { WalletAddress } from "../../types";
 import type { GetAddressOptions, GetAddressResponse } from "sats-connect";
+import * as satsConnect from "sats-connect";
+
+import { WalletAddress } from "../../types";
+import { getAddresses, isInstalled } from "..";
 
 vi.mock("sats-connect", async (originalImport) => {
   const mod = (await originalImport()) as typeof satsConnect;
