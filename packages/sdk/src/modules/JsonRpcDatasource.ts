@@ -19,7 +19,10 @@ import type { Transaction, UTXO, UTXOLimited } from "../transactions/types";
 import { outpointToIdFormat } from "../utils";
 import { BaseDatasource } from "./BaseDatasource";
 import { DatasourceUtility } from "./DatasourceUtility";
-import type { JsonRpcPagination } from "./types";
+import type {
+  AddressGetUnspentsJsonRpcResponse,
+  OrdinalsGetInscriptionsJsonRpcResponse,
+} from "./types";
 
 export interface JsonRpcDatasourceOptions {
   network: Network;
@@ -92,10 +95,7 @@ export class JsonRpcDatasource extends BaseDatasource {
       // eslint-disable-next-line no-await-in-loop
       const { inscriptions: _inscriptions, pagination } = await rpc[
         this.network
-      ].call<{
-        inscriptions: Inscription[];
-        pagination: JsonRpcPagination;
-      }>(
+      ].call<OrdinalsGetInscriptionsJsonRpcResponse>(
         "Ordinals.GetInscriptions",
         {
           filter: { creator, owner, mimeType, mimeSubType, outpoint },
@@ -191,10 +191,9 @@ export class JsonRpcDatasource extends BaseDatasource {
     let next = _next;
     do {
       // eslint-disable-next-line no-await-in-loop
-      const { unspents, pagination } = await rpc[this.network].call<{
-        unspents: UTXO[];
-        pagination: JsonRpcPagination;
-      }>(
+      const { unspents, pagination } = await rpc[
+        this.network
+      ].call<AddressGetUnspentsJsonRpcResponse>(
         "Address.GetUnspents",
         {
           address,
