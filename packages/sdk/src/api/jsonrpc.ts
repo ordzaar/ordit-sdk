@@ -5,7 +5,17 @@ import { OrditSDKError } from "../errors";
 
 type JsonRpcId = string | number | null;
 
-export type Params = unknown[] | Record<string, unknown>;
+export type ParamRecord = { [k in string]: Params };
+export type Params =
+  | string
+  | string[]
+  | number
+  | number[]
+  | boolean
+  | boolean[]
+  | null
+  | undefined
+  | ParamRecord;
 
 function isNumber(value: unknown): value is number {
   return (
