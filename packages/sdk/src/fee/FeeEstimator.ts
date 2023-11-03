@@ -5,7 +5,7 @@ import type { Network } from "../config/types";
 import { MAXIMUM_FEE } from "../constants";
 import { OrditSDKError } from "../errors";
 import { getNetwork, getScriptType } from "../utils";
-import { getBaseSizeByType } from "./helper";
+import { getBaseSizeByType, TRANSACTION_HEADER_SIZE } from "./helper";
 import type { FeeEstimatorOptions } from "./types";
 
 class FeeEstimator {
@@ -99,8 +99,7 @@ class FeeEstimator {
     const witnessHeaderSize = 2;
     const inputVBytes = inputTypes.reduce(
       (acc, inputType) => {
-        const { input, txHeader, witness } = getBaseSizeByType(inputType);
-        acc.txHeader = txHeader;
+        const { input, witness } = getBaseSizeByType(inputType);
         acc.input += input;
         acc.witness += witness;
 
@@ -109,7 +108,6 @@ class FeeEstimator {
       {
         input: 0,
         witness: 0,
-        txHeader: 0,
       },
     );
     const outputVBytes = outputTypes.reduce((acc, outputType) => {
@@ -128,7 +126,7 @@ class FeeEstimator {
     }
 
     return {
-      baseSize: inputVBytes.input + inputVBytes.txHeader + outputVBytes,
+      baseSize: inputVBytes.input + TRANSACTION_HEADER_SIZE + outputVBytes,
       witnessSize: totalWitnessSize,
     };
   }

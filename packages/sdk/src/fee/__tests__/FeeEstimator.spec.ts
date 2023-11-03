@@ -44,7 +44,7 @@ describe("FeeEstimator", () => {
         network: "regtest",
         psbt: createMockPsbt("p2sh-p2wpkh"),
       });
-      expect(feeEstimator.calculateNetworkFee()).toBe(255);
+      expect(feeEstimator.calculateNetworkFee()).toBe(256);
     });
 
     test("should return network fee for P2WPKH psbt", () => {
@@ -72,7 +72,7 @@ describe("FeeEstimator", () => {
         network: "regtest",
         psbt: createMockPsbt("p2sh-p2wpkh"),
       });
-      expect(feeEstimator.calculateNetworkFee()).toBe(255);
+      expect(feeEstimator.calculateNetworkFee()).toBe(256);
     });
   });
 });
