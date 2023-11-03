@@ -15,11 +15,11 @@ import type { Network } from "../config/types";
 import type { Inscription } from "../inscription/types";
 import type { Transaction, UTXO, UTXOLimited } from "../transactions/types";
 
-interface BaseDatasourceOptions {
+export interface BaseDatasourceOptions {
   network: Network;
 }
 
-abstract class BaseDatasource {
+export abstract class BaseDatasource {
   protected readonly network: Network;
 
   constructor({ network }: BaseDatasourceOptions) {
@@ -75,5 +75,3 @@ abstract class BaseDatasource {
 
   abstract relay({ hex, maxFeeRate, validate }: RelayOptions): Promise<string>;
 }
-
-export { BaseDatasource };

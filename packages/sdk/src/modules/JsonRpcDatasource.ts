@@ -21,11 +21,11 @@ import { BaseDatasource } from "./BaseDatasource";
 import { DatasourceUtility } from "./DatasourceUtility";
 import type { JsonRpcPagination } from "./types";
 
-interface JsonRpcDatasourceOptions {
+export interface JsonRpcDatasourceOptions {
   network: Network;
 }
 
-class JsonRpcDatasource extends BaseDatasource {
+export class JsonRpcDatasource extends BaseDatasource {
   constructor({ network }: JsonRpcDatasourceOptions) {
     super({ network });
   }
@@ -234,5 +234,3 @@ class JsonRpcDatasource extends BaseDatasource {
     );
   }
 }
-
-export { JsonRpcDatasource };
