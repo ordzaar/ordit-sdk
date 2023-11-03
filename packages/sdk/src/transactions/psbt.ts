@@ -7,6 +7,15 @@ export type CreatePsbtOptions = {
   satsPerByte: number;
   address: string;
   outputs: Output[];
+
+  /**
+   * Enable Replace By Fee (RBF).
+   *
+   * Replace-By-Fee is a node policy that allows an unconfirmed transaction in a mempool
+   * to be replaced with a different transaction that spends at least one of the same inputs and which pays a higher transaction fee.
+   *
+   * Refer to [BIP-125](https://github.com/bitcoin/bips/blob/master/bip-0125.mediawiki).
+   */
   enableRBF?: boolean;
   pubKey: string;
   network: Network;
