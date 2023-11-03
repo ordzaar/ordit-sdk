@@ -1,6 +1,6 @@
 import { OrditSDKError } from "../../errors";
 import { FeeEstimator } from "../FeeEstimator";
-import { createMockPsbt } from "../utils";
+import { createMockPsbt } from "./utils";
 
 describe("FeeEstimator", () => {
   describe("constructor", () => {
