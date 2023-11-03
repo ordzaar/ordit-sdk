@@ -3,15 +3,18 @@ import {
   DIFFCHANGE_INTERVAL,
   SUBSIDY_HALVING_INTERVAL,
 } from "./constants";
-import { Sat } from "./Sat";
+import type { Sat } from "./Sat";
 
 /**
  * convert sat into degree format. A°B’C’’D’’’
  */
 export class Degree {
   readonly hour: number; // A° - Index of Sat in the Block
+
   readonly minute: number; // B’ - Index of the Block in the Difficulty Adjustment Period (every 2016 blocks)
+
   readonly second: number; // C’’ - Index of Block in Halving Epoch (every 210_000 blocks)
+
   readonly third: number; // D’’’ - Cycle Number
 
   constructor(sat: Sat) {

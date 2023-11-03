@@ -1,10 +1,10 @@
-import { Rarity } from "../Rarity";
-import { Sat } from "../Sat";
 import {
   COIN_VALUE,
   DIFFCHANGE_INTERVAL,
   SUBSIDY_HALVING_INTERVAL,
 } from "../constants";
+import { Rarity } from "../Rarity";
+import { Sat } from "../Sat";
 
 describe("Rarity", () => {
   describe("from", () => {

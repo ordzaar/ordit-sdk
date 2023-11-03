@@ -7,20 +7,31 @@ import {
 import { Decimal } from "./Decimal";
 import { Degree } from "./Degree";
 import { Epoch } from "./Epoch";
+// eslint-disable-next-line import/no-cycle
 import { Height } from "./Height";
 import { Rarity } from "./Rarity";
 
 export class Sat {
   #height?: Height;
+
   #cycle?: number;
+
   #percentile?: string;
+
   #degree?: Degree;
+
   #third?: number;
+
   #epoch?: Epoch;
+
   #period?: number;
+
   #rarity?: Rarity;
+
   #epochPosition?: number;
+
   #decimal?: Decimal;
+
   #name?: string;
 
   constructor(readonly n: number) {
@@ -31,6 +42,7 @@ export class Sat {
 
   static fromName(name: string): Sat {
     let x = 0;
+    // eslint-disable-next-line no-restricted-syntax
     for (const c of name) {
       if (c >= "a" && c <= "z") {
         x = x * 26 + c.charCodeAt(0) - "a".charCodeAt(0) + 1;

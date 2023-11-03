@@ -1,5 +1,5 @@
-import { Height } from "./Height";
-import { Sat } from "./Sat";
+import type { Height } from "./Height";
+import type { Sat } from "./Sat";
 
 /**
  * convert sat into decimal format. A.B

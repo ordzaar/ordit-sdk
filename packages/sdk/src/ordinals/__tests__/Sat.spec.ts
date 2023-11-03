@@ -1,5 +1,5 @@
-import { Sat } from "../Sat";
 import { SAT_SUPPLY } from "../constants";
+import { Sat } from "../Sat";
 
 describe("Sat", () => {
   describe("constructor", () => {
