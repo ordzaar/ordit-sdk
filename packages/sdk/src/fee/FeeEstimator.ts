@@ -90,6 +90,7 @@ class FeeEstimator {
     if (inputTypes.includes("taproot") && this.witness?.length) {
       return this.witness.reduce((acc, witness) => acc + witness.byteLength, 0);
     }
+
     return 0;
   }
 
