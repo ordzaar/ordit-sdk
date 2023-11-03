@@ -209,8 +209,8 @@ export class PSBTBuilder extends FeeEstimator {
           injectable.standardOutput as any;
         break;
       }
-      // eslint-disable-next-line no-plusplus
-    } while (potentialIndex++);
+      potentialIndex += 1;
+    } while (potentialIndex);
   }
 
   private addInputs() {
@@ -219,40 +219,40 @@ export class PSBTBuilder extends FeeEstimator {
     );
     const injectedIndexes: number[] = [];
 
-    for (let i = 0; i < this.inputs.length; i += 1) {
-      const indexReserved = reservedIndexes.includes(i);
+    this.inputs.forEach((input, inputIndex) => {
+      const indexReserved = reservedIndexes.includes(inputIndex);
       if (indexReserved) {
         const injectable = this.injectableInputs.find(
-          (o) => o.injectionIndex === i,
+          (o) => o.injectionIndex === inputIndex,
         )!;
         this.injectInput(injectable);
         injectedIndexes.push(injectable.injectionIndex);
       }
 
-      const existingInputHashes = this.psbt.txInputs.map((input) => {
-        const hash = reverseBuffer(input.hash) as Buffer;
-        return generateTxUniqueIdentifier(hash.toString("hex"), input.index);
+      const existingInputHashes = this.psbt.txInputs.map((txInput) => {
+        const hash = reverseBuffer(txInput.hash) as Buffer;
+        return generateTxUniqueIdentifier(hash.toString("hex"), txInput.index);
       });
 
-      const input = this.inputs[i];
       if (
         existingInputHashes.includes(
           generateTxUniqueIdentifier(input.hash, input.index),
         )
       ) {
-        // eslint-disable-next-line no-continue
-        continue;
+        return;
       }
 
       this.psbt.addInput(input);
       this.psbt.setInputSequence(
-        indexReserved ? i + 1 : i,
+        indexReserved ? inputIndex + 1 : inputIndex,
         this.getInputSequence(),
       );
-    }
+    });
 
     this.injectableInputs.forEach((injectable) => {
-      if (injectedIndexes.includes(injectable.injectionIndex)) return;
+      if (injectedIndexes.includes(injectable.injectionIndex)) {
+        return;
+      }
       this.injectInput(injectable);
       injectedIndexes.push(injectable.injectionIndex);
     });
@@ -270,10 +270,10 @@ export class PSBTBuilder extends FeeEstimator {
     const reservedIndexes = this.injectableOutputs.map((o) => o.injectionIndex);
     const injectedIndexes: number[] = [];
 
-    this.outputs.forEach((output, index) => {
-      if (reservedIndexes.includes(index)) {
+    this.outputs.forEach((output, outputIndex) => {
+      if (reservedIndexes.includes(outputIndex)) {
         const injectable = this.injectableOutputs.find(
-          (o) => o.injectionIndex === index,
+          (o) => o.injectionIndex === outputIndex,
         )!;
         this.injectOutput(injectable);
         injectedIndexes.push(injectable.injectionIndex);
@@ -286,7 +286,9 @@ export class PSBTBuilder extends FeeEstimator {
     });
 
     this.injectableOutputs.forEach((injectable) => {
-      if (injectedIndexes.includes(injectable.injectionIndex)) return;
+      if (injectedIndexes.includes(injectable.injectionIndex)) {
+        return;
+      }
       this.injectOutput(injectable);
       injectedIndexes.push(injectable.injectionIndex);
     });
@@ -309,7 +311,9 @@ export class PSBTBuilder extends FeeEstimator {
   }
 
   private async calculateChangeAmount() {
-    if (!this.autoAdjustment) return;
+    if (!this.autoAdjustment) {
+      return;
+    }
 
     this.changeAmount = Math.floor(
       this.inputAmount - this.outputAmount - this.fee,
@@ -319,7 +323,9 @@ export class PSBTBuilder extends FeeEstimator {
   }
 
   private async isNegativeChange() {
-    if (this.changeAmount >= 0) return;
+    if (this.changeAmount >= 0) {
+      return;
+    }
 
     await this.prepare();
     if (this.noMoreUTXOS) {
@@ -341,22 +347,29 @@ export class PSBTBuilder extends FeeEstimator {
     );
   }
 
+  private getUTXOAmountToRequestFromChangeAmount() {
+    if (this.changeAmount < 0) {
+      return Math.abs(this.changeAmount);
+    }
+
+    return this.outputAmount - this.getRetrievedUTXOsValue();
+  }
+
   private async retrieveUTXOs(address?: string, amount?: number) {
-    if (!this.autoAdjustment && !address) return;
+    if (!this.autoAdjustment && !address) {
+      return;
+    }
 
     const amountToRequest =
-      // eslint-disable-next-line no-nested-ternary
       amount && amount > 0
         ? amount
-        : this.changeAmount < 0
-        ? this.changeAmount * -1
-        : this.outputAmount - this.getRetrievedUTXOsValue();
-
+        : this.getUTXOAmountToRequestFromChangeAmount();
     if (
       (amount && this.getRetrievedUTXOsValue() >= amount) ||
       amountToRequest <= 0
-    )
+    ) {
       return;
+    }
 
     const utxos = await this.datasource.getSpendables({
       address: address || this.address,
@@ -385,13 +398,11 @@ export class PSBTBuilder extends FeeEstimator {
 
     const promises: Promise<InputType>[] = [];
 
-    // eslint-disable-next-line no-restricted-syntax
-    for (const utxo of this.utxos) {
+    this.utxos.forEach((utxo) => {
       if (
         this.usedUTXOs.includes(generateTxUniqueIdentifier(utxo.txid, utxo.n))
       ) {
-        // eslint-disable-next-line no-continue
-        continue;
+        return;
       }
 
       this.inputAmount += utxo.sats;
@@ -403,7 +414,7 @@ export class PSBTBuilder extends FeeEstimator {
       }); // TODO: add sigHashType
 
       promises.push(promise);
-    }
+    });
 
     const response = await Promise.all(promises);
 
@@ -411,18 +422,16 @@ export class PSBTBuilder extends FeeEstimator {
       (acc, curr) => acc + curr.sats,
       0,
     );
-    // eslint-disable-next-line no-restricted-syntax
-    for (const input of response) {
-      if (
-        this.usedUTXOs.includes(
-          generateTxUniqueIdentifier(input.hash, input.index),
-        )
-      ) {
-        // eslint-disable-next-line no-continue
-        continue;
+    response.forEach((input) => {
+      const txUniqueIdentifier = generateTxUniqueIdentifier(
+        input.hash,
+        input.index,
+      );
+      if (this.usedUTXOs.includes(txUniqueIdentifier)) {
+        return;
       }
-      this.usedUTXOs.push(generateTxUniqueIdentifier(input.hash, input.index));
-    }
+      this.usedUTXOs.push(txUniqueIdentifier);
+    });
 
     this.inputs = this.inputs.concat(response);
 
