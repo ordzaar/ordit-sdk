@@ -7,16 +7,47 @@ interface SegregateUTXOsBySpendStatusArgOptions {
   utxos: UTXO[];
 }
 
-class DatasourceUtility {
-  static transformInscriptions(inscriptions?: Inscription[]) {
-    if (!inscriptions) return [];
+interface ParseInscriptionsOptions {
+  decodeMetadata: boolean;
+}
 
-    return inscriptions.map((inscription) => ({
+class DatasourceUtility {
+  /**
+   * Parses an inscription.
+   *
+   * @param inscription Inscription
+   * @param options Options
+   * - `decodeMetadata` decodes the metadata object into [valid URI components](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/decodeURIComponent).
+   * @returns Parsed inscription
+   */
+  static parseInscription(
+    inscription: Inscription,
+    { decodeMetadata }: ParseInscriptionsOptions,
+  ) {
+    return {
       ...inscription,
-      meta: inscription.meta
-        ? UNSTABLE_decodeObject(inscription.meta)
-        : inscription.meta,
-    }));
+      meta:
+        decodeMetadata && inscription.meta
+          ? UNSTABLE_decodeObject(inscription.meta)
+          : inscription.meta,
+    };
+  }
+
+  /**
+   * Parses inscriptions.
+   *
+   * @param inscriptions Inscriptions
+   * @param options Options
+   * - `decodeMetadata` decodes the metadata object into [valid URI components](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/decodeURIComponent).
+   * @returns Parsed inscriptions
+   */
+  static parseInscriptions(
+    inscriptions: Inscription[],
+    { decodeMetadata }: ParseInscriptionsOptions,
+  ) {
+    return inscriptions.map((inscription) =>
+      this.parseInscription(inscription, { decodeMetadata }),
+    );
   }
 
   static segregateUTXOsBySpendStatus({

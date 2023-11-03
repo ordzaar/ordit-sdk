@@ -7,34 +7,54 @@ import {
 } from "../__fixtures__/DataSourceUtility.fixture";
 
 describe("DatasourceUtility", () => {
-  describe("transformInscriptions", () => {
-    test("should return empty array if there are no inscriptions", () => {
-      expect(DatasourceUtility.transformInscriptions(undefined)).toEqual([]);
-      expect(DatasourceUtility.transformInscriptions([])).toEqual([]);
-    });
-    test("should transform all inscriptions in array", () => {
-      expect(DatasourceUtility.transformInscriptions(INSCRIPTIONS)).toEqual(
-        INSCRIPTIONS,
-      );
+  describe("parseInscriptions", () => {
+    describe("when decodeMetadata is true", () => {
+      test("should return identical inscriptions when metadata property values do not contain any special characters", () => {
+        const INSCRIPTIONS_COPY = INSCRIPTIONS.map((inscription) => ({
+          ...inscription,
+          meta: { ...inscription.meta },
+        }));
+        expect(
+          DatasourceUtility.parseInscriptions(INSCRIPTIONS, {
+            decodeMetadata: true,
+          }),
+        ).toEqual(INSCRIPTIONS_COPY);
+      });
 
-      const INSCRIPTION_ENCODED_META_COPY = {
-        ...INSCRIPTIONS_ENCODED_META[0],
-        meta: { ...INSCRIPTIONS_ENCODED_META[0].meta },
-      };
-      const INSCRIPTION_DECODED_META = {
-        ...INSCRIPTIONS_ENCODED_META[0],
-        meta: {
-          ...INSCRIPTIONS_ENCODED_META[0].meta,
-          iid: "шеллы",
-        },
-      };
-      expect(
-        DatasourceUtility.transformInscriptions([
-          INSCRIPTION_ENCODED_META_COPY,
-        ]),
-      ).toContainEqual(INSCRIPTION_DECODED_META);
-      // TODO: Fix UNSTABLE_decodeObject to ensure immutability
-      // expect(INSCRIPTION_ENCODED_META_COPY).toEqual(INSCRIPTIONS_ENCODED_META);
+      test("should transform all inscriptions in array", () => {
+        const INSCRIPTION_ENCODED_META_COPY = {
+          ...INSCRIPTIONS_ENCODED_META[0],
+          meta: { ...INSCRIPTIONS_ENCODED_META[0].meta },
+        };
+        const INSCRIPTION_DECODED_META = {
+          ...INSCRIPTIONS_ENCODED_META[0],
+          meta: {
+            ...INSCRIPTIONS_ENCODED_META[0].meta,
+            iid: "шеллы",
+          },
+        };
+        expect(
+          DatasourceUtility.parseInscriptions([INSCRIPTION_ENCODED_META_COPY], {
+            decodeMetadata: true,
+          }),
+        ).toContainEqual(INSCRIPTION_DECODED_META);
+        // TODO: Fix UNSTABLE_decodeObject to ensure immutability
+        // expect(INSCRIPTION_ENCODED_META_COPY).toEqual(INSCRIPTIONS_ENCODED_META);
+      });
+    });
+
+    describe("when decodeMetadata is false", () => {
+      test("should not transform all inscriptions in array", () => {
+        const INSCRIPTION_ENCODED_META_COPY = {
+          ...INSCRIPTIONS_ENCODED_META[0],
+          meta: { ...INSCRIPTIONS_ENCODED_META[0].meta },
+        };
+        expect(
+          DatasourceUtility.parseInscriptions([INSCRIPTION_ENCODED_META_COPY], {
+            decodeMetadata: false,
+          }),
+        ).toEqual(INSCRIPTIONS_ENCODED_META);
+      });
     });
   });
   describe("segregateUTXOsBySpendStatus", () => {

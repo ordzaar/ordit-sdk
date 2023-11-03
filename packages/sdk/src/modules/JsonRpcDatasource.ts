@@ -42,7 +42,10 @@ class JsonRpcDatasource extends BaseDatasource {
     );
   }
 
-  async getInscription({ id: _id, decodeMetadata }: GetInscriptionOptions) {
+  async getInscription({
+    id: _id,
+    decodeMetadata = false,
+  }: GetInscriptionOptions) {
     if (!_id) {
       throw new OrditSDKError("Invalid request");
     }
@@ -54,11 +57,8 @@ class JsonRpcDatasource extends BaseDatasource {
       { id },
       rpc.id,
     );
-    if (decodeMetadata) {
-      return DatasourceUtility.transformInscriptions([inscription])[0];
-    }
 
-    return inscription;
+    return DatasourceUtility.parseInscription(inscription, { decodeMetadata });
   }
 
   async getInscriptionUTXO({ id: _id }: GetInscriptionUTXOOptions) {
@@ -81,7 +81,7 @@ class JsonRpcDatasource extends BaseDatasource {
     mimeType,
     mimeSubType,
     outpoint,
-    decodeMetadata,
+    decodeMetadata = false,
     sort = "asc",
     limit = 25,
     next: _next = null,
@@ -107,9 +107,9 @@ class JsonRpcDatasource extends BaseDatasource {
       inscriptions = inscriptions.concat(_inscriptions);
       next = pagination.next;
     } while (next !== null);
-    return decodeMetadata
-      ? DatasourceUtility.transformInscriptions(inscriptions)
-      : inscriptions;
+    return DatasourceUtility.parseInscriptions(inscriptions, {
+      decodeMetadata,
+    });
   }
 
   async getSpendables({
@@ -164,9 +164,9 @@ class JsonRpcDatasource extends BaseDatasource {
 
     tx.vout = tx.vout.map((vout) => ({
       ...vout,
-      inscriptions: decodeMetadata
-        ? DatasourceUtility.transformInscriptions(vout.inscriptions)
-        : vout.inscriptions,
+      inscriptions: DatasourceUtility.parseInscriptions(vout.inscriptions, {
+        decodeMetadata,
+      }),
     }));
 
     return {
