@@ -6,6 +6,16 @@ describe("FeeEstimator", () => {
   describe("constructor", () => {
     const INVALID_FEE_RATE_ERROR = new OrditSDKError("Invalid feeRate");
 
+    test("should not throw an error for fee rate 0", () => {
+      expect(() => {
+        const _ = new FeeEstimator({
+          feeRate: 0,
+          network: "regtest",
+          psbt: createMockPsbt("p2sh-p2wpkh"),
+        });
+      }).not.toThrowError(INVALID_FEE_RATE_ERROR);
+    });
+
     test("should throw an error for negative fee rate", () => {
       expect(() => {
         const _ = new FeeEstimator({

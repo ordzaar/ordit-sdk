@@ -45,6 +45,7 @@ class FeeEstimator {
   protected weight = 0;
 
   constructor({ feeRate, network, psbt, witness }: FeeEstimatorOptions) {
+    // feeRate can be 0 because a seller does not pay for network fees
     if (feeRate < 0 || !Number.isSafeInteger(feeRate)) {
       throw new OrditSDKError("Invalid feeRate");
     }
