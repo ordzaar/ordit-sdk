@@ -1,4 +1,5 @@
 import { DIFFCHANGE_INTERVAL } from "./constants";
+// eslint-disable-next-line import/no-cycle
 import { Epoch } from "./Epoch";
 // eslint-disable-next-line import/no-cycle
 import { Sat } from "./Sat";
