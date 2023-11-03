@@ -66,7 +66,7 @@ class JsonRpcDatasource extends BaseDatasource {
       throw new OrditSDKError("Invalid request");
     }
 
-    const id = outpointToIdFormat;
+    const id = outpointToIdFormat(_id);
 
     return rpc[this.network].call<UTXO>(
       "Ordinals.GetInscriptionUtxo",
