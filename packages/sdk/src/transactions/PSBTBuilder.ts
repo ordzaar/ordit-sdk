@@ -21,7 +21,7 @@ export interface PSBTBuilderOptions {
   address: string;
   changeAddress?: string;
   feeRate: number;
-  network: Network;
+  network?: Network;
   outputs: Output[];
   publicKey: string;
   autoAdjustment?: boolean;
