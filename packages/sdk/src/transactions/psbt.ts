@@ -43,11 +43,7 @@ export async function createPsbt({
     outputs,
   });
 
-  if (enableRBF) {
-    psbt.setRBF(true);
-  } else {
-    psbt.setRBF(false);
-  }
+  psbt.setRBF(enableRBF);
   await psbt.prepare();
 
   return {
