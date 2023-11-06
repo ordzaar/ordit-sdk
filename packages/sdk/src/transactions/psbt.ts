@@ -9,10 +9,11 @@ export type CreatePsbtOptions = {
   outputs: Output[];
 
   /**
-   * Enable Replace By Fee (RBF).
+   * Enable Replace-by-fee (RBF).
    *
-   * Replace-By-Fee is a node policy that allows an unconfirmed transaction in a mempool
-   * to be replaced with a different transaction that spends at least one of the same inputs and which pays a higher transaction fee.
+   * Replace-by-fee (RBF) is a feature that allows users to replace one version of an unconfirmed transaction
+   * with a different version of the transaction that pays a higher transaction fee.
+   * This can be done multiple times while the transaction is unconfirmed.
    *
    * Refer to [BIP-125](https://github.com/bitcoin/bips/blob/master/bip-0125.mediawiki).
    */
@@ -43,9 +44,9 @@ export async function createPsbt({
   });
 
   if (enableRBF) {
-    psbt.enableRBF();
+    psbt.setRBF(true);
   } else {
-    psbt.disableRBF();
+    psbt.setRBF(false);
   }
   await psbt.prepare();
 
