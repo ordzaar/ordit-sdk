@@ -22,11 +22,9 @@ import {
   OrditSDKError,
 } from "../../errors";
 import type { BrowserWalletSignResponse, WalletAddress } from "../types";
+import { NETWORK_TO_BITCOIN_NETWORK_TYPE } from "./constants";
 import type { XverseSignPSBTOptions } from "./types";
-import {
-  fromBrowserWalletNetworkToBitcoinNetworkType,
-  fromXOnlyToFullPubkey,
-} from "./utils";
+import { fromXOnlyToFullPubkey } from "./utils";
 
 /**
  * Checks if the browser wallet extension is installed.
@@ -97,7 +95,7 @@ async function getAddresses(
       purposes: ["ordinals", "payment"] as AddressPurpose[],
       message: "Provide access to payment Address and Ordinals address", // Message is hardcoded for now
       network: {
-        type: fromBrowserWalletNetworkToBitcoinNetworkType(network),
+        type: NETWORK_TO_BITCOIN_NETWORK_TYPE[network],
       },
     },
     onFinish: (response: GetAddressResponse) => handleOnFinish(response),
@@ -170,7 +168,7 @@ async function signPsbt(
   const xverseOptions: SignTransactionOptions = {
     payload: {
       network: {
-        type: fromBrowserWalletNetworkToBitcoinNetworkType(network),
+        type: NETWORK_TO_BITCOIN_NETWORK_TYPE[network],
       },
       message: "Sign transaction",
       psbtBase64: psbt.toBase64(),
@@ -225,7 +223,7 @@ async function signMessage(
   const xverseOptions: XverseSignMessageOptions = {
     payload: {
       network: {
-        type: fromBrowserWalletNetworkToBitcoinNetworkType(network),
+        type: NETWORK_TO_BITCOIN_NETWORK_TYPE[network],
       },
       message,
       address,
