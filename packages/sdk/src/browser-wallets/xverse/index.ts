@@ -58,11 +58,7 @@ async function getAddresses(
     throw new OrditSDKError("Read only mode is not supported on Xverse");
   }
 
-  const result: Array<{
-    publicKey: string;
-    address: string;
-    format: AddressFormat;
-  }> = [];
+  const result: WalletAddress[] = [];
 
   const handleOnFinish = (response: GetAddressResponse) => {
     if (!response || !response.addresses || response.addresses.length !== 2) {

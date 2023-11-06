@@ -88,7 +88,7 @@ describe("Xverse Wallet", () => {
     test("should return address from testnet", () => {
       const mockData: WalletAddress[] = [
         {
-          // Random dude's address from testnet faucet
+          // Random address from testnet faucet
           address:
             "tb1pd692twjx8xwq5v7c0u2ltuwx60ef6r5hmrjfef3j5zkekdpq0dpq7cc0wy",
           publicKey:
