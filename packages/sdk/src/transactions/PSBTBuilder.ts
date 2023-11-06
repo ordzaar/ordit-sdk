@@ -146,6 +146,9 @@ export class PSBTBuilder extends FeeEstimator {
     this.addInputs();
   }
 
+  /**
+   * Gets the x-coordinate of the public key.
+   */
   get xKey() {
     return toXOnly(Buffer.from(this.publicKey, "hex")).toString("hex");
   }
