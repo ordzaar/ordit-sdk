@@ -5,6 +5,8 @@ declare interface Window {
 
 type UnisatNetwork = "livenet" | "testnet";
 
+type MessageSignatureTypes = "bip322-simple" | "ecdsa";
+
 type Unisat = {
   getNetwork: () => Promise<UnisatNetwork>;
   switchNetwork: (targetNetwork: UnisatNetwork) => Promise<void>;
@@ -15,7 +17,10 @@ type Unisat = {
     hex: string,
     { autoFinalized }: Record<string, boolean>,
   ) => Promise<string>;
-  signMessage: (message: string) => Promise<string>;
+  signMessage: (
+    message: string,
+    type: MessageSignatureTypes,
+  ) => Promise<string>;
 };
 
 type MetaMask = {
