@@ -73,7 +73,7 @@ export class PSBTBuilder extends FeeEstimator {
    * with a different version of the transaction that pays a higher transaction fee.
    * This can be done multiple times while the transaction is unconfirmed.
    *
-   * Refer to [BIP-125](https://github.com/bitcoin/bips/blob/master/bip-0125.mediawiki).
+   * Reference: [BIP-125](https://github.com/bitcoin/bips/blob/master/bip-0125.mediawiki)
    */
   protected rbf = true;
 
