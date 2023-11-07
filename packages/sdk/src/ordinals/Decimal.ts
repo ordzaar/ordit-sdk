@@ -2,7 +2,7 @@ import type { Height } from "./Height";
 import type { Sat } from "./Sat";
 
 /**
- * convert sat into decimal format. A.B
+ * Decimal converts Sat into format `A.B`
  */
 export class Decimal {
   constructor(
