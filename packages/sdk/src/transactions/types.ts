@@ -52,23 +52,9 @@ export type Vout = {
     hex: string;
 
     /**
-     * Number of required signatures
-     *
-     * @deprecated since bitcoin-core 22.0.0 RPC - see https://github.com/bitcoin/bitcoin/pull/22650
-     */
-    reqSigs?: number;
-
-    /**
      * Type, for example, pubkeyhash
      */
     type: string;
-
-    /**
-     * Array of bitcoin addresses
-     *
-     * @deprecated since bitcoin-core 22.0.0 RPC - see https://github.com/bitcoin/bitcoin/pull/22650
-     */
-    addresses: string[];
 
     /**
      * Bitcoin address
