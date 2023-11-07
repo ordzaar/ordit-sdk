@@ -280,6 +280,7 @@ export const isP2PKH = (
     payload: p2pkh,
   };
 };
+
 export const isP2WPKH = (
   script: Buffer,
   network: Network,
@@ -290,6 +291,7 @@ export const isP2WPKH = (
     payload: p2wpkh,
   };
 };
+
 export const isP2WSHScript = (
   script: Buffer,
   network: Network,
@@ -310,6 +312,7 @@ export const isP2SHScript = (
     payload: p2sh,
   };
 };
+
 export const isP2TR = (
   script: Buffer,
   network: Network,
@@ -320,6 +323,7 @@ export const isP2TR = (
     payload: p2tr,
   };
 };
+
 export function getScriptType(
   script: Buffer,
   network: Network,
