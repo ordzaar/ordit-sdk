@@ -37,7 +37,7 @@ export function getNetwork(value: Network) {
   return networks[value];
 }
 
-export function createTransaction(
+export function createPayment(
   key: Buffer,
   type: AddressType,
   network: Network | BitcoinNetwork,
