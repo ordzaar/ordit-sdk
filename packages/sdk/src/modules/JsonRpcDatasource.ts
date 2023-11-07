@@ -92,7 +92,6 @@ export class JsonRpcDatasource extends BaseDatasource {
     let inscriptions: Inscription[] = [];
     let next = _next;
     do {
-      // eslint-disable-next-line no-await-in-loop
       const { inscriptions: _inscriptions, pagination } = await rpc[
         this.network
       ].call<OrdinalsGetInscriptionsJsonRpcResponse>(
@@ -190,7 +189,6 @@ export class JsonRpcDatasource extends BaseDatasource {
     let utxos: UTXO[] = [];
     let next = _next;
     do {
-      // eslint-disable-next-line no-await-in-loop
       const { unspents, pagination } = await rpc[
         this.network
       ].call<AddressGetUnspentsJsonRpcResponse>(
