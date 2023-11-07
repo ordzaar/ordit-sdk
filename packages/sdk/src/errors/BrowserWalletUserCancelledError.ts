@@ -1,6 +1,6 @@
 export class BrowserWalletUserCancelledError extends Error {
-  constructor(message: string) {
+  constructor(message: string = "Request canceled by user.") {
     super(message);
-    this.name = "BrowserWallerUserCancelError";
+    this.name = "BrowserWalletUserCancelError";
   }
 }

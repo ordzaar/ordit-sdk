@@ -83,7 +83,7 @@ async function getAddresses(
   };
 
   const handleOnCancel = () => {
-    throw new BrowserWalletUserCancelledError("Request canceled by user.");
+    throw new BrowserWalletUserCancelledError();
   };
 
   const xVerseOptions: GetAddressOptions = {
@@ -133,7 +133,7 @@ async function signPsbt(
   const handleOnFinish = (response: SignTransactionResponse) => {
     const { psbtBase64 } = response;
     if (!psbtBase64) {
-      throw new BrowserWalletUserCancelledError("Request canceled by user.");
+      throw new BrowserWalletUserCancelledError();
     }
 
     const signedPsbt = Psbt.fromBase64(psbtBase64);
@@ -156,9 +156,7 @@ async function signPsbt(
   };
 
   const handleOnCancel = () => {
-    throw new BrowserWalletUserCancelledError(
-      `Failed to sign transaction using xVerse`,
-    );
+    throw new BrowserWalletUserCancelledError();
   };
 
   const xverseOptions: SignTransactionOptions = {
@@ -213,7 +211,7 @@ async function signMessage(
   };
 
   const handleOnCancel = () => {
-    throw new BrowserWalletUserCancelledError("Request canceled by user.");
+    throw new BrowserWalletUserCancelledError();
   };
 
   const xverseOptions: XverseSignMessageOptions = {
