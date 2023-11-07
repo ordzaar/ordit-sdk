@@ -6,6 +6,9 @@ import type { Sat } from "./Sat";
 import { STARTING_SATS } from "./Sat";
 
 export class Epoch {
+  /**
+   * First epoch where no new bitcoin will be mined
+   */
   static readonly FIRST_POST_SUBSIDY = new Epoch(33);
 
   #subsidy?: number;

@@ -43,8 +43,8 @@ export class Sat {
 
   static fromName(name: string): Sat {
     let x = 0;
-    // eslint-disable-next-line no-restricted-syntax
-    for (const c of name) {
+    for (let i = 0; i < name.length; i += 1) {
+      const c = name[i];
       if (c >= "a" && c <= "z") {
         x = x * 26 + c.charCodeAt(0) - "a".charCodeAt(0) + 1;
       } else {
@@ -161,6 +161,9 @@ export class Sat {
   }
 }
 
+/**
+ * Copied from the ord server implementation https://github.com/ordinals/ord/blob/8e8449bcc55af275b79fff00077d4841528aa233/src/epoch.rs#L6-L42
+ */
 export const STARTING_SATS = [
   new Sat(0), // epoch 1 - 2009
   new Sat(1050000000000000), // epoch 2 - 2012
