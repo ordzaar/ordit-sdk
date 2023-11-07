@@ -94,6 +94,14 @@ export function hdNodeToChild(
   return node.derivePath(fullDerivationPath);
 }
 
+/**
+ * This function was copied from bitcoinjs-lib as it is not exported.
+ *
+ * Reference: [bitcoinjs-lib](https://github.com/bitcoinjs/bitcoinjs-lib/blob/master/ts_src/payments/bip341.ts)
+ *
+ * @param pubkey Public Key
+ * @returns x-coordinate of public key
+ */
 export function toXOnly(pubkey: Buffer): Buffer {
   return pubkey.subarray(1, 33);
 }
@@ -105,7 +113,7 @@ export function toXOnly(pubkey: Buffer): Buffer {
  *
  * @param pubKey Public Key
  * @param h Hash
- * @returns
+ * @returns Concatenated TapTweak Hash
  */
 export function tapTweakHash(pubKey: Buffer, h: Buffer | undefined): Buffer {
   return crypto.taggedHash(
