@@ -175,6 +175,9 @@ async function signPsbt(
 
   await signTransaction(xverseOptions);
 
+  // The Return is supplied by the await statement above, which extracts the hex and optional base64 from the response.
+  // Hex is always returned, hence the not null assertion.
+  // In cases where there is no hex, an error would be thrown by the handleOnFinish function.
   return { hex: hex!, base64 };
 }
 
@@ -228,6 +231,9 @@ async function signMessage(
 
   await xverseSignMessage(xverseOptions);
 
+  // The Return is supplied by the await statement above, which extracts the hex and optional base64 from the response.
+  // Hex is always returned, hence the not null assertion.
+  // In cases where there is no hex, an error would be thrown by the handleOnFinish function.
   return { hex: hex!, base64 };
 }
 
