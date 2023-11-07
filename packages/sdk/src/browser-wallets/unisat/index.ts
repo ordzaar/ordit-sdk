@@ -107,18 +107,20 @@ async function signPsbt(
  * Signs a message.
  *
  * @param message Message to be signed
+ * @param type Signature type
  * @returns An object containing `base64` and `hex`.
  * @throws {BrowserWalletNotInstalledError} Wallet is not installed
  * @throws {BrowserWalletSigningError} Signing failed
  */
 async function signMessage(
   message: string,
+  type: MessageSignatureTypes = "ecdsa",
 ): Promise<BrowserWalletSignResponse> {
   if (!isInstalled()) {
     throw new BrowserWalletNotInstalledError("Unisat not installed");
   }
 
-  const signature = await window.unisat.signMessage(message);
+  const signature = await window.unisat.signMessage(message, type);
 
   if (!signature) {
     throw new BrowserWalletSigningError("Failed to sign message using Unisat");

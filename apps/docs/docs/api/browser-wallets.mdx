@@ -152,13 +152,14 @@ Signs a Partially Signed Bitcoin Transaction (PSBT) and returns a signature.
 
 ### signMessage
 
-`signMessage(message)`
+`signMessage(message[, type])`
 
 Signs a message and returns a signature.
 
 **Parameters**:
 
 - `message` : `string`
+- `type` : `"bip322-simple" | "ecdsa"` (defaults to `ecdsa`)
 
 **Returns**: `Promise<BrowserWalletSignResponse>`
 
