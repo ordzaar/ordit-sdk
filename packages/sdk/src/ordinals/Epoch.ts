@@ -31,9 +31,12 @@ export class Epoch {
   }
 
   static fromHeight(height: Height): Epoch {
-    return new Epoch(height.n / SUBSIDY_HALVING_INTERVAL);
+    return new Epoch(Math.floor(height.n / SUBSIDY_HALVING_INTERVAL));
   }
 
+  /**
+   * subsidy refers to how much satoshis will be created/mined per block
+   */
   get subsidy(): number {
     if (this.#subsidy === undefined) {
       if (this.n < Epoch.FIRST_POST_SUBSIDY.n) {
