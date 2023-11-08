@@ -50,6 +50,9 @@ export class PSBTBuilder extends FeeEstimator {
 
   protected changeAddress?: string;
 
+  /**
+   * Change amount in satoshis
+   */
   protected changeAmount: number = 0;
 
   protected datasource: BaseDatasource;
@@ -58,10 +61,16 @@ export class PSBTBuilder extends FeeEstimator {
 
   protected injectableOutputs: InjectableOutput[] = [];
 
+  /**
+   * Input amount in satoshis
+   */
   protected inputAmount: number = 0;
 
   protected inputs: InputType[] = [];
 
+  /**
+   * Output amount in satoshis
+   */
   protected outputAmount: number = 0;
 
   protected outputs: Output[] = [];
@@ -352,6 +361,12 @@ export class PSBTBuilder extends FeeEstimator {
     return this.outputAmount - this.getRetrievedUTXOsValue();
   }
 
+  /**
+   * Retrieves UTXOs using `getSpendables` RPC.
+   *
+   * @param address Address
+   * @param amount Amount in satoshis
+   */
   private async retrieveUTXOs(address?: string, amount?: number) {
     if (!this.autoAdjustment && !address) {
       return;
@@ -435,6 +450,9 @@ export class PSBTBuilder extends FeeEstimator {
     return this.inputs;
   }
 
+  /**
+   * Prepares PSBT to be set to a network, calculating and validating both inputs and outputs.
+   */
   async prepare() {
     // calculate output amount
     this.calculateOutputAmount();
@@ -452,6 +470,11 @@ export class PSBTBuilder extends FeeEstimator {
     this.process();
   }
 
+  /**
+   * Initializes PSBT instance, adding all inputs and outputs and calculates network fees.
+   *
+   * @returns PSBTBuilder instance
+   */
   private process() {
     this.initPSBT();
 
