@@ -7,10 +7,10 @@ import type {
 } from "sats-connect";
 import * as satsConnect from "sats-connect";
 
+import { BrowserWalletRequestCancelledByUserError } from "../../../errors";
 import { createMockPsbt } from "../../../fee/__tests__/utils";
 import { WalletAddress } from "../../types";
 import { getAddresses, isInstalled, signPsbt } from "..";
-import { BrowserWalletRequestCancelledByUserError } from "../../../errors";
 
 vi.mock("sats-connect", async (originalImport) => {
   const mod = (await originalImport()) as typeof satsConnect;
