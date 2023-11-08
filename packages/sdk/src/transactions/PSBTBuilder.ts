@@ -322,21 +322,15 @@ export class PSBTBuilder extends FeeEstimator {
       this.inputAmount - this.outputAmount - this.fee,
     );
 
-    await this.isNegativeChange();
-  }
-
-  private async isNegativeChange() {
-    if (this.changeAmount >= 0) {
-      return;
-    }
-
-    await this.prepare();
-    if (this.noMoreUTXOS) {
-      throw new Error(
-        `Insufficient balance. Decrease the output amount by ${
-          this.changeAmount * -1
-        } sats`,
-      );
+    if (this.changeAmount < 0) {
+      await this.prepare();
+      if (this.noMoreUTXOS) {
+        throw new Error(
+          `Insufficient balance. Decrease the output amount by ${
+            this.changeAmount * -1
+          } sats`,
+        );
+      }
     }
   }
 
