@@ -265,14 +265,6 @@ export class PSBTBuilder extends FeeEstimator {
     });
   }
 
-  private validateOutputAmount() {
-    if (this.outputAmount < MINIMUM_AMOUNT_IN_SATS) {
-      throw new Error(
-        `Output amount too low. Minimum output amount needs to be ${MINIMUM_AMOUNT_IN_SATS} sats`,
-      );
-    }
-  }
-
   private addOutputs() {
     const reservedIndexes = this.injectableOutputs.map((o) => o.injectionIndex);
     const injectedIndexes: number[] = [];
@@ -314,7 +306,11 @@ export class PSBTBuilder extends FeeEstimator {
         this.injectableOutputs.reduce((acc, curr) => acc + curr.sats, 0),
     );
 
-    this.validateOutputAmount();
+    if (this.outputAmount < MINIMUM_AMOUNT_IN_SATS) {
+      throw new Error(
+        `Output amount too low. Minimum output amount needs to be ${MINIMUM_AMOUNT_IN_SATS} sats`,
+      );
+    }
   }
 
   private async calculateChangeAmount() {
