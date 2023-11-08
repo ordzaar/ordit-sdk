@@ -148,10 +148,13 @@ async function signPsbt(
       }
     }
 
-    hex = extractTx
-      ? signedPsbt.extractTransaction().toHex()
-      : signedPsbt.toHex();
-    base64 = !extractTx ? signedPsbt.toBase64() : null;
+    if (extractTx) {
+      hex = signedPsbt.extractTransaction().toHex();
+      base64 = null;
+    } else {
+      hex = signedPsbt.toHex();
+      base64 = signedPsbt.toBase64();
+    }
   };
 
   const handleOnCancel = () => {
