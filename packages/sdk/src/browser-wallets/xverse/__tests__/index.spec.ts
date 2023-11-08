@@ -10,6 +10,7 @@ import * as satsConnect from "sats-connect";
 import { createMockPsbt } from "../../../fee/__tests__/utils";
 import { WalletAddress } from "../../types";
 import { getAddresses, isInstalled, signPsbt } from "..";
+import { BrowserWalletRequestCancelledByUserError } from "../../../errors";
 
 vi.mock("sats-connect", async (originalImport) => {
   const mod = (await originalImport()) as typeof satsConnect;
@@ -255,6 +256,9 @@ describe("Xverse Wallet", () => {
     });
 
     test("should throw error on user cancel", () => {
+      const CANCELLED_BY_USER_ERROR =
+        new BrowserWalletRequestCancelledByUserError();
+
       const signTransactionSpy = vi.spyOn(satsConnect, "signTransaction");
       signTransactionSpy.mockImplementation(
         (options: SignTransactionOptions) => {
@@ -277,7 +281,7 @@ describe("Xverse Wallet", () => {
             },
           ],
         }),
-      ).rejects.toThrowError("Request canceled by user.");
+      ).rejects.toThrowError(CANCELLED_BY_USER_ERROR);
       expect(() =>
         signPsbt(psbt, {
           finalize: false,
@@ -292,7 +296,7 @@ describe("Xverse Wallet", () => {
             },
           ],
         }),
-      ).rejects.toThrowError("Request canceled by user.");
+      ).rejects.toThrowError(CANCELLED_BY_USER_ERROR);
     });
   });
 });
