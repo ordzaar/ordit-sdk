@@ -4,7 +4,7 @@ import { Buffer } from "buffer";
 
 import type { Network } from "../config/types";
 import { BaseDatasource, JsonRpcDatasource } from "../modules";
-import { createTransaction, getNetwork, toXOnly } from "../utils";
+import { createPayment, getNetwork, toXOnly } from "../utils";
 import type { UTXO, UTXOLimited } from "./types";
 
 // TODO: replace below interfaces and custom types w/ PsbtInputExtended from bitcoinjs-lib
@@ -132,7 +132,7 @@ function generateNestedSegwitInput({
   network,
   sighashType,
 }: ProcessInputOptions): NestedSegwitInputType {
-  const p2sh = createTransaction(Buffer.from(pubKey, "hex"), "p2sh", network);
+  const p2sh = createPayment(Buffer.from(pubKey, "hex"), "p2sh", network);
   if (!p2sh || !p2sh.output || !p2sh.redeem) {
     throw new Error("Unable to process Segwit input");
   }
@@ -166,7 +166,7 @@ async function generateLegacyInput({
     throw new Error("Unable to process legacy input");
   }
 
-  const p2pkh = createTransaction(Buffer.from(pubKey, "hex"), "p2pkh", network);
+  const p2pkh = createPayment(Buffer.from(pubKey, "hex"), "p2pkh", network);
 
   return {
     type: "legacy",
