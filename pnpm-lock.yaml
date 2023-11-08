@@ -125,8 +125,8 @@ importers:
         specifier: 2.1.0
         version: 2.1.0
       ethers:
-        specifier: 6.8.0
-        version: 6.8.0
+        specifier: 6.8.1
+        version: 6.8.1
       sats-connect:
         specifier: 1.1.1
         version: 1.1.1
@@ -6285,8 +6285,8 @@ packages:
     engines: {node: '>= 0.6'}
     dev: false
 
-  /ethers@6.8.0:
-    resolution: {integrity: sha512-zrFbmQRlraM+cU5mE4CZTLBurZTs2gdp2ld0nG/f3ecBK+x6lZ69KSxBqZ4NjclxwfTxl5LeNufcBbMsTdY53Q==}
+  /ethers@6.8.1:
+    resolution: {integrity: sha512-iEKm6zox5h1lDn6scuRWdIdFJUCGg3+/aQWu0F4K0GVyEZiktFkqrJbRjTn1FlYEPz7RKA707D6g5Kdk6j7Ljg==}
     engines: {node: '>=14.0.0'}
     dependencies:
       '@adraffy/ens-normalize': 1.10.0
