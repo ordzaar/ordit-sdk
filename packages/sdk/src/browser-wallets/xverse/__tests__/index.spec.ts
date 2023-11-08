@@ -39,7 +39,6 @@ describe("Xverse Wallet", () => {
 
   describe("getAddresses", () => {
     afterEach(() => {
-      vi.unstubAllGlobals();
       vi.resetAllMocks();
     });
 

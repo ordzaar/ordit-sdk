@@ -16,8 +16,8 @@ import { getAddressFormat } from "../../addresses";
 import type { BrowserWalletNetwork } from "../../config/types";
 import {
   BrowserWalletNotInstalledError,
+  BrowserWalletRequestCancelledByUserError,
   BrowserWalletSigningError,
-  BrowserWalletUserCancelledError,
   OrditSDKError,
 } from "../../errors";
 import type { BrowserWalletSignResponse, WalletAddress } from "../types";
@@ -82,13 +82,13 @@ async function getAddresses(
   };
 
   const handleOnCancel = () => {
-    throw new BrowserWalletUserCancelledError();
+    throw new BrowserWalletRequestCancelledByUserError();
   };
 
   const xVerseOptions: GetAddressOptions = {
     payload: {
       purposes: ["ordinals", "payment"] as AddressPurpose[],
-      message: "Provide access to payment Address and Ordinals address", // Message is hardcoded for now
+      message: "Provide access to payment Address and Ordinals address",
       network: {
         type: NETWORK_TO_BITCOIN_NETWORK_TYPE[network],
       },
@@ -132,7 +132,7 @@ async function signPsbt(
   const handleOnFinish = (response: SignTransactionResponse) => {
     const { psbtBase64 } = response;
     if (!psbtBase64) {
-      throw new BrowserWalletUserCancelledError();
+      throw new OrditSDKError("Invalid options provided");
     }
 
     const signedPsbt = Psbt.fromBase64(psbtBase64);
@@ -158,7 +158,7 @@ async function signPsbt(
   };
 
   const handleOnCancel = () => {
-    throw new BrowserWalletUserCancelledError();
+    throw new BrowserWalletRequestCancelledByUserError();
   };
 
   const xverseOptions: SignTransactionOptions = {
@@ -166,7 +166,7 @@ async function signPsbt(
       network: {
         type: NETWORK_TO_BITCOIN_NETWORK_TYPE[network],
       },
-      message: "Sign transaction",
+      message: "Sign PSBT",
       psbtBase64: psbt.toBase64(),
       broadcast: false,
       inputsToSign,
@@ -216,7 +216,7 @@ async function signMessage(
   };
 
   const handleOnCancel = () => {
-    throw new BrowserWalletUserCancelledError();
+    throw new BrowserWalletRequestCancelledByUserError();
   };
 
   const xverseOptions: XverseSignMessageOptions = {
