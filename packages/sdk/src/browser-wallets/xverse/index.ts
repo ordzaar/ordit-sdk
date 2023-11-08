@@ -13,7 +13,6 @@ import {
 } from "sats-connect";
 
 import { getAddressFormat } from "../../addresses";
-import { AddressFormat } from "../../addresses/types";
 import type { BrowserWalletNetwork } from "../../config/types";
 import {
   BrowserWalletNotInstalledError,

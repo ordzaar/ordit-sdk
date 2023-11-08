@@ -1,5 +1,6 @@
+import { BitcoinNetworkType } from "sats-connect";
+
 import type { BrowserWalletNetwork } from "../../config/types";
-import type { BitcoinNetworkType } from "sats-connect";
 
 export const NETWORK_TO_BITCOIN_NETWORK_TYPE: Record<
   BrowserWalletNetwork,
