@@ -9,7 +9,7 @@ import { getBaseSizeByType, TRANSACTION_HEADER_SIZE } from "./helper";
 import type { FeeEstimatorOptions } from "./types";
 
 class FeeEstimator {
-  protected fee = 0;
+  protected fee: number = 0;
 
   protected feeRate: number;
 
@@ -19,9 +19,9 @@ class FeeEstimator {
 
   protected witness?: Buffer[] = [];
 
-  protected virtualSize = 0;
+  protected virtualSize: number = 0;
 
-  protected weight = 0;
+  protected weight: number = 0;
 
   constructor({ feeRate, network, psbt, witness }: FeeEstimatorOptions) {
     // feeRate can be 0 because a seller does not pay for network fees

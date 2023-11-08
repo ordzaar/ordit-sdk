@@ -50,7 +50,7 @@ export class PSBTBuilder extends FeeEstimator {
 
   protected changeAddress?: string;
 
-  protected changeAmount = 0;
+  protected changeAmount: number = 0;
 
   protected datasource: BaseDatasource;
 
@@ -58,11 +58,11 @@ export class PSBTBuilder extends FeeEstimator {
 
   protected injectableOutputs: InjectableOutput[] = [];
 
-  protected inputAmount = 0;
+  protected inputAmount: number = 0;
 
   protected inputs: InputType[] = [];
 
-  protected outputAmount = 0;
+  protected outputAmount: number = 0;
 
   protected outputs: Output[] = [];
 
@@ -77,7 +77,7 @@ export class PSBTBuilder extends FeeEstimator {
    *
    * Reference: [BIP-125](https://github.com/bitcoin/bips/blob/master/bip-0125.mediawiki)
    */
-  protected rbf = true;
+  protected rbf: boolean = true;
 
   protected utxos: UTXOLimited[] = [];
 
@@ -89,7 +89,7 @@ export class PSBTBuilder extends FeeEstimator {
 
   private nativeNetwork: networks.Network;
 
-  private noMoreUTXOS = false;
+  private noMoreUTXOS: boolean = false;
 
   get data() {
     return {
