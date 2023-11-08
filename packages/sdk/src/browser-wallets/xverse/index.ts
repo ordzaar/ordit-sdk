@@ -137,15 +137,11 @@ async function signPsbt(
 
     const signedPsbt = Psbt.fromBase64(psbtBase64);
     if (finalize) {
-      if (!inputsToSign.length) {
-        signedPsbt.finalizeAllInputs();
-      } else {
-        inputsToSign.forEach((input) => {
-          input.signingIndexes.forEach((index) => {
-            signedPsbt.finalizeInput(index);
-          });
+      inputsToSign.forEach((input) => {
+        input.signingIndexes.forEach((index) => {
+          signedPsbt.finalizeInput(index);
         });
-      }
+      });
     }
 
     if (extractTx) {
