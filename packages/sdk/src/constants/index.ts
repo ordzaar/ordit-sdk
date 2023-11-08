@@ -13,3 +13,9 @@ export const MAXIMUM_FEE = 5_000_000;
  * Maximum number of bytes pushable to the witness stack
  */
 export const MAXIMUM_SCRIPT_ELEMENT_SIZE = 520;
+
+/**
+ * Input from seller PSBT when unwrapped & merged,
+ * is placed on the 2nd index in instant-buy-sell flow
+ */
+export const INSTANT_BUY_SELLER_INPUT_INDEX = 2;

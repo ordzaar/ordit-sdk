@@ -1,9 +1,11 @@
 import { networks, Psbt, Transaction } from "bitcoinjs-lib";
 import reverseBuffer from "buffer-reverse";
 
-import { INSTANT_BUY_SELLER_INPUT_INDEX } from "../config";
 import type { Network } from "../config/types";
-import { MINIMUM_AMOUNT_IN_SATS } from "../constants";
+import {
+  INSTANT_BUY_SELLER_INPUT_INDEX,
+  MINIMUM_AMOUNT_IN_SATS,
+} from "../constants";
 import { FeeEstimator } from "../fee/FeeEstimator";
 import type { InputsToSign } from "../inscription/types";
 import { BaseDatasource } from "../modules/BaseDatasource";
