@@ -9,8 +9,14 @@ import { getBaseSizeByType, TRANSACTION_HEADER_SIZE } from "./helper";
 import type { FeeEstimatorOptions } from "./types";
 
 class FeeEstimator {
+  /**
+   * Fee in satoshis
+   */
   protected fee: number = 0;
 
+  /**
+   * Fee rate in satoshis
+   */
   protected feeRate: number;
 
   protected network: Network;
@@ -43,6 +49,12 @@ class FeeEstimator {
     };
   }
 
+  /**
+   * Calculates network fee based on virtual size of transaction and fee rate.
+   *
+   * @returns Estimated network fee
+   * @throws {OrditSDKError} Fee is above MAXIMUM_FEE (5,000,000 satoshis)
+   */
   calculateNetworkFee(): number {
     this.fee = this.calculateVirtualSize() * this.feeRate;
     // Prevents catastrophic calculations from happening

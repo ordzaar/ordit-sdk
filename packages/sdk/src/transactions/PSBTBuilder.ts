@@ -1,4 +1,4 @@
-import { networks, Psbt, Transaction } from "bitcoinjs-lib";
+import { Psbt, Transaction } from "bitcoinjs-lib";
 import reverseBuffer from "buffer-reverse";
 
 import type { Network } from "../config/types";
@@ -92,11 +92,16 @@ export class PSBTBuilder extends FeeEstimator {
 
   protected usedUTXOs: string[] = [];
 
+  /**
+   * Enable auto adjustment.
+   *
+   * When `true`, change is calculated and UTXOs will be added as required to account for network fees.
+   *
+   * Otherwise, change is not calculated and no UTXOs will be added.
+   */
   private autoAdjustment: boolean;
 
   private instantTradeMode: boolean;
-
-  private nativeNetwork: networks.Network;
 
   private noMoreUTXOS: boolean = false;
 
@@ -131,13 +136,12 @@ export class PSBTBuilder extends FeeEstimator {
     this.datasource =
       datasource || new JsonRpcDatasource({ network: this.network });
     this.outputs = outputs;
-    this.nativeNetwork = getNetwork(network);
     this.publicKey = publicKey;
 
     this.autoAdjustment = autoAdjustment;
     this.instantTradeMode = instantTradeMode;
 
-    this.psbt = new Psbt({ network: this.nativeNetwork });
+    this.psbt = new Psbt({ network: getNetwork(network) });
   }
 
   toPSBT() {
@@ -322,7 +326,10 @@ export class PSBTBuilder extends FeeEstimator {
     }
   }
 
-  private async calculateChangeAmount() {
+  /**
+   * Calculates change amount from transaction and fetches additional UTXOs as required to cover output and network fees, if change is negative.
+   */
+  private async recursivelyCalculateChangeAmount() {
     if (!this.autoAdjustment) {
       return;
     }
@@ -332,6 +339,7 @@ export class PSBTBuilder extends FeeEstimator {
     );
 
     if (this.changeAmount < 0) {
+      // Repeatedly fetch additional UTXOs as required to cover output and network fee
       await this.prepare();
       if (this.noMoreUTXOS) {
         throw new Error(
@@ -403,9 +411,12 @@ export class PSBTBuilder extends FeeEstimator {
     return this.utxos;
   }
 
-  private async prepareInputs() {
+  /**
+   * Prepares inputs from UTXOs.
+   */
+  private async prepareInputs(): Promise<void> {
     if (!this.autoAdjustment) {
-      return undefined;
+      return;
     }
 
     const promises: Promise<InputType>[] = [];
@@ -446,8 +457,6 @@ export class PSBTBuilder extends FeeEstimator {
     });
 
     this.inputs = this.inputs.concat(response);
-
-    return this.inputs;
   }
 
   /**
@@ -461,12 +470,15 @@ export class PSBTBuilder extends FeeEstimator {
     await this.retrieveUTXOs();
     await this.prepareInputs();
 
-    await this.calculateChangeAmount();
+    // Note: fee is still 0 here
+    await this.recursivelyCalculateChangeAmount();
 
     this.process();
-    await this.calculateChangeAmount();
-    this.calculateOutputAmount();
 
+    // Repeat the following steps because network fee could be added to input, and a new UTXO will be used to cover it.
+    // We also need to add the change to output for the network fee.
+    await this.recursivelyCalculateChangeAmount();
+    this.calculateOutputAmount();
     this.process();
   }
 
