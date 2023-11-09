@@ -3,17 +3,17 @@ import type { Sat } from "./Sat";
 export enum Sattribute {
   // every other sats
   Common = "common",
-  // The first sat of a every new block (~ 10 mins)
+  // The first sat of every new block (~ 10 mins)
   Uncommon = "uncommon",
-  // The first sat after difficulty adjustment block, every 2016 blocks (~ 2 weeks)
+  // The first sat after each difficulty adjustment block, every 2016 blocks (~ 2 weeks)
   Rare = "rare",
-  // The first sat of a halving epoch block, every 210_000 blocks (~4 years)
+  // The first sat after each halving epoch block, every 210_000 blocks (~4 years)
   Epic = "epic",
-  // the first sat after every 6 halving (~ 24 years)
+  // The first sat after every 6 halving (~ 24 years)
   Legendary = "legendary",
-  // the first sat ever mined
+  // The first sat of the genesis block
   Mythic = "mythic",
-  // the sat that reads the same forward and backward
+  // The sat that reads the same forward and backward
   Palindrome = "palindrome",
 }
 export class Sattributes {
