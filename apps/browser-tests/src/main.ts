@@ -21,7 +21,7 @@ if (unisatConnectButton) {
 }
 
 async function createAndPreparePsbt() {
-  const psbt = new PSBTBuilder({
+  const psbtParams = {
     address: "tb1p98dv6f5jp5qr4z2dtaljvwrhq34xrr8zuaqgv4ajf36vg2mmsruqt5m3lv",
     feeRate: 1,
     publicKey:
@@ -33,11 +33,15 @@ async function createAndPreparePsbt() {
       },
     ],
     network: "testnet",
-  });
-  console.log("Created Psbt: ", psbt);
-  await psbt.prepare();
-  console.log("Prepared Psbt: ", psbt);
-  return psbt;
+  };
+  const psbt = new PSBTBuilder(psbtParams);
+  console.log("Initial Psbt: ", psbt);
+
+  // Duplicate the PSBT so that console log shows a different instance.
+  const clonedPSBT = new PSBTBuilder(psbtParams);
+  await clonedPSBT.prepare();
+  console.log("Prepared Psbt: ", clonedPSBT);
+  return clonedPSBT;
 }
 
 async function handleCreateAndPreparePsbtButtonClick() {
