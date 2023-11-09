@@ -32,7 +32,7 @@ export type CreatePsbtOptions = {
   /**
    * Public key of address
    */
-  pubKey: string;
+  publicKey: string;
 
   /**
    * Network used for the transaction
@@ -47,7 +47,7 @@ export type CreatePsbtOptions = {
  * @returns An object containing `base64` and `hex`.
  */
 export async function createPsbt({
-  pubKey,
+  publicKey,
   network,
   address,
   outputs,
@@ -62,7 +62,7 @@ export async function createPsbt({
     address,
     feeRate: satsPerByte,
     network,
-    publicKey: pubKey,
+    publicKey,
     outputs,
   });
 
