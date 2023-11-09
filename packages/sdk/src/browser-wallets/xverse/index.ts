@@ -89,7 +89,7 @@ async function getAddresses(
   const xVerseOptions: GetAddressOptions = {
     payload: {
       purposes: ["ordinals", "payment"] as AddressPurpose[],
-      message: "Provide access to payment Address and Ordinals address",
+      message: "Provide access to Payment address and Ordinals address",
       network: {
         type: NETWORK_TO_BITCOIN_NETWORK_TYPE[network],
       },
