@@ -129,10 +129,10 @@ Signs a Partially Signed Bitcoin Transaction (PSBT) and returns a signature.
 
 **Parameters**:
 
-- `psbt` : `string` in hex or base64 format
+- `psbt` : `string` - hex or base64 format
 - `options` : `object` (optional)
-  - `extractTx` : Extract transaction (defaults to `true`)
-  - `finalize` : Finalize signing (defaults to `true`)
+  - `extractTx` : `boolean` - Extract transaction (defaults to `true`)
+  - `finalize` : `boolean` - Finalize signing (defaults to `true`)
 
 **Returns**: `Promise<BrowserWalletSignResponse>`
 
