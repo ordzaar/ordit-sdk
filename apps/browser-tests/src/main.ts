@@ -1,4 +1,4 @@
-import { PSBTBuilder } from "@ordzaar/ordit-sdk";
+import { Network, PSBTBuilder } from "@ordzaar/ordit-sdk";
 import {
   getAddresses as getUnisatAddresses,
   isInstalled as isUnisatInstalled,
@@ -32,7 +32,7 @@ async function createAndPreparePsbt() {
         value: 600,
       },
     ],
-    network: "testnet",
+    network: "testnet" as Network,
   };
   const psbt = new PSBTBuilder(psbtParams);
   console.log("Initial Psbt: ", psbt);
@@ -59,7 +59,7 @@ if (createPsbtButton) {
 async function handleSignPsbt() {
   console.log("Sign PSBT");
   const psbt = await createAndPreparePsbt();
-  const signPsbtResponse = await signUnisatPsbt(psbt);
+  const signPsbtResponse = await signUnisatPsbt(psbt.toPSBT());
   console.log("Sign PSBT Response", signPsbtResponse);
 }
 
