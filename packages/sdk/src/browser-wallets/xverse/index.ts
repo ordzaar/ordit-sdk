@@ -43,26 +43,20 @@ function isInstalled() {
  * Gets addresses from the browser wallet.
  *
  * @param network Network
- * @param readOnly Read only (when set to true, the wallet modal appears)
  * @returns An array of WalletAddress objects.
  */
 async function getAddresses(
   network: BrowserWalletNetwork = "mainnet",
-  readOnly?: boolean,
 ): Promise<WalletAddress[]> {
   if (!isInstalled()) {
     throw new BrowserWalletNotInstalledError("Xverse not installed");
-  }
-
-  if (readOnly) {
-    throw new OrditSDKError("Read only mode is not supported on Xverse");
   }
 
   const result: WalletAddress[] = [];
 
   const handleOnFinish = (response: GetAddressResponse) => {
     if (!response || !response.addresses || response.addresses.length !== 2) {
-      throw new OrditSDKError("Invalid address format");
+      throw new BrowserWalletSigningError("Failed to sign psbt using Xverse");
     }
 
     response.addresses.forEach((addressObj) => {
