@@ -2,6 +2,7 @@
 import type {
   GetAddressOptions,
   GetAddressResponse,
+  SignMessageResponse,
   SignTransactionOptions,
   SignTransactionResponse,
 } from "sats-connect";
@@ -13,7 +14,7 @@ import {
 } from "../../../errors";
 import { createMockPsbt } from "../../../fee/__tests__/utils";
 import { WalletAddress } from "../../types";
-import { getAddresses, isInstalled, signPsbt } from "..";
+import { getAddresses, isInstalled, signMessage, signPsbt } from "..";
 
 vi.mock("sats-connect", async (originalImport) => {
   const mod = (await originalImport()) as typeof satsConnect;
@@ -323,7 +324,7 @@ describe("Xverse Wallet", () => {
       ).rejects.toThrowError(EXTRACTION_TRANSACTION_NON_FINALIZED_PSBT);
     });
 
-    test("should throw error when extractTx is true but not all tx signed", async () => {
+    test("should throw error when extractTx is true but not all tx signed", () => {
       const EXTRACTION_TRANSACTION_NON_FINALIZED_PSBT =
         new BrowserWalletExtractTxFromNonFinalizedPsbtError();
 
@@ -340,19 +341,6 @@ describe("Xverse Wallet", () => {
       );
 
       const psbt = createMockPsbt("taproot");
-      const signedPsbtResponse = await signPsbt(psbt, {
-        finalize: false,
-        extractTx: false,
-        network: "mainnet",
-        inputsToSign: [
-          {
-            // Dummy address that is not used. Only the signingIndexes are used in this case.
-            address:
-              "bc1pr09enf3yc43cz8qh7xwaasuv3xzlgfttdr3wn0q2dy9frkhrpdtsk05jqq",
-            signingIndexes: [0],
-          },
-        ],
-      });
       expect(() =>
         signPsbt(psbt, {
           finalize: false,
@@ -426,6 +414,61 @@ describe("Xverse Wallet", () => {
             },
           ],
         }),
+      ).rejects.toThrowError(CANCELLED_BY_USER_ERROR);
+    });
+  });
+
+  describe("signMessage", () => {
+    const mockResponse: SignMessageResponse =
+      "G+LrYa7T5dUMDgQduAErw+i6ebK4GqTXYVWIDM+snYk7Yc6LdPitmaqM6j+iJOeID1CsMXOJFpVopvPiHBdulkE=";
+
+    afterEach(() => {
+      vi.resetAllMocks();
+    });
+
+    beforeEach(() => {
+      vi.stubGlobal("BitcoinProvider", {});
+    });
+
+    test("should sign a message", async () => {
+      const signMessageSpy = vi.spyOn(satsConnect, "signMessage");
+      signMessageSpy.mockImplementation(
+        (options: satsConnect.SignMessageOptions) => {
+          options.onFinish(mockResponse);
+          return Promise.resolve();
+        },
+      );
+
+      const signedMessageResponse = await signMessage(
+        "abcdefghijk123456789",
+        "bc1q7q5qyqgqjgq5qyqgqjgq5qyqgqjgq5qyqgq5qy",
+        "mainnet",
+      );
+
+      expect(signedMessageResponse).toEqual({
+        base64:
+          "G+LrYa7T5dUMDgQduAErw+i6ebK4GqTXYVWIDM+snYk7Yc6LdPitmaqM6j+iJOeID1CsMXOJFpVopvPiHBdulkE=",
+        hex: "1be2eb61aed3e5d50c0e041db8012bc3e8ba79b2b81aa4d76155880ccfac9d893b61ce8b74f8ad99aa8cea3fa224e7880f50ac317389169568a6f3e21c176e9641",
+      });
+    });
+
+    test("should throw error on user cancel", () => {
+      const CANCELLED_BY_USER_ERROR =
+        new BrowserWalletRequestCancelledByUserError();
+
+      const signMessageSpy = vi.spyOn(satsConnect, "signMessage");
+      signMessageSpy.mockImplementation(
+        (options: satsConnect.SignMessageOptions) => {
+          options.onCancel();
+          return Promise.resolve();
+        },
+      );
+      expect(() =>
+        signMessage(
+          "abcdefghijk123456789",
+          "bc1q7q5qyqgqjgq5qyqgqjgq5qyqgqjgq5qyqgq5qy",
+          "mainnet",
+        ),
       ).rejects.toThrowError(CANCELLED_BY_USER_ERROR);
     });
   });
