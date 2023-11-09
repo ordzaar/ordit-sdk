@@ -36,7 +36,7 @@ export class Sat {
 
   #name?: string;
 
-  #sattributes: Sattributes;
+  #sattributes?: Sattributes;
 
   constructor(readonly n: number) {
     if (n > SAT_SUPPLY || n < 0) {
