@@ -37,7 +37,7 @@ export type CreatePsbtOptions = {
   /**
    * Network used for the transaction
    */
-  network: Network;
+  network?: Network;
 };
 
 /**
@@ -48,7 +48,7 @@ export type CreatePsbtOptions = {
  */
 export async function createPsbt({
   publicKey,
-  network,
+  network = "mainnet",
   address,
   outputs,
   satsPerByte,
