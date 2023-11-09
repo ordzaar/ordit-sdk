@@ -5,5 +5,6 @@ import { initEccLib } from "bitcoinjs-lib";
 // This function will manage its own instance.
 initEccLib(ecc);
 
+export * from "./modules";
 export * from "./ordinals/index";
 export * from "./transactions";
