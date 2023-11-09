@@ -1,7 +1,9 @@
-import { createPsbt } from "@ordzaar/ordit-sdk";
+import { PSBTBuilder } from "@ordzaar/ordit-sdk";
 import {
   getAddresses as getUnisatAddresses,
   isInstalled as isUnisatInstalled,
+  signMessage as signUnisatMessage,
+  signPsbt as signUnisatPsbt,
 } from "@ordzaar/ordit-sdk/browser-wallets/unisat";
 
 async function connectToUnisat() {
@@ -18,10 +20,10 @@ if (unisatConnectButton) {
   unisatConnectButton.addEventListener("click", connectToUnisat);
 }
 
-async function handleCreatePsbtButtonClick() {
-  const psbt = await createPsbt({
+async function createAndPreparePsbt() {
+  const psbt = new PSBTBuilder({
     address: "tb1p98dv6f5jp5qr4z2dtaljvwrhq34xrr8zuaqgv4ajf36vg2mmsruqt5m3lv",
-    satsPerByte: 1,
+    feeRate: 1,
     publicKey:
       "039ce27aa7666731648421004ba943b90b8273e23a175d9c58e3ec2e643a9b01d1",
     outputs: [
@@ -33,9 +35,43 @@ async function handleCreatePsbtButtonClick() {
     network: "testnet",
   });
   console.log("Created Psbt: ", psbt);
+  await psbt.prepare();
+  console.log("Prepared Psbt: ", psbt);
+  return psbt;
+}
+
+async function handleCreateAndPreparePsbtButtonClick() {
+  await createAndPreparePsbt();
 }
 
 const createPsbtButton = document.getElementById("create-psbt");
 if (createPsbtButton) {
-  createPsbtButton.addEventListener("click", handleCreatePsbtButtonClick);
+  createPsbtButton.addEventListener(
+    "click",
+    handleCreateAndPreparePsbtButtonClick,
+  );
+}
+
+async function handleSignPsbt() {
+  console.log("Sign PSBT");
+  const psbt = await createAndPreparePsbt();
+  const signPsbtResponse = await signUnisatPsbt(psbt);
+  console.log("Sign PSBT Response", signPsbtResponse);
+}
+
+const signPsbtButton = document.getElementById("sign-psbt");
+if (signPsbtButton) {
+  signPsbtButton.addEventListener("click", handleSignPsbt);
+}
+
+async function handleSignMessage() {
+  const signPsbtResponse = await signUnisatMessage(
+    "This is a test message for signing.\n\nThis will not be used.",
+  );
+  console.log("Sign PSBT Response", signPsbtResponse);
+}
+
+const signMessageButton = document.getElementById("sign-message");
+if (signMessageButton) {
+  signMessageButton.addEventListener("click", handleSignMessage);
 }
