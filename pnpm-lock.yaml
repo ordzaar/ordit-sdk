@@ -9,11 +9,11 @@ importers:
   .:
     devDependencies:
       '@ordzaar/standard-linter':
-        specifier: ^0.3.4
-        version: 0.3.4(eslint-plugin-import@2.29.0)(typescript@5.2.2)
+        specifier: ^0.3.5
+        version: 0.3.5(eslint-plugin-import@2.29.0)(typescript@5.2.2)
       '@ordzaar/standard-typescript':
-        specifier: ^0.3.4
-        version: 0.3.4(typescript@5.2.2)
+        specifier: ^0.3.5
+        version: 0.3.5(typescript@5.2.2)
       '@vitest/coverage-v8':
         specifier: ^0.34.6
         version: 0.34.6(vitest@0.34.6)
@@ -2870,10 +2870,10 @@ packages:
       '@nodelib/fs.scandir': 2.1.5
       fastq: 1.15.0
 
-  /@ordzaar/standard-linter@0.3.4(eslint-plugin-import@2.29.0)(typescript@5.2.2):
-    resolution: {integrity: sha512-e8/5H/B4NF9gvEqvGAA86Wtg0bVnIYaUe2mOgJXQgW52wB3HqPcLtk5QWNU01V02j5Xos9VG052TZ7ID3dkYPg==}
+  /@ordzaar/standard-linter@0.3.5(eslint-plugin-import@2.29.0)(typescript@5.2.2):
+    resolution: {integrity: sha512-M9Cd6PvpoyX6GhrDfMX3/HDPBgUqJn9HhODewOy+p5lBH66coGhGh/Ujo4SmtUxbo9i9OOZ8LP7EbnWWE6UsqA==}
     dependencies:
-      '@ordzaar/standard-typescript': 0.3.4(typescript@5.2.2)
+      '@ordzaar/standard-typescript': 0.3.5(typescript@5.2.2)
       '@typescript-eslint/eslint-plugin': 6.10.0(@typescript-eslint/parser@6.10.0)(eslint@8.53.0)(typescript@5.2.2)
       '@typescript-eslint/parser': 6.10.0(eslint@8.53.0)(typescript@5.2.2)
       eslint: 8.53.0
@@ -2902,8 +2902,8 @@ packages:
       typescript: 5.2.2
     dev: true
 
-  /@ordzaar/standard-typescript@0.3.4(typescript@5.2.2):
-    resolution: {integrity: sha512-xs3lmlsDsECNjgkIo6a95bsZYLIqaI/tm1giIZcFGZtXXKJ6pVOv/xt05Jci6XVxcXf5FvLE2LEwDITSW3Q25w==}
+  /@ordzaar/standard-typescript@0.3.5(typescript@5.2.2):
+    resolution: {integrity: sha512-WZtcezkr69qTeVi43LMPAW0fU9/uPhXMOSaNhmkwqLIRhog5tblMoVPtAmOCic+galYwuSV4NXttt4IsLOVlHw==}
     peerDependencies:
       typescript: 5.2.2
     dependencies:
