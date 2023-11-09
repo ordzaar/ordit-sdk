@@ -1,7 +1,10 @@
 // @vitest-environment happy-dom
 import { networks, Psbt } from "bitcoinjs-lib";
 
-import { OrditSDKError } from "../../../errors";
+import {
+  BrowserWalletExtractTxFromNonFinalizedPsbtError,
+  OrditSDKError,
+} from "../../../errors";
 import { WalletAddress } from "../../types";
 import { getAddresses, isInstalled, signMessage, signPsbt } from "..";
 import { NETWORK_TO_UNISAT_NETWORK } from "../constants";
@@ -126,12 +129,12 @@ describe("Unisat Wallet", () => {
       vi.stubGlobal("unisat", {
         signPsbt: MOCK_SIGN_PSBT,
       });
+      const EXTRACTION_TRANSACTION_NON_FINALIZED_PSBT_ERROR =
+        new BrowserWalletExtractTxFromNonFinalizedPsbtError();
       const psbt = new Psbt({ network: networks.bitcoin });
-      const signedPsbtResponse = await signPsbt(psbt, { finalize: false });
-      expect(signedPsbtResponse).toEqual({
-        base64: null,
-        hex: "02000000000000000000",
-      });
+      await expect(() =>
+        signPsbt(psbt, { finalize: false }),
+      ).rejects.toThrowError(EXTRACTION_TRANSACTION_NON_FINALIZED_PSBT_ERROR);
     });
     test("should fail to sign a psbt when unisat returns an empty psbt hex string", async () => {
       const SIGN_PSBT_ERROR = new OrditSDKError(
