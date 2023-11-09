@@ -21,9 +21,11 @@ export class Sattributes {
 
   static from(sat: Sat): Sattributes {
     const sattributesList = [];
+
     if (Sattributes.isPalindrome(sat.n)) {
       sattributesList.push(Sattribute.Palindrome);
     }
+
     return new Sattributes([sat.rarity.name, ...sattributesList]);
   }
 

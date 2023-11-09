@@ -11,6 +11,7 @@ import { Epoch } from "./Epoch";
 // eslint-disable-next-line import/no-cycle
 import { Height } from "./Height";
 import { Rarity } from "./Rarity";
+import { Sattributes } from "./Sattributes";
 
 export class Sat {
   #height?: Height;
@@ -34,6 +35,8 @@ export class Sat {
   #decimal?: Decimal;
 
   #name?: string;
+
+  #sattributes: Sattributes;
 
   constructor(readonly n: number) {
     if (n > SAT_SUPPLY || n < 0) {
@@ -144,6 +147,13 @@ export class Sat {
     return this.#name;
   }
 
+  get sattributes(): Sattributes {
+    if (this.#sattributes === undefined) {
+      this.#sattributes = Sattributes.from(this);
+    }
+    return this.#sattributes;
+  }
+
   toJSON() {
     return {
       number: this.n,
@@ -157,6 +167,7 @@ export class Sat {
       offset: this.third,
       rarity: this.rarity.toString(),
       percentile: this.percentile,
+      sattributes: this.sattributes.toList(),
     };
   }
 }
