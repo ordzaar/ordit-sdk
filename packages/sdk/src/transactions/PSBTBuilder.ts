@@ -156,6 +156,15 @@ export class PSBTBuilder extends FeeEstimator {
     return this.psbt.toBase64();
   }
 
+  /**
+   * Set Replace-by-fee (RBF) value
+   *
+   * Replace-by-fee (RBF) is a feature that allows users to replace one version of an unconfirmed transaction
+   * with a different version of the transaction that pays a higher transaction fee.
+   * This can be done multiple times while the transaction is unconfirmed.
+   *
+   * Reference: [BIP-125](https://github.com/bitcoin/bips/blob/master/bip-0125.mediawiki)
+   */
   setRBF(value: boolean) {
     this.rbf = value;
     this.addInputs();
