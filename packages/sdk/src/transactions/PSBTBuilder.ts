@@ -214,6 +214,7 @@ export class PSBTBuilder extends FeeEstimator {
   }
 
   private injectInput(injectable: InjectableInput) {
+    // TODO: remove hack
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (this.psbt.data.globalMap.unsignedTx as any).tx.ins[
       injectable.injectionIndex
@@ -225,15 +226,18 @@ export class PSBTBuilder extends FeeEstimator {
     let potentialIndex = injectable.injectionIndex;
 
     do {
+      // TODO: remove hack
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const isReserved = !!(this.psbt.data.globalMap.unsignedTx as any).tx.outs[
         potentialIndex
       ];
       if (!isReserved) {
+        // TODO: remove hack
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         (this.psbt.data.globalMap.unsignedTx as any).tx.outs[potentialIndex] =
           injectable.txOutput;
         this.psbt.data.outputs[potentialIndex] =
+          // TODO: remove hack
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           injectable.standardOutput as any;
         break;
