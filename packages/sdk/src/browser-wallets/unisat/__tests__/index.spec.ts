@@ -94,7 +94,7 @@ describe("Unisat Wallet", () => {
         signPsbt: MOCK_SIGN_PSBT,
       });
       const psbt = new Psbt({ network: networks.bitcoin });
-      const signedPsbtResponse = await signPsbt(psbt);
+      const signedPsbtResponse = await signPsbt(psbt, { extractTx: true });
       expect(signedPsbtResponse).toEqual({
         base64: null,
         hex: "02000000000000000000",
