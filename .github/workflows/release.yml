@@ -27,7 +27,7 @@ jobs:
             const semver = require("semver");
             const version = context.ref.replace('refs/tags/v', '')
             if (semver.valid(version)) {
-                return semver
+                return version
             }
             throw new Error('not semver')
           result-encoding: string
