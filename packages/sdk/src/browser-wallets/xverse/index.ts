@@ -15,6 +15,7 @@ import {
 import { getAddressFormat } from "../../addresses";
 import type { BrowserWalletNetwork } from "../../config/types";
 import {
+  BrowserWalletExtractTxFromNonFinalizedPsbtError,
   BrowserWalletNotInstalledError,
   BrowserWalletRequestCancelledByUserError,
   BrowserWalletSigningError,
@@ -122,6 +123,9 @@ async function signPsbt(
   if (!isInstalled()) {
     throw new BrowserWalletNotInstalledError("Xverse not installed");
   }
+  if (!finalize && extractTx) {
+    throw new BrowserWalletExtractTxFromNonFinalizedPsbtError();
+  }
   if (!psbt || !network || !inputsToSign.length) {
     throw new OrditSDKError("Invalid options provided");
   }
@@ -139,13 +143,27 @@ async function signPsbt(
     if (finalize) {
       inputsToSign.forEach((input) => {
         input.signingIndexes.forEach((index) => {
-          signedPsbt.finalizeInput(index);
+          try {
+            signedPsbt.finalizeInput(index);
+          } catch (error) {
+            throw new OrditSDKError("Failed to finalize input");
+          }
         });
       });
     }
 
     if (extractTx) {
-      hex = signedPsbt.extractTransaction().toHex();
+      try {
+        hex = signedPsbt.extractTransaction().toHex();
+      } catch (error) {
+        // It is possible that not all inputs are finalized.
+        // extractTransaction will fail if there are any.
+        if (error instanceof Error && error.message === "Not finalized") {
+          throw new BrowserWalletExtractTxFromNonFinalizedPsbtError();
+        } else {
+          throw new OrditSDKError("Failed to extract transaction from PSBT");
+        }
+      }
       base64 = null;
     } else {
       hex = signedPsbt.toHex();
