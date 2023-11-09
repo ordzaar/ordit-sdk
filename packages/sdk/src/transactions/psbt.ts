@@ -2,6 +2,11 @@ import type { Network } from "../config/types";
 import { PSBTBuilder } from "./PSBTBuilder";
 import type { Output } from "./types";
 
+export type CreatePsbtResponse = {
+  hex: string;
+  base64: string;
+};
+
 export type CreatePsbtOptions = {
   /**
    * Sats per byte (Used to calculate fee rate)
@@ -53,7 +58,7 @@ export async function createPsbt({
   outputs,
   satsPerByte,
   enableRBF = true,
-}: CreatePsbtOptions) {
+}: CreatePsbtOptions): Promise<CreatePsbtResponse> {
   if (!outputs.length) {
     throw new Error("Invalid request");
   }
