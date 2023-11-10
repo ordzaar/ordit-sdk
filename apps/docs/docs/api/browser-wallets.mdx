@@ -134,6 +134,8 @@ Signs a Partially Signed Bitcoin Transaction (PSBT) and returns a signature.
   - `extractTx` : `boolean` - Extract transaction (defaults to `true`)
   - `finalize` : `boolean` - Finalize signing (defaults to `true`)
 
+Note: Extracting a transaction is only possible when all transactions on the PSBT are finalized. Hence, when `extractTx` is `true`, `finalize` must also be `true` and all other inputs must have been finalized.
+
 **Returns**: `Promise<BrowserWalletSignResponse>`
 
 **Output Example**:
@@ -149,6 +151,7 @@ Signs a Partially Signed Bitcoin Transaction (PSBT) and returns a signature.
 
 - `BrowserWalletNotInstalledError` Wallet is not installed
 - `BrowserWalletSigningError` Signing failed
+- `BrowserWalletExtractTxFromNonFinalizedPsbtError` if `extractTx` is `true` but there are non-finalized transactions in the PSBT
 
 ### signMessage
 
