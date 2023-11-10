@@ -75,12 +75,10 @@ export function getAddressesFromPublicKey(
   const publicKeyBuffer = Buffer.isBuffer(publicKey)
     ? publicKey
     : Buffer.from(publicKey, "hex");
-  const networkObj = getNetwork(network);
-  const chainCode = Buffer.alloc(32).fill(1);
   const { publicKey: bip32PublicKey } = BIP32.fromPublicKey(
     publicKeyBuffer,
-    chainCode,
-    networkObj,
+    Buffer.alloc(32).fill(1), // fixed chainCode
+    getNetwork(network),
   );
 
   if (type === "p2tr") {
