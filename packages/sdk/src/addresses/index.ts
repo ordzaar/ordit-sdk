@@ -69,7 +69,7 @@ function getTaprootAddressFromBip32PublicKey(
 
 export function getAddressesFromPublicKey(
   publicKey: string | Buffer,
-  network: Network = "testnet",
+  network: Network = "mainnet",
   type: AddressType | "all" = "all",
 ): Address[] {
   const publicKeyBuffer = Buffer.isBuffer(publicKey)
