@@ -53,6 +53,20 @@ export function getAddressFormat(
   return getAddressFormatFromType(type);
 }
 
+function getTaprootAddressFromBip32PublicKey(
+  bip32PublicKey: Buffer,
+  network: Network,
+): Address {
+  const childNodeXOnlyPubkey = bip32PublicKey.subarray(1, 33);
+  const { address } = createPayment(childNodeXOnlyPubkey, "p2tr", network);
+  return {
+    address,
+    format: ADDRESS_TYPE_TO_FORMAT.p2tr,
+    publicKey: bip32PublicKey.toString("hex"),
+    xKey: childNodeXOnlyPubkey.toString("hex"),
+  };
+}
+
 export function getAddressesFromPublicKey(
   publicKey: string | Buffer,
   network: Network = "testnet",
@@ -63,46 +77,38 @@ export function getAddressesFromPublicKey(
     : Buffer.from(publicKey, "hex");
   const networkObj = getNetwork(network);
   const chainCode = Buffer.alloc(32).fill(1);
-  const keys = BIP32.fromPublicKey(publicKeyBuffer, chainCode, networkObj);
-  const childNodeXOnlyPubkey = keys.publicKey.subarray(1, 33);
+  const { publicKey: bip32PublicKey } = BIP32.fromPublicKey(
+    publicKeyBuffer,
+    chainCode,
+    networkObj,
+  );
+
+  if (type === "p2tr") {
+    return [getTaprootAddressFromBip32PublicKey(bip32PublicKey, network)];
+  }
 
   if (type === "all") {
     const addressTypes = Object.keys(ADDRESS_TYPE_TO_FORMAT) as AddressType[];
-
     return addressTypes.map<Address>((addressType) => {
       if (addressType === "p2tr") {
-        const { address } = createPayment(
-          childNodeXOnlyPubkey,
-          addressType,
-          network,
-        );
-
-        return {
-          address,
-          format: ADDRESS_TYPE_TO_FORMAT[addressType],
-          publicKey: keys.publicKey.toString("hex"),
-          xKey: childNodeXOnlyPubkey.toString("hex"),
-        };
+        return getTaprootAddressFromBip32PublicKey(bip32PublicKey, network);
       }
 
-      const { address } = createPayment(keys.publicKey, addressType, network);
+      const { address } = createPayment(bip32PublicKey, addressType, network);
       return {
         address,
         format: ADDRESS_TYPE_TO_FORMAT[addressType],
-        publicKey: keys.publicKey.toString("hex"),
+        publicKey: bip32PublicKey.toString("hex"),
       };
     });
   }
 
-  const key = type === "p2tr" ? childNodeXOnlyPubkey : keys.publicKey;
-  const { address } = createPayment(key, type, network);
-
+  const { address } = createPayment(bip32PublicKey, type, network);
   return [
     {
       address,
       format: ADDRESS_TYPE_TO_FORMAT[type],
-      publicKey: keys.publicKey.toString("hex"),
-      xKey: type === "p2tr" ? childNodeXOnlyPubkey.toString("hex") : undefined,
+      publicKey: bip32PublicKey.toString("hex"),
     },
   ];
 }
