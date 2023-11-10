@@ -67,6 +67,23 @@ function getTaprootAddressFromBip32PublicKey(
   };
 }
 
+function getAddressFromBip32PublicKey(
+  bip32PublicKey: Buffer,
+  network: Network,
+  type: AddressType,
+): Address {
+  if (type === "p2tr") {
+    return getTaprootAddressFromBip32PublicKey(bip32PublicKey, network);
+  }
+
+  const { address } = createPayment(bip32PublicKey, type, network);
+  return {
+    address: address!, // address will never be undefined
+    format: ADDRESS_TYPE_TO_FORMAT[type],
+    publicKey: bip32PublicKey.toString("hex"),
+  };
+}
+
 export function getAddressesFromPublicKey(
   publicKey: string | Buffer,
   network: Network = "mainnet",
@@ -81,32 +98,12 @@ export function getAddressesFromPublicKey(
     getNetwork(network),
   );
 
-  if (type === "p2tr") {
-    return [getTaprootAddressFromBip32PublicKey(bip32PublicKey, network)];
-  }
-
   if (type === "all") {
     const addressTypes = Object.keys(ADDRESS_TYPE_TO_FORMAT) as AddressType[];
-    return addressTypes.map<Address>((addressType) => {
-      if (addressType === "p2tr") {
-        return getTaprootAddressFromBip32PublicKey(bip32PublicKey, network);
-      }
-
-      const { address } = createPayment(bip32PublicKey, addressType, network);
-      return {
-        address: address!, // address will never be undefined
-        format: ADDRESS_TYPE_TO_FORMAT[addressType],
-        publicKey: bip32PublicKey.toString("hex"),
-      };
-    });
+    return addressTypes.map((addressType) =>
+      getAddressFromBip32PublicKey(bip32PublicKey, network, addressType),
+    );
   }
 
-  const { address } = createPayment(bip32PublicKey, type, network);
-  return [
-    {
-      address: address!, // address will never be undefined
-      format: ADDRESS_TYPE_TO_FORMAT[type],
-      publicKey: bip32PublicKey.toString("hex"),
-    },
-  ];
+  return [getAddressFromBip32PublicKey(bip32PublicKey, network, type)];
 }
