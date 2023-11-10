@@ -56,57 +56,53 @@ export function getAddressFormat(
 export function getAddressesFromPublicKey(
   publicKey: string | Buffer,
   network: Network = "testnet",
-  format: AddressType | "all" = "all",
-) {
+  type: AddressType | "all" = "all",
+): Address[] {
   const publicKeyBuffer = Buffer.isBuffer(publicKey)
     ? publicKey
     : Buffer.from(publicKey, "hex");
   const networkObj = getNetwork(network);
   const chainCode = Buffer.alloc(32).fill(1);
-
-  const addresses: Address[] = [];
   const keys = BIP32.fromPublicKey(publicKeyBuffer, chainCode, networkObj);
   const childNodeXOnlyPubkey = keys.publicKey.subarray(1, 33);
 
-  if (format === "all") {
+  if (type === "all") {
     const addressTypes = Object.keys(ADDRESS_TYPE_TO_FORMAT) as AddressType[];
 
-    addressTypes.forEach((addrType) => {
-      if (addrType === "p2tr") {
-        const paymentObj = createPayment(
+    return addressTypes.map((addressType) => {
+      if (addressType === "p2tr") {
+        const { address } = createPayment(
           childNodeXOnlyPubkey,
-          addrType,
+          addressType,
           network,
         );
 
-        addresses.push({
-          address: paymentObj.address,
+        return {
+          address,
+          format: ADDRESS_TYPE_TO_FORMAT[addressType],
+          publicKey: keys.publicKey.toString("hex"),
           xkey: childNodeXOnlyPubkey.toString("hex"),
-          format: ADDRESS_TYPE_TO_FORMAT[addrType],
-          publicKey: keys.publicKey.toString("hex"),
-        });
-      } else {
-        const paymentObj = createPayment(keys.publicKey, addrType, network);
-
-        addresses.push({
-          address: paymentObj.address,
-          format: ADDRESS_TYPE_TO_FORMAT[addrType],
-          publicKey: keys.publicKey.toString("hex"),
-        });
+        };
       }
-    });
-  } else {
-    const key = format === "p2tr" ? childNodeXOnlyPubkey : keys.publicKey;
-    const paymentObj = createPayment(key, format, network);
 
-    addresses.push({
-      address: paymentObj.address,
-      format: ADDRESS_TYPE_TO_FORMAT[format],
-      publicKey: keys.publicKey.toString("hex"),
-      xkey:
-        format === "p2tr" ? childNodeXOnlyPubkey.toString("hex") : undefined,
+      const { address } = createPayment(keys.publicKey, addressType, network);
+      return {
+        address,
+        format: ADDRESS_TYPE_TO_FORMAT[addressType],
+        publicKey: keys.publicKey.toString("hex"),
+      };
     });
   }
 
-  return addresses;
+  const key = type === "p2tr" ? childNodeXOnlyPubkey : keys.publicKey;
+  const { address } = createPayment(key, type, network);
+
+  return [
+    {
+      address,
+      format: ADDRESS_TYPE_TO_FORMAT[type],
+      publicKey: keys.publicKey.toString("hex"),
+      xkey: type === "p2tr" ? childNodeXOnlyPubkey.toString("hex") : undefined,
+    },
+  ];
 }
