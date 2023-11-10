@@ -6,6 +6,6 @@
  */
 export function invert(data: Record<string, unknown> & { length?: never }) {
   return Object.fromEntries(
-    Object.entries(data).map(([key, value]) => [value, key]),
+    Object.entries(data).map(([key, value]) => [value, key])
   );
 }

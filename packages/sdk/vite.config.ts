@@ -13,7 +13,7 @@ export default defineConfig({
         index: resolve(__dirname, "src/index.ts"),
         "browser-wallets-unisat": resolve(
           __dirname,
-          "src/browser-wallets/unisat/index.ts",
+          "src/browser-wallets/unisat/index.ts"
         ),
       },
       formats: ["es", "cjs"],

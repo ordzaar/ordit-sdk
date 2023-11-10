@@ -38,151 +38,151 @@ describe("addresses", () => {
     test("should return correct address format for mainnet", () => {
       const network = MAINNET;
       expect(getAddressFormat(ADDRESSES[network].legacy, network)).toBe(
-        "legacy",
+        "legacy"
       );
       expect(getAddressFormat(ADDRESSES[network]["p2sh-p2wpkh"], network)).toBe(
-        "p2sh-p2wpkh",
+        "p2sh-p2wpkh"
       );
       expect(getAddressFormat(ADDRESSES[network].segwit, network)).toBe(
-        "segwit",
+        "segwit"
       );
       expect(getAddressFormat(ADDRESSES[network].taproot, network)).toBe(
-        "taproot",
+        "taproot"
       );
     });
 
     test("should return correct address format for testnet", () => {
       const network = TESTNET;
       expect(getAddressFormat(ADDRESSES[network].legacy, network)).toBe(
-        "legacy",
+        "legacy"
       );
       expect(getAddressFormat(ADDRESSES[network]["p2sh-p2wpkh"], network)).toBe(
-        "p2sh-p2wpkh",
+        "p2sh-p2wpkh"
       );
       expect(getAddressFormat(ADDRESSES[network].segwit, network)).toBe(
-        "segwit",
+        "segwit"
       );
       expect(getAddressFormat(ADDRESSES[network].taproot, network)).toBe(
-        "taproot",
+        "taproot"
       );
 
       // non-bech32 addresses from regtest will work on testnet
       expect(() =>
-        getAddressFormat(ADDRESSES[REGTEST].legacy, network),
+        getAddressFormat(ADDRESSES[REGTEST].legacy, network)
       ).not.toThrowError(INVALID_ADDRESS_ERROR);
       expect(() =>
-        getAddressFormat(ADDRESSES[REGTEST]["p2sh-p2wpkh"], network),
+        getAddressFormat(ADDRESSES[REGTEST]["p2sh-p2wpkh"], network)
       ).not.toThrowError(INVALID_ADDRESS_ERROR);
     });
 
     test("should return correct address format for regtest", () => {
       const network = REGTEST;
       expect(getAddressFormat(ADDRESSES[network].legacy, network)).toBe(
-        "legacy",
+        "legacy"
       );
       expect(getAddressFormat(ADDRESSES[network]["p2sh-p2wpkh"], network)).toBe(
-        "p2sh-p2wpkh",
+        "p2sh-p2wpkh"
       );
       expect(getAddressFormat(ADDRESSES[network].segwit, network)).toBe(
-        "segwit",
+        "segwit"
       );
       expect(getAddressFormat(ADDRESSES[network].taproot, network)).toBe(
-        "taproot",
+        "taproot"
       );
 
       // non-bech32 addresses from testnet will work on regtest
       expect(() =>
-        getAddressFormat(ADDRESSES[TESTNET].legacy, network),
+        getAddressFormat(ADDRESSES[TESTNET].legacy, network)
       ).not.toThrowError(INVALID_ADDRESS_ERROR);
       expect(() =>
-        getAddressFormat(ADDRESSES[TESTNET]["p2sh-p2wpkh"], network),
+        getAddressFormat(ADDRESSES[TESTNET]["p2sh-p2wpkh"], network)
       ).not.toThrowError(INVALID_ADDRESS_ERROR);
     });
 
     test("should throw an error if address format is not recognised for mainnet", () => {
       expect(() => getAddressFormat("", MAINNET)).toThrowError(
-        INVALID_ADDRESS_ERROR,
+        INVALID_ADDRESS_ERROR
       );
       expect(() => getAddressFormat("abc", MAINNET)).toThrowError(
-        INVALID_ADDRESS_ERROR,
+        INVALID_ADDRESS_ERROR
       );
       expect(() =>
-        getAddressFormat(ADDRESSES[TESTNET].legacy, MAINNET),
+        getAddressFormat(ADDRESSES[TESTNET].legacy, MAINNET)
       ).toThrowError(INVALID_ADDRESS_ERROR);
       expect(() =>
-        getAddressFormat(ADDRESSES[TESTNET]["p2sh-p2wpkh"], MAINNET),
+        getAddressFormat(ADDRESSES[TESTNET]["p2sh-p2wpkh"], MAINNET)
       ).toThrowError(INVALID_ADDRESS_ERROR);
       expect(() =>
-        getAddressFormat(ADDRESSES[TESTNET].segwit, MAINNET),
+        getAddressFormat(ADDRESSES[TESTNET].segwit, MAINNET)
       ).toThrowError(INVALID_ADDRESS_ERROR);
       expect(() =>
-        getAddressFormat(ADDRESSES[TESTNET].taproot, MAINNET),
+        getAddressFormat(ADDRESSES[TESTNET].taproot, MAINNET)
       ).toThrowError(INVALID_ADDRESS_ERROR);
       expect(() =>
-        getAddressFormat(ADDRESSES[REGTEST].legacy, MAINNET),
+        getAddressFormat(ADDRESSES[REGTEST].legacy, MAINNET)
       ).toThrowError(INVALID_ADDRESS_ERROR);
       expect(() =>
-        getAddressFormat(ADDRESSES[REGTEST]["p2sh-p2wpkh"], MAINNET),
+        getAddressFormat(ADDRESSES[REGTEST]["p2sh-p2wpkh"], MAINNET)
       ).toThrowError(INVALID_ADDRESS_ERROR);
       expect(() =>
-        getAddressFormat(ADDRESSES[REGTEST].segwit, MAINNET),
+        getAddressFormat(ADDRESSES[REGTEST].segwit, MAINNET)
       ).toThrowError(INVALID_ADDRESS_ERROR);
       expect(() =>
-        getAddressFormat(ADDRESSES[REGTEST].taproot, MAINNET),
+        getAddressFormat(ADDRESSES[REGTEST].taproot, MAINNET)
       ).toThrowError(INVALID_ADDRESS_ERROR);
     });
 
     test("should throw an error if address format is not recognised for testnet", () => {
       expect(() => getAddressFormat("", TESTNET)).toThrowError(
-        INVALID_ADDRESS_ERROR,
+        INVALID_ADDRESS_ERROR
       );
       expect(() => getAddressFormat("abc", TESTNET)).toThrowError(
-        INVALID_ADDRESS_ERROR,
+        INVALID_ADDRESS_ERROR
       );
       expect(() =>
-        getAddressFormat(ADDRESSES[MAINNET].legacy, TESTNET),
+        getAddressFormat(ADDRESSES[MAINNET].legacy, TESTNET)
       ).toThrowError(INVALID_ADDRESS_ERROR);
       expect(() =>
-        getAddressFormat(ADDRESSES[MAINNET]["p2sh-p2wpkh"], TESTNET),
+        getAddressFormat(ADDRESSES[MAINNET]["p2sh-p2wpkh"], TESTNET)
       ).toThrowError(INVALID_ADDRESS_ERROR);
       expect(() =>
-        getAddressFormat(ADDRESSES[MAINNET].segwit, TESTNET),
+        getAddressFormat(ADDRESSES[MAINNET].segwit, TESTNET)
       ).toThrowError(INVALID_ADDRESS_ERROR);
       expect(() =>
-        getAddressFormat(ADDRESSES[MAINNET].taproot, TESTNET),
+        getAddressFormat(ADDRESSES[MAINNET].taproot, TESTNET)
       ).toThrowError(INVALID_ADDRESS_ERROR);
       expect(() =>
-        getAddressFormat(ADDRESSES[REGTEST].segwit, TESTNET),
+        getAddressFormat(ADDRESSES[REGTEST].segwit, TESTNET)
       ).toThrowError(INVALID_ADDRESS_ERROR);
       expect(() =>
-        getAddressFormat(ADDRESSES[REGTEST].taproot, TESTNET),
+        getAddressFormat(ADDRESSES[REGTEST].taproot, TESTNET)
       ).toThrowError(INVALID_ADDRESS_ERROR);
     });
 
     test("should throw an error if address format is not recognised for regtest", () => {
       expect(() => getAddressFormat("", REGTEST)).toThrowError(
-        INVALID_ADDRESS_ERROR,
+        INVALID_ADDRESS_ERROR
       );
       expect(() => getAddressFormat("abc", REGTEST)).toThrowError(
-        INVALID_ADDRESS_ERROR,
+        INVALID_ADDRESS_ERROR
       );
       expect(() =>
-        getAddressFormat(ADDRESSES[MAINNET].legacy, REGTEST),
+        getAddressFormat(ADDRESSES[MAINNET].legacy, REGTEST)
       ).toThrowError(INVALID_ADDRESS_ERROR);
       expect(() =>
-        getAddressFormat(ADDRESSES[MAINNET]["p2sh-p2wpkh"], REGTEST),
+        getAddressFormat(ADDRESSES[MAINNET]["p2sh-p2wpkh"], REGTEST)
       ).toThrowError(INVALID_ADDRESS_ERROR);
       expect(() =>
-        getAddressFormat(ADDRESSES[MAINNET].segwit, REGTEST),
+        getAddressFormat(ADDRESSES[MAINNET].segwit, REGTEST)
       ).toThrowError(INVALID_ADDRESS_ERROR);
       expect(() =>
-        getAddressFormat(ADDRESSES[MAINNET].taproot, REGTEST),
+        getAddressFormat(ADDRESSES[MAINNET].taproot, REGTEST)
       ).toThrowError(INVALID_ADDRESS_ERROR);
       expect(() =>
-        getAddressFormat(ADDRESSES[TESTNET].segwit, REGTEST),
+        getAddressFormat(ADDRESSES[TESTNET].segwit, REGTEST)
       ).toThrowError(INVALID_ADDRESS_ERROR);
       expect(() =>
-        getAddressFormat(ADDRESSES[TESTNET].taproot, REGTEST),
+        getAddressFormat(ADDRESSES[TESTNET].taproot, REGTEST)
       ).toThrowError(INVALID_ADDRESS_ERROR);
     });
   });

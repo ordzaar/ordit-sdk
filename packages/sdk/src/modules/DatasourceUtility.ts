@@ -22,7 +22,7 @@ class DatasourceUtility {
    */
   static parseInscription(
     inscription: Inscription,
-    { decodeMetadata }: ParseInscriptionsOptions,
+    { decodeMetadata }: ParseInscriptionsOptions
   ) {
     return {
       ...inscription,
@@ -43,10 +43,10 @@ class DatasourceUtility {
    */
   static parseInscriptions(
     inscriptions: Inscription[],
-    { decodeMetadata }: ParseInscriptionsOptions,
+    { decodeMetadata }: ParseInscriptionsOptions
   ) {
     return inscriptions.map((inscription) =>
-      this.parseInscription(inscription, { decodeMetadata }),
+      this.parseInscription(inscription, { decodeMetadata })
     );
   }
 
@@ -65,7 +65,7 @@ class DatasourceUtility {
       {
         spendableUTXOs: [] as UTXO[],
         unspendableUTXOs: [] as UTXO[],
-      },
+      }
     );
 
     return {

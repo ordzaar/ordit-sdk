@@ -15,11 +15,11 @@ type Unisat = {
   getPublicKey: () => Promise<string>;
   signPsbt: (
     hex: string,
-    { autoFinalized }: Record<string, boolean>,
+    { autoFinalized }: Record<string, boolean>
   ) => Promise<string>;
   signMessage: (
     message: string,
-    type: MessageSignatureTypes,
+    type: MessageSignatureTypes
   ) => Promise<string>;
 };
 

@@ -14,47 +14,47 @@ describe("Rarity", () => {
 
     test("should return legendary", () => {
       expect(
-        Rarity.from(new Sat(2_067_187_500_000_000)).toString(),
+        Rarity.from(new Sat(2_067_187_500_000_000)).toString()
       ).toStrictEqual("legendary");
     });
 
     test("should return epic", () => {
       expect(
         Rarity.from(
-          new Sat(50 * COIN_VALUE * SUBSIDY_HALVING_INTERVAL),
-        ).toString(),
+          new Sat(50 * COIN_VALUE * SUBSIDY_HALVING_INTERVAL)
+        ).toString()
       ).toStrictEqual("epic");
     });
 
     test("should return rare", () => {
       expect(
-        Rarity.from(new Sat(50 * COIN_VALUE * DIFFCHANGE_INTERVAL)).toString(),
+        Rarity.from(new Sat(50 * COIN_VALUE * DIFFCHANGE_INTERVAL)).toString()
       ).toStrictEqual("rare");
     });
 
     test("should return uncommon", () => {
       expect(Rarity.from(new Sat(50 * COIN_VALUE)).toString()).toStrictEqual(
-        "uncommon",
+        "uncommon"
       );
     });
 
     test("should return common", () => {
       expect(
-        Rarity.from(new Sat(50 * COIN_VALUE - 1)).toString(),
+        Rarity.from(new Sat(50 * COIN_VALUE - 1)).toString()
       ).toStrictEqual("common");
       expect(
-        Rarity.from(new Sat(50 * COIN_VALUE + 1)).toString(),
+        Rarity.from(new Sat(50 * COIN_VALUE + 1)).toString()
       ).toStrictEqual("common");
 
       expect(
         Rarity.from(
-          new Sat(50 * COIN_VALUE * DIFFCHANGE_INTERVAL - 1),
-        ).toString(),
+          new Sat(50 * COIN_VALUE * DIFFCHANGE_INTERVAL - 1)
+        ).toString()
       ).toStrictEqual("common");
       expect(
         Rarity.from(
-          new Sat(50 * COIN_VALUE * DIFFCHANGE_INTERVAL + 1),
-        ).toString(),
+          new Sat(50 * COIN_VALUE * DIFFCHANGE_INTERVAL + 1)
+        ).toString()
       ).toStrictEqual("common");
 
       expect(Rarity.from(new Sat(1)).toString()).toStrictEqual("common");

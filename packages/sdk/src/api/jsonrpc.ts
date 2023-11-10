@@ -72,7 +72,7 @@ class JsonRpc {
   async call<T>(
     method: string,
     paramsOrId: Params | JsonRpcId,
-    id?: JsonRpcId,
+    id?: JsonRpcId
   ): Promise<T> {
     let params: Params = {};
     let rpcId = id;

@@ -35,7 +35,7 @@ function getAddressFormatForRegTest(address: string): AddressFormat {
 }
 export function getAddressFormat(
   address: string,
-  network: Network,
+  network: Network
 ): AddressFormat {
   // Separate regtest handling because bitcoin-address-validation treats non-bech32 addresses as testnet addresses,
   // which fail in the validate function.

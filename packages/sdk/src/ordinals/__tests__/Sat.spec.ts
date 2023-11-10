@@ -18,24 +18,24 @@ describe("Sat", () => {
   describe("fromName", () => {
     test("should throw error if name contains numeric", () => {
       expect(() => Sat.fromName("asdas2")).toThrowError(
-        "invalid character in sat name: 2",
+        "invalid character in sat name: 2"
       );
       expect(() => Sat.fromName("3soepsos")).toThrowError(
-        "invalid character in sat name: 3",
+        "invalid character in sat name: 3"
       );
     });
     test("should throw error if name exceeds sats supply", () => {
       // highest name = nvtdijuwxlp => sat 0
       expect(() => Sat.fromName("nvtdijuwxlz")).toThrowError(
-        "sat name out of range",
+        "sat name out of range"
       );
       expect(() => Sat.fromName("zzzzzzzzzzzz")).toThrowError(
-        "sat name out of range",
+        "sat name out of range"
       );
     });
     test("should successfully return sat from valid name", () => {
       expect(Sat.fromName("frnsxuwniyb").n).toStrictEqual(
-        1_152_182_500_000_000,
+        1_152_182_500_000_000
       );
       expect(Sat.fromName("a").n).toStrictEqual(SAT_SUPPLY - 1);
       expect(Sat.fromName("b").n).toStrictEqual(SAT_SUPPLY - 2);
@@ -69,11 +69,11 @@ describe("Sat", () => {
       expect(new Sat(0).percentile).toStrictEqual("0%");
       expect(new Sat(1).percentile).toStrictEqual("4.7619047671428595e-14%");
       expect(new Sat(1_152_182_500_000_000).percentile).toStrictEqual(
-        "54.86583339368578%",
+        "54.86583339368578%"
       );
       expect(new Sat(SAT_SUPPLY - 1).percentile).toStrictEqual("100%");
       expect(new Sat(SAT_SUPPLY - 2).percentile).toStrictEqual(
-        "99.99999999999996%",
+        "99.99999999999996%"
       );
     });
   });
@@ -83,22 +83,22 @@ describe("Sat", () => {
       expect(new Sat(0).degree.toString()).toStrictEqual("0°0′0″0‴");
       expect(new Sat(1).degree.toString()).toStrictEqual("0°0′0″1‴");
       expect(
-        new Sat(2_067_187_500_000_000 - 1).degree.toString(),
+        new Sat(2_067_187_500_000_000 - 1).degree.toString()
       ).toStrictEqual("0°209999′2015″156249999‴");
       expect(new Sat(2_067_187_500_000_000).degree.toString()).toStrictEqual(
-        "1°0′0″0‴",
+        "1°0′0″0‴"
       );
       expect(
-        new Sat(2_067_187_500_000_000 + 1).degree.toString(),
+        new Sat(2_067_187_500_000_000 + 1).degree.toString()
       ).toStrictEqual("1°0′0″1‴");
       expect(new Sat(1_152_182_500_000_000).degree.toString()).toStrictEqual(
-        "0°40873′889″0‴",
+        "0°40873′889″0‴"
       );
       expect(new Sat(SAT_SUPPLY - 1).degree.toString()).toStrictEqual(
-        "5°209999′1007″0‴",
+        "5°209999′1007″0‴"
       );
       expect(new Sat(SAT_SUPPLY - 2).degree.toString()).toStrictEqual(
-        "5°209998′1006″0‴",
+        "5°209998′1006″0‴"
       );
     });
   });
@@ -144,19 +144,19 @@ describe("Sat", () => {
       expect(new Sat(0).rarity.toString()).toStrictEqual("mythic");
       expect(new Sat(1).rarity.toString()).toStrictEqual("common");
       expect(
-        new Sat(2_067_187_500_000_000 - 1).rarity.toString(),
+        new Sat(2_067_187_500_000_000 - 1).rarity.toString()
       ).toStrictEqual("common");
       expect(new Sat(2_067_187_500_000_000).rarity.toString()).toStrictEqual(
-        "legendary",
+        "legendary"
       );
       expect(
-        new Sat(2_067_187_500_000_000 + 1).rarity.toString(),
+        new Sat(2_067_187_500_000_000 + 1).rarity.toString()
       ).toStrictEqual("common");
       expect(new Sat(SAT_SUPPLY - 1).rarity.toString()).toStrictEqual(
-        "uncommon",
+        "uncommon"
       );
       expect(new Sat(SAT_SUPPLY - 2).rarity.toString()).toStrictEqual(
-        "uncommon",
+        "uncommon"
       );
     });
   });
@@ -166,7 +166,7 @@ describe("Sat", () => {
       expect(new Sat(0).epochPosition).toStrictEqual(0);
       expect(new Sat(1).epochPosition).toStrictEqual(1);
       expect(new Sat(2_067_187_500_000_000 - 1).epochPosition).toStrictEqual(
-        32812499999999,
+        32812499999999
       );
       expect(new Sat(2_067_187_500_000_000).epochPosition).toStrictEqual(0);
       expect(new Sat(2_067_187_500_000_000 + 1).epochPosition).toStrictEqual(1);
@@ -180,19 +180,19 @@ describe("Sat", () => {
       expect(new Sat(0).decimal.toString()).toStrictEqual("0.0");
       expect(new Sat(1).decimal.toString()).toStrictEqual("0.1");
       expect(
-        new Sat(2_067_187_500_000_000 - 1).decimal.toString(),
+        new Sat(2_067_187_500_000_000 - 1).decimal.toString()
       ).toStrictEqual("1259999.156249999");
       expect(new Sat(2_067_187_500_000_000).decimal.toString()).toStrictEqual(
-        "1260000.0",
+        "1260000.0"
       );
       expect(
-        new Sat(2_067_187_500_000_000 + 1).decimal.toString(),
+        new Sat(2_067_187_500_000_000 + 1).decimal.toString()
       ).toStrictEqual("1260000.1");
       expect(new Sat(SAT_SUPPLY - 1).decimal.toString()).toStrictEqual(
-        "6929999.0",
+        "6929999.0"
       );
       expect(new Sat(SAT_SUPPLY - 2).decimal.toString()).toStrictEqual(
-        "6929998.0",
+        "6929998.0"
       );
     });
   });
@@ -202,11 +202,11 @@ describe("Sat", () => {
       expect(new Sat(0).name).toStrictEqual("nvtdijuwxlp");
       expect(new Sat(1).name).toStrictEqual("nvtdijuwxlo");
       expect(new Sat(2_067_187_500_000_000 - 1).name).toStrictEqual(
-        "fachfvytgc",
+        "fachfvytgc"
       );
       expect(new Sat(2_067_187_500_000_000).name).toStrictEqual("fachfvytgb");
       expect(new Sat(2_067_187_500_000_000 + 1).name).toStrictEqual(
-        "fachfvytga",
+        "fachfvytga"
       );
       expect(new Sat(SAT_SUPPLY - 1).name).toStrictEqual("a");
       expect(new Sat(SAT_SUPPLY - 2).name).toStrictEqual("b");
@@ -216,16 +216,16 @@ describe("Sat", () => {
   describe("sattributes", () => {
     test("should successfully return sattributes", () => {
       expect(new Sat(0).sattributes).toEqual(
-        new Sattributes([Sattribute.Mythic, Sattribute.Palindrome]),
+        new Sattributes([Sattribute.Mythic, Sattribute.Palindrome])
       );
       expect(new Sat(1).sattributes).toEqual(
-        new Sattributes([Sattribute.Common, Sattribute.Palindrome]),
+        new Sattributes([Sattribute.Common, Sattribute.Palindrome])
       );
       expect(new Sat(2_067_187_500_000_000).sattributes).toEqual(
-        new Sattributes([Sattribute.Legendary]),
+        new Sattributes([Sattribute.Legendary])
       );
       expect(new Sat(SAT_SUPPLY - 1).sattributes).toEqual(
-        new Sattributes([Sattribute.Uncommon]),
+        new Sattributes([Sattribute.Uncommon])
       );
     });
   });

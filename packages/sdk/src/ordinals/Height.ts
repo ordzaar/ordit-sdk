@@ -17,7 +17,7 @@ export class Height {
       const { startingSat } = epoch;
       const { startingHeight } = epoch;
       this.#startingSat = new Sat(
-        startingSat.n + (this.n - startingHeight.n) * epoch.subsidy,
+        startingSat.n + (this.n - startingHeight.n) * epoch.subsidy
       );
     }
     return this.#startingSat;
