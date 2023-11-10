@@ -132,11 +132,11 @@ Signs a Partially Signed Bitcoin Transaction (PSBT) and returns a signature.
 **Parameters**:
 
 - `psbt` : `string` - hex or base64 format
-- `options` : `object` (optional)
+- `options` : `object` (optional for Unisat)
   - `extractTx` : Extract transaction (defaults to `true`)
   - `finalize` : Finalize signing (defaults to `true`)
-  - `network` (for Xverse only): `"mainnet" | "testnet"` (defaults to `mainnet`)
-  - `inputsToSign` (for Xverse only): List of inputs and signing indexes to sign
+  - `network` (for Xverse only) : `"mainnet" | "testnet"` (defaults to `mainnet`)
+  - `inputsToSign` (for Xverse only) : List of inputs and signing indexes to sign
 
 Note: Extracting a transaction is only possible when all transactions on the PSBT are finalized. Hence, when `extractTx` is `true`, `finalize` must also be `true` and all other inputs must have been finalized.
 
@@ -184,7 +184,9 @@ Signs a message and returns a signature.
 **Parameters**:
 
 - `message` : `string`
-- `type` : `"bip322-simple" | "ecdsa"` (defaults to `ecdsa`)
+- `address` (for Xverse only) : `string` - Wallet address to sign message
+- `network` (for Xverse only) : `"mainnet" | "testnet"` (defaults to `mainnet`) - Network
+- `type` (for Unisat only) : `"bip322-simple" | "ecdsa"` (defaults to `ecdsa`)
 
 **Returns**: `Promise<BrowserWalletSignResponse>`
 
