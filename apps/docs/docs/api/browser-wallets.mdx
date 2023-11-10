@@ -120,6 +120,7 @@ Gets a list of addresses for the browser wallet if authorized.
 **Throws**:
 
 - `BrowserWalletNotInstalledError` Wallet is not installed
+- `BrowserWalletRequestCancelledByUserError` if user cancels the request on wallet popup
 
 ### signPsbt
 
@@ -133,6 +134,24 @@ Signs a Partially Signed Bitcoin Transaction (PSBT) and returns a signature.
 - `options` : `object` (optional)
   - `extractTx` : Extract transaction (defaults to `true`)
   - `finalize` : Finalize signing (defaults to `true`)
+  - `network` (for Xverse only): `"mainnet" | "testnet"` (defaults to `mainnet`)
+  - `inputsToSign` (for Xverse only): List of inputs and signing indexes to sign
+
+Sample input (for Xverse):
+
+```bash
+{
+  extractTx: true,
+  finalize: true
+  network: "mainnet",
+  inputsToSign: [
+    {
+      address: "bc1pr09enf3yc43cz8qh7xwaasuv3xzlgfttdr3wn0q2dy9frkhrpdtsk05jqq",
+      signingIndexes: [0, 1],
+    },
+  ],
+}
+```
 
 **Returns**: `Promise<BrowserWalletSignResponse>`
 
@@ -149,6 +168,9 @@ Signs a Partially Signed Bitcoin Transaction (PSBT) and returns a signature.
 
 - `BrowserWalletNotInstalledError` Wallet is not installed
 - `BrowserWalletSigningError` Signing failed
+- `BrowserWalletExtractTxFromNonFinalizedPsbtError` if `extractTx` is `true` but there are non-finalized transactions in the PSBT
+- `BrowserWalletRequestCancelledByUserError` if user cancels the request on wallet popup
+- `OrditSDKError` if invalid options are provided
 
 ### signMessage
 
@@ -176,3 +198,5 @@ Signs a message and returns a signature.
 
 - `BrowserWalletNotInstalledError` Wallet is not installed
 - `BrowserWalletSigningError` Signing failed
+- `BrowserWalletRequestCancelledByUserError` if user cancels the request on wallet popup
+- `OrditSDKError` if invalid options are provided
