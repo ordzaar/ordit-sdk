@@ -4,13 +4,13 @@ import {
   isInstalled as isUnisatInstalled,
   signMessage as signUnisatMessage,
   signPsbt as signUnisatPsbt,
-} from "@ordzaar/ordit-sdk/browser-wallets/unisat";
+} from "@ordzaar/ordit-sdk/unisat";
 import {
   getAddresses as getXverseAddresses,
   isInstalled as isXverseInstalled,
   signMessage as signXverseMessage,
   signPsbt as signXversePsbt,
-} from "@ordzaar/ordit-sdk/browser-wallets/xverse";
+} from "@ordzaar/ordit-sdk/xverse";
 
 // Helpers
 

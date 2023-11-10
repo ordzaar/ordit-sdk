@@ -10,21 +10,21 @@
       "import": "./dist/index.js",
       "require": "./dist/index.cjs"
     },
-    "./browser-wallets/unisat": {
-      "import": "./dist/browser-wallets-unisat.js",
-      "require": "./dist/browser-wallets-unisat.cjs"
+    "./unisat": {
+      "import": "./dist/unisat.js",
+      "require": "./dist/unisat.cjs"
     },
-    "./browser-wallets/xverse": {
-      "import": "./dist/browser-wallets-xverse.js",
-      "require": "./dist/browser-wallets-xverse.cjs"
+    "./xverse": {
+      "import": "./dist/xverse.js",
+      "require": "./dist/xverse.cjs"
     }
   },
   "types": "./index.d.ts",
   "files": [
     "dist/*",
     "index.d.ts",
-    "browser-wallets-unisat.d.ts",
-    "browser-wallets-xverse.d.ts"
+    "unisat.d.ts",
+    "xverse.d.ts"
   ],
   "keywords": [
     "ordit",

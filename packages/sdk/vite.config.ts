@@ -11,14 +11,8 @@ export default defineConfig({
     lib: {
       entry: {
         index: resolve(__dirname, "src/index.ts"),
-        "browser-wallets-unisat": resolve(
-          __dirname,
-          "src/browser-wallets/unisat/index.ts",
-        ),
-        "browser-wallets-xverse": resolve(
-          __dirname,
-          "src/browser-wallets/xverse/index.ts",
-        ),
+        unisat: resolve(__dirname, "src/browser-wallets/unisat/index.ts"),
+        xverse: resolve(__dirname, "src/browser-wallets/xverse/index.ts"),
       },
       formats: ["es", "cjs"],
     },
