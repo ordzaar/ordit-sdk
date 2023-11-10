@@ -65,12 +65,8 @@ export function getAddressesFromPublicKey(
   const chainCode = Buffer.alloc(32).fill(1);
 
   const addresses: Address[] = [];
-
-  let childNodeXOnlyPubkey = publicKeyBuffer;
-
   const keys = BIP32.fromPublicKey(publicKeyBuffer, chainCode, networkObj);
-
-  childNodeXOnlyPubkey = keys.publicKey.subarray(1, 33);
+  const childNodeXOnlyPubkey = keys.publicKey.subarray(1, 33);
 
   if (format === "all") {
     const addressTypes = Object.keys(ADDRESS_TYPE_TO_FORMAT) as AddressType[];
