@@ -60,7 +60,7 @@ function getTaprootAddressFromBip32PublicKey(
   const childNodeXOnlyPubkey = bip32PublicKey.subarray(1, 33);
   const { address } = createPayment(childNodeXOnlyPubkey, "p2tr", network);
   return {
-    address,
+    address: address!, // address will never be undefined
     format: ADDRESS_TYPE_TO_FORMAT.p2tr,
     publicKey: bip32PublicKey.toString("hex"),
     xKey: childNodeXOnlyPubkey.toString("hex"),
@@ -96,7 +96,7 @@ export function getAddressesFromPublicKey(
 
       const { address } = createPayment(bip32PublicKey, addressType, network);
       return {
-        address,
+        address: address!, // address will never be undefined
         format: ADDRESS_TYPE_TO_FORMAT[addressType],
         publicKey: bip32PublicKey.toString("hex"),
       };
@@ -106,7 +106,7 @@ export function getAddressesFromPublicKey(
   const { address } = createPayment(bip32PublicKey, type, network);
   return [
     {
-      address,
+      address: address!, // address will never be undefined
       format: ADDRESS_TYPE_TO_FORMAT[type],
       publicKey: bip32PublicKey.toString("hex"),
     },
