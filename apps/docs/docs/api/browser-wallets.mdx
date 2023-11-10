@@ -94,13 +94,14 @@ Indicates whether the browser wallet extension is installed.
 
 ### getAddresses
 
-`getAddresses(network)`
+`getAddresses([network, readOnly])`
 
 Gets a list of addresses for the browser wallet if authorized.
 
 **Parameters**:
 
-- `network` : `"mainnet" | "testnet"` (defaults to `mainnet`)
+- `network` : `"mainnet" | "testnet"` (defaults to `mainnet`) - Network
+- `readOnly` : boolean (defaults to `false`) - Read only (when set to true, the wallet modal appears)
 
 **Returns**: `Promise<WalletAddress[]>`
 
