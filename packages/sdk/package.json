@@ -15,7 +15,8 @@
       "require": "./dist/browser-wallets-unisat.cjs"
     },
     "./browser-wallets/xverse": {
-      "import": "./dist/browser-wallets-xverse.js"
+      "import": "./dist/browser-wallets-xverse.js",
+      "require": "./dist/browser-wallets-xverse.cjs"
     }
   },
   "types": "./index.d.ts",
