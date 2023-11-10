@@ -13,13 +13,18 @@
     "./browser-wallets/unisat": {
       "import": "./dist/browser-wallets-unisat.js",
       "require": "./dist/browser-wallets-unisat.cjs"
+    },
+    "./browser-wallets/xverse": {
+      "import": "./dist/browser-wallets-xverse.js",
+      "require": "./dist/browser-wallets-xverse.cjs"
     }
   },
   "types": "./index.d.ts",
   "files": [
     "dist/*",
     "index.d.ts",
-    "browser-wallets-unisat.d.ts"
+    "browser-wallets-unisat.d.ts",
+    "browser-wallets-xverse.d.ts"
   ],
   "keywords": [
     "ordit",
