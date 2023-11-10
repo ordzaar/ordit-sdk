@@ -75,12 +75,9 @@ function generateTaprootInput({
   sighashType,
   witness,
 }: ProcessInputOptions): TaprootInputType {
-  const chainCode = Buffer.alloc(32);
-  chainCode.fill(1);
-
   const key = BIP32.fromPublicKey(
     Buffer.from(pubKey, "hex"),
-    chainCode,
+    Buffer.alloc(32).fill(1), // fixed chainCode
     getNetwork(network),
   );
   const xOnlyPubKey = toXOnly(key.publicKey);
