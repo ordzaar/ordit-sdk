@@ -27,8 +27,8 @@
     "react-dom": "^18.2.0"
   },
   "devDependencies": {
-    "@ordzaar/standard-typescript": "*",
     "@docusaurus/module-type-aliases": "3.0.0",
+    "@ordzaar/standard-typescript": "^0.3.6",
     "@tsconfig/docusaurus": "^2.0.2"
   },
   "browserslist": {
