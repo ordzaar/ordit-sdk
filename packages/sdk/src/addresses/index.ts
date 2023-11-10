@@ -69,7 +69,7 @@ export function getAddressesFromPublicKey(
   if (type === "all") {
     const addressTypes = Object.keys(ADDRESS_TYPE_TO_FORMAT) as AddressType[];
 
-    return addressTypes.map((addressType) => {
+    return addressTypes.map<Address>((addressType) => {
       if (addressType === "p2tr") {
         const { address } = createPayment(
           childNodeXOnlyPubkey,
@@ -81,7 +81,7 @@ export function getAddressesFromPublicKey(
           address,
           format: ADDRESS_TYPE_TO_FORMAT[addressType],
           publicKey: keys.publicKey.toString("hex"),
-          xkey: childNodeXOnlyPubkey.toString("hex"),
+          xKey: childNodeXOnlyPubkey.toString("hex"),
         };
       }
 
@@ -102,7 +102,7 @@ export function getAddressesFromPublicKey(
       address,
       format: ADDRESS_TYPE_TO_FORMAT[type],
       publicKey: keys.publicKey.toString("hex"),
-      xkey: type === "p2tr" ? childNodeXOnlyPubkey.toString("hex") : undefined,
+      xKey: type === "p2tr" ? childNodeXOnlyPubkey.toString("hex") : undefined,
     },
   ];
 }
