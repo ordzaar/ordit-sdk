@@ -15,6 +15,7 @@ import {
 import { getAddressFormat } from "../../addresses";
 import type { BrowserWalletNetwork } from "../../config/types";
 import {
+  BrowserWalletExtractTxFromNonFinalizedPsbtError,
   BrowserWalletNotInstalledError,
   BrowserWalletRequestCancelledByUserError,
   BrowserWalletSigningError,
@@ -29,6 +30,7 @@ import { fromXOnlyToFullPubkey } from "./utils";
  * Checks if the browser wallet extension is installed.
  *
  * @returns `true` if installed, `false` otherwise.
+ * @throws {OrditSDKError} Function is called outside a browser without `window` object
  */
 function isInstalled() {
   if (typeof window === "undefined") {
@@ -42,26 +44,25 @@ function isInstalled() {
  * Gets addresses from the browser wallet.
  *
  * @param network Network
- * @param readOnly Read only (when set to true, the wallet modal appears)
  * @returns An array of WalletAddress objects.
+ * @throws {BrowserWalletNotInstalledError} Wallet is not installed
+ * @throws {BrowserWalletSigningError} Failed to sign with Xverse
+ * @throws {BrowserWalletRequestCancelledByUserError} Request was cancelled by user
  */
 async function getAddresses(
   network: BrowserWalletNetwork = "mainnet",
-  readOnly?: boolean,
 ): Promise<WalletAddress[]> {
   if (!isInstalled()) {
     throw new BrowserWalletNotInstalledError("Xverse not installed");
-  }
-
-  if (readOnly) {
-    throw new OrditSDKError("Read only mode is not supported on Xverse");
   }
 
   const result: WalletAddress[] = [];
 
   const handleOnFinish = (response: GetAddressResponse) => {
     if (!response || !response.addresses || response.addresses.length !== 2) {
-      throw new OrditSDKError("Invalid address format");
+      throw new BrowserWalletSigningError(
+        "Failed to retrieve addresses using Xverse",
+      );
     }
 
     response.addresses.forEach((addressObj) => {
@@ -88,7 +89,7 @@ async function getAddresses(
   const xVerseOptions: GetAddressOptions = {
     payload: {
       purposes: ["ordinals", "payment"] as AddressPurpose[],
-      message: "Provide access to payment Address and Ordinals address",
+      message: "Provide access to Payment address and Ordinals address",
       network: {
         type: NETWORK_TO_BITCOIN_NETWORK_TYPE[network],
       },
@@ -109,6 +110,11 @@ async function getAddresses(
  * @param psbt Partially Signed Bitcoin Transaction
  * @param options Options for signing
  * @returns An object containing `base64` and `hex` if the transaction is not extracted, or `hex` if the transaction is extracted.
+ * @throws {BrowserWalletNotInstalledError} Wallet is not installed
+ * @throws {BrowserWalletExtractTxFromNonFinalizedPsbtError} Failed to extract transaction as not all inputs are finalized
+ * @throws {BrowserWalletSigningError} Failed to sign with Xverse
+ * @throws {OrditSDKError} Invalid options provided
+ * @throws {BrowserWalletRequestCancelledByUserError} Request was cancelled by user
  */
 async function signPsbt(
   psbt: Psbt,
@@ -122,6 +128,9 @@ async function signPsbt(
   if (!isInstalled()) {
     throw new BrowserWalletNotInstalledError("Xverse not installed");
   }
+  if (!finalize && extractTx) {
+    throw new BrowserWalletExtractTxFromNonFinalizedPsbtError();
+  }
   if (!psbt || !network || !inputsToSign.length) {
     throw new OrditSDKError("Invalid options provided");
   }
@@ -132,20 +141,34 @@ async function signPsbt(
   const handleOnFinish = (response: SignTransactionResponse) => {
     const { psbtBase64 } = response;
     if (!psbtBase64) {
-      throw new OrditSDKError("Invalid options provided");
+      throw new BrowserWalletSigningError("Failed to sign psbt using Xverse");
     }
 
     const signedPsbt = Psbt.fromBase64(psbtBase64);
     if (finalize) {
       inputsToSign.forEach((input) => {
         input.signingIndexes.forEach((index) => {
-          signedPsbt.finalizeInput(index);
+          try {
+            signedPsbt.finalizeInput(index);
+          } catch (error) {
+            throw new OrditSDKError("Failed to finalize input");
+          }
         });
       });
     }
 
     if (extractTx) {
-      hex = signedPsbt.extractTransaction().toHex();
+      try {
+        hex = signedPsbt.extractTransaction().toHex();
+      } catch (error) {
+        // It is possible that not all inputs are finalized.
+        // extractTransaction will fail if there are any.
+        if (error instanceof Error && error.message === "Not finalized") {
+          throw new BrowserWalletExtractTxFromNonFinalizedPsbtError();
+        } else {
+          throw new OrditSDKError("Failed to extract transaction from PSBT");
+        }
+      }
       base64 = null;
     } else {
       hex = signedPsbt.toHex();
@@ -183,7 +206,13 @@ async function signPsbt(
  * Signs a message.
  *
  * @param message Message to be signed
+ * @param address Address to sign with
+ * @param network Network (mainnet or testnet)
  * @returns An object containing `base64` and `hex`.
+ * @throws {BrowserWalletNotInstalledError} Wallet is not installed
+ * @throws {BrowserWalletSigningError} Failed to sign with Xverse
+ * @throws {OrditSDKError} Invalid options provided
+ * @throws {BrowserWalletRequestCancelledByUserError} Request was cancelled by user
  */
 async function signMessage(
   message: string,
