@@ -16,7 +16,7 @@
     "@ordzaar/ordit-sdk": "workspace:*"
   },
   "devDependencies": {
-    "@ordzaar/standard-typescript": "*",
+    "@ordzaar/standard-typescript": "^0.3.6",
     "vite-plugin-node-polyfills": "^0.16.0"
   }
 }
