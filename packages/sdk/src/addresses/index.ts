@@ -58,18 +58,17 @@ export function getAddressesFromPublicKey(
   network: Network = "testnet",
   format: AddressType | "all" = "all",
 ) {
-  if (!Buffer.isBuffer(publicKey)) {
-    // eslint-disable-next-line no-param-reassign
-    publicKey = Buffer.from(publicKey, "hex");
-  }
+  const publicKeyBuffer = Buffer.isBuffer(publicKey)
+    ? publicKey
+    : Buffer.from(publicKey, "hex");
   const networkObj = getNetwork(network);
   const chainCode = Buffer.alloc(32).fill(1);
 
   const addresses: Address[] = [];
 
-  let childNodeXOnlyPubkey = publicKey;
+  let childNodeXOnlyPubkey = publicKeyBuffer;
 
-  const keys = BIP32.fromPublicKey(publicKey, chainCode, networkObj);
+  const keys = BIP32.fromPublicKey(publicKeyBuffer, chainCode, networkObj);
 
   childNodeXOnlyPubkey = keys.publicKey.subarray(1, 33);
 
