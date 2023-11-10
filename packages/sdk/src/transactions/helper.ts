@@ -84,7 +84,7 @@ function generateTaprootInput({
   const key = bip32.fromPublicKey(
     Buffer.from(pubKey, "hex"),
     chainCode,
-    getNetwork(network)
+    getNetwork(network),
   );
   const xOnlyPubKey = toXOnly(key.publicKey);
 

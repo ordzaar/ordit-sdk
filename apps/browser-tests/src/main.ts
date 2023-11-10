@@ -52,7 +52,7 @@ const createPsbtButton = document.getElementById("create-psbt");
 if (createPsbtButton) {
   createPsbtButton.addEventListener(
     "click",
-    handleCreateAndPreparePsbtButtonClick
+    handleCreateAndPreparePsbtButtonClick,
   );
 }
 
@@ -70,7 +70,7 @@ if (signPsbtButton) {
 
 async function handleSignMessage() {
   const signPsbtResponse = await signUnisatMessage(
-    "This is a test message for signing.\n\nThis will not be used."
+    "This is a test message for signing.\n\nThis will not be used.",
   );
   console.log("Sign PSBT Response", signPsbtResponse);
 }

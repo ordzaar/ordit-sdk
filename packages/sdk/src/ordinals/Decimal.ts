@@ -7,7 +7,7 @@ import type { Sat } from "./Sat";
 export class Decimal {
   constructor(
     readonly height: Height, // A is the block height
-    readonly offset: number // B is the cycle number
+    readonly offset: number, // B is the cycle number
   ) {}
 
   static from(sat: Sat): Decimal {

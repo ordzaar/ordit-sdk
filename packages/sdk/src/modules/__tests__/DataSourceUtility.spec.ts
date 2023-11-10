@@ -17,7 +17,7 @@ describe("DatasourceUtility", () => {
         expect(
           DatasourceUtility.parseInscriptions(INSCRIPTIONS, {
             decodeMetadata: true,
-          })
+          }),
         ).toEqual(INSCRIPTIONS_COPY);
       });
 
@@ -36,7 +36,7 @@ describe("DatasourceUtility", () => {
         expect(
           DatasourceUtility.parseInscriptions([INSCRIPTION_ENCODED_META_COPY], {
             decodeMetadata: true,
-          })
+          }),
         ).toContainEqual(INSCRIPTION_DECODED_META);
         // TODO: Fix UNSTABLE_decodeObject to ensure immutability
         // expect(INSCRIPTION_ENCODED_META_COPY).toEqual(INSCRIPTIONS_ENCODED_META);
@@ -52,7 +52,7 @@ describe("DatasourceUtility", () => {
         expect(
           DatasourceUtility.parseInscriptions([INSCRIPTION_ENCODED_META_COPY], {
             decodeMetadata: false,
-          })
+          }),
         ).toEqual(INSCRIPTIONS_ENCODED_META);
       });
     });
@@ -60,7 +60,7 @@ describe("DatasourceUtility", () => {
   describe("segregateUTXOsBySpendStatus", () => {
     test("should return all spendable utxos", () => {
       expect(
-        DatasourceUtility.segregateUTXOsBySpendStatus({ utxos: UNSPENT_UTXOS })
+        DatasourceUtility.segregateUTXOsBySpendStatus({ utxos: UNSPENT_UTXOS }),
       ).toEqual({
         totalUTXOs: 2,
         spendableUTXOs: UNSPENT_UTXOS,
@@ -75,7 +75,7 @@ describe("DatasourceUtility", () => {
       expect(
         DatasourceUtility.segregateUTXOsBySpendStatus({
           utxos: UNSPENT_UTXOS_WITH_UNSAFE_TO_SPEND,
-        })
+        }),
       ).toEqual({
         totalUTXOs: 2,
         spendableUTXOs: expect.arrayContaining([SAFE_TO_SPEND_UTXO]),

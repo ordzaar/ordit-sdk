@@ -135,7 +135,7 @@ describe("Unisat Wallet", () => {
     });
     test("should fail to sign a psbt when unisat returns an empty psbt hex string", async () => {
       const SIGN_PSBT_ERROR = new OrditSDKError(
-        "Failed to sign psbt hex using Unisat"
+        "Failed to sign psbt hex using Unisat",
       );
       vi.stubGlobal("unisat", {
         signPsbt: MOCK_EMPTY_VALUE_RESULT,
@@ -151,7 +151,7 @@ describe("Unisat Wallet", () => {
         signMessage: vi
           .fn()
           .mockResolvedValue(
-            "G+LrYa7T5dUMDgQduAErw+i6ebK4GqTXYVWIDM+snYk7Yc6LdPitmaqM6j+iJOeID1CsMXOJFpVopvPiHBdulkE="
+            "G+LrYa7T5dUMDgQduAErw+i6ebK4GqTXYVWIDM+snYk7Yc6LdPitmaqM6j+iJOeID1CsMXOJFpVopvPiHBdulkE=",
           ),
       });
       const signedMessageResponse = await signMessage("abcdefghijk123456789");
@@ -163,13 +163,13 @@ describe("Unisat Wallet", () => {
     });
     test("should fail to sign a message when unisat returns an empty signature", async () => {
       const SIGN_MESSAGE_ERROR = new OrditSDKError(
-        "Failed to sign message using Unisat"
+        "Failed to sign message using Unisat",
       );
       vi.stubGlobal("unisat", {
         signMessage: MOCK_EMPTY_VALUE_RESULT,
       });
       await expect(() =>
-        signMessage("abcdefghijk123456789")
+        signMessage("abcdefghijk123456789"),
       ).rejects.toThrowError(SIGN_MESSAGE_ERROR);
     });
   });

@@ -41,7 +41,7 @@ export function createPayment(
   key: Buffer,
   type: AddressType,
   network: Network | BitcoinNetwork,
-  paymentOptions?: Payment
+  paymentOptions?: Payment,
 ) {
   initEccLib(ecc);
   const networkObj =
@@ -68,7 +68,7 @@ export function createPayment(
 export function getDerivationPath(
   formatType: AddressFormat,
   account = 0,
-  addressIndex = 0
+  addressIndex = 0,
 ) {
   const pathFormat: Record<AddressFormat, string> = {
     legacy: `m/44'/0'/${account}'/0/${addressIndex}`,
@@ -83,12 +83,12 @@ export function hdNodeToChild(
   node: BIP32Interface,
   formatType: AddressFormat = "legacy",
   addressIndex = 0,
-  account = 0
+  account = 0,
 ) {
   const fullDerivationPath = getDerivationPath(
     formatType,
     account,
-    addressIndex
+    addressIndex,
   );
 
   return node.derivePath(fullDerivationPath);
@@ -118,13 +118,13 @@ export function toXOnly(pubkey: Buffer): Buffer {
 export function tapTweakHash(pubKey: Buffer, h: Buffer | undefined): Buffer {
   return crypto.taggedHash(
     "TapTweak",
-    Buffer.concat(h ? [pubKey, h] : [pubKey])
+    Buffer.concat(h ? [pubKey, h] : [pubKey]),
   );
 }
 
 export function tweakSigner(
   signer: BIP32Interface | ECPairInterface,
-  opts: { tweakHash?: Buffer; network?: BitcoinNetwork } = {}
+  opts: { tweakHash?: Buffer; network?: BitcoinNetwork } = {},
 ): Signer {
   const ECPair = ECPairFactory(ecc);
 
@@ -138,7 +138,7 @@ export function tweakSigner(
 
   const tweakedPrivateKey = ecc.privateAdd(
     privateKey,
-    tapTweakHash(toXOnly(signer.publicKey), opts.tweakHash)
+    tapTweakHash(toXOnly(signer.publicKey), opts.tweakHash),
   );
   if (!tweakedPrivateKey) {
     throw new OrditSDKError("Invalid tweaked private key!");
@@ -155,7 +155,7 @@ export const isString = (s: unknown) =>
 
 function encodeDecodeObject(
   obj: NestedObject,
-  { encode, depth = 0 }: EncodeDecodeObjectOptions
+  { encode, depth = 0 }: EncodeDecodeObjectOptions,
 ) {
   const maxDepth = 5;
 
@@ -272,7 +272,7 @@ function isPaymentFactory(payment: PaymentCreator, network: Network) {
 
 export const isP2PKH = (
   script: Buffer,
-  network: Network
+  network: Network,
 ): IsBitcoinPaymentResponse => {
   const p2pkh = isPaymentFactory(payments.p2pkh, network)(script);
   return {
@@ -283,7 +283,7 @@ export const isP2PKH = (
 
 export const isP2WPKH = (
   script: Buffer,
-  network: Network
+  network: Network,
 ): IsBitcoinPaymentResponse => {
   const p2wpkh = isPaymentFactory(payments.p2wpkh, network)(script);
   return {
@@ -294,7 +294,7 @@ export const isP2WPKH = (
 
 export const isP2WSHScript = (
   script: Buffer,
-  network: Network
+  network: Network,
 ): IsBitcoinPaymentResponse => {
   const p2wsh = isPaymentFactory(payments.p2wsh, network)(script);
   return {
@@ -304,7 +304,7 @@ export const isP2WSHScript = (
 };
 export const isP2SHScript = (
   script: Buffer,
-  network: Network
+  network: Network,
 ): IsBitcoinPaymentResponse => {
   const p2sh = isPaymentFactory(payments.p2sh, network)(script);
   return {
@@ -315,7 +315,7 @@ export const isP2SHScript = (
 
 export const isP2TR = (
   script: Buffer,
-  network: Network
+  network: Network,
 ): IsBitcoinPaymentResponse => {
   const p2tr = isPaymentFactory(payments.p2tr, network)(script);
   return {
@@ -326,7 +326,7 @@ export const isP2TR = (
 
 export function getScriptType(
   script: Buffer,
-  network: Network
+  network: Network,
 ): GetScriptTypeResponse {
   const p2pkh = isP2PKH(script, network);
   if (p2pkh.payload) {

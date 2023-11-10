@@ -26,7 +26,7 @@ function isInstalled() {
  */
 async function getAddresses(
   _network: BrowserWalletNetwork = "mainnet",
-  _readOnly?: boolean
+  _readOnly?: boolean,
 ): Promise<WalletAddress[]> {
   return [];
 }
@@ -41,7 +41,7 @@ async function getAddresses(
  */
 async function signPsbt(
   _psbt: Psbt,
-  _options: BrowserWalletSignPSBTOptions = {}
+  _options: BrowserWalletSignPSBTOptions = {},
 ): Promise<BrowserWalletSignResponse> {
   throw new OrditSDKError("Method not implemented");
 }
@@ -53,7 +53,7 @@ async function signPsbt(
  * @returns An object containing `base64` and `hex`.
  */
 async function signMessage(
-  _message: string
+  _message: string,
 ): Promise<BrowserWalletSignResponse> {
   throw new OrditSDKError("Method not implemented");
 }

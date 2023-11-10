@@ -6,16 +6,16 @@ describe("Sattributes", () => {
   describe("from", () => {
     test("should return correct Sattributes", () => {
       expect(Sattributes.from(new Sat(0))).toEqual(
-        new Sattributes([Sattribute.Mythic, Sattribute.Palindrome])
+        new Sattributes([Sattribute.Mythic, Sattribute.Palindrome]),
       );
       expect(Sattributes.from(new Sat(2_067_187_500_000_000))).toEqual(
-        new Sattributes([Sattribute.Legendary])
+        new Sattributes([Sattribute.Legendary]),
       );
       expect(
-        Sattributes.from(new Sat(50 * COIN_VALUE * SUBSIDY_HALVING_INTERVAL))
+        Sattributes.from(new Sat(50 * COIN_VALUE * SUBSIDY_HALVING_INTERVAL)),
       ).toEqual(new Sattributes([Sattribute.Epic]));
       expect(Sattributes.from(new Sat(1))).toEqual(
-        new Sattributes([Sattribute.Common, Sattribute.Palindrome])
+        new Sattributes([Sattribute.Common, Sattribute.Palindrome]),
       );
     });
   });

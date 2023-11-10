@@ -13,7 +13,7 @@ describe("Decimal", () => {
       expect(Decimal.from(new Sat(1)).offset).toStrictEqual(1);
 
       expect(Decimal.from(new Sat(LAST_SAT)).height).toEqual(
-        new Height(6929999)
+        new Height(6929999),
       );
       expect(Decimal.from(new Sat(LAST_SAT)).offset).toStrictEqual(0);
     });
@@ -26,7 +26,7 @@ describe("Decimal", () => {
       expect(Decimal.from(new Sat(1)).toString()).toStrictEqual("0.1");
 
       expect(Decimal.from(new Sat(LAST_SAT)).toString()).toStrictEqual(
-        "6929999.0"
+        "6929999.0",
       );
     });
   });

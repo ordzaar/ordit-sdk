@@ -10,7 +10,7 @@ describe("Epoch", () => {
       expect(Epoch.from(new Sat(1))).toEqual(new Epoch(0));
       expect(Epoch.from(new Epoch(2).startingSat)).toEqual(new Epoch(2));
       expect(Epoch.from(new Sat(new Epoch(2).startingSat.n + 1))).toEqual(
-        new Epoch(2)
+        new Epoch(2),
       );
       expect(Epoch.from(new Sat(2_067_187_500_000_000))).toEqual(new Epoch(6));
     });
@@ -21,13 +21,13 @@ describe("Epoch", () => {
       expect(Epoch.fromHeight(new Height(0))).toEqual(new Epoch(0));
       expect(Epoch.fromHeight(new Height(1))).toEqual(new Epoch(0));
       expect(
-        Epoch.fromHeight(new Height(SUBSIDY_HALVING_INTERVAL - 1))
+        Epoch.fromHeight(new Height(SUBSIDY_HALVING_INTERVAL - 1)),
       ).toEqual(new Epoch(0));
       expect(Epoch.fromHeight(new Height(SUBSIDY_HALVING_INTERVAL))).toEqual(
-        new Epoch(1)
+        new Epoch(1),
       );
       expect(
-        Epoch.fromHeight(new Height(SUBSIDY_HALVING_INTERVAL + 1))
+        Epoch.fromHeight(new Height(SUBSIDY_HALVING_INTERVAL + 1)),
       ).toEqual(new Epoch(1));
     });
   });

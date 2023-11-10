@@ -23,17 +23,17 @@ describe("Degree", () => {
               1_250_000_000 * SUBSIDY_HALVING_INTERVAL +
               625_000_000 * SUBSIDY_HALVING_INTERVAL +
               312_500_000 * SUBSIDY_HALVING_INTERVAL +
-              156_250_000 * SUBSIDY_HALVING_INTERVAL
-          )
-        ).hour
+              156_250_000 * SUBSIDY_HALVING_INTERVAL,
+          ),
+        ).hour,
       ).toStrictEqual(1);
 
       expect(
-        new Degree(new Sat(5_000_000_000 * DIFFCHANGE_INTERVAL)).minute
+        new Degree(new Sat(5_000_000_000 * DIFFCHANGE_INTERVAL)).minute,
       ).toStrictEqual(DIFFCHANGE_INTERVAL);
 
       expect(
-        new Degree(new Sat(5_000_000_000 * SUBSIDY_HALVING_INTERVAL)).second
+        new Degree(new Sat(5_000_000_000 * SUBSIDY_HALVING_INTERVAL)).second,
       ).toStrictEqual(336);
     });
   });
@@ -52,17 +52,19 @@ describe("Degree", () => {
               1_250_000_000 * SUBSIDY_HALVING_INTERVAL +
               625_000_000 * SUBSIDY_HALVING_INTERVAL +
               312_500_000 * SUBSIDY_HALVING_INTERVAL +
-              156_250_000 * SUBSIDY_HALVING_INTERVAL
-          )
-        ).toString()
+              156_250_000 * SUBSIDY_HALVING_INTERVAL,
+          ),
+        ).toString(),
       ).toStrictEqual("1°0′0″0‴");
 
       expect(
-        new Degree(new Sat(5_000_000_000 * DIFFCHANGE_INTERVAL)).toString()
+        new Degree(new Sat(5_000_000_000 * DIFFCHANGE_INTERVAL)).toString(),
       ).toStrictEqual("0°2016′0″0‴");
 
       expect(
-        new Degree(new Sat(5_000_000_000 * SUBSIDY_HALVING_INTERVAL)).toString()
+        new Degree(
+          new Sat(5_000_000_000 * SUBSIDY_HALVING_INTERVAL),
+        ).toString(),
       ).toStrictEqual("0°0′336″0‴");
     });
   });

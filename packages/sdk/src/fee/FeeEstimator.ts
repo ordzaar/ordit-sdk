@@ -91,7 +91,7 @@ class FeeEstimator {
         return getScriptType(script, this.network).format;
       }),
       outputTypes: outputs.map(
-        (output) => getScriptType(output.script, this.network).format
+        (output) => getScriptType(output.script, this.network).format,
       ),
     };
   }
@@ -119,7 +119,7 @@ class FeeEstimator {
       {
         input: 0,
         witness: 0,
-      }
+      },
     );
     const outputVBytes = outputTypes.reduce((acc, outputType) => {
       const { output } = getBaseSizeByType(outputType);

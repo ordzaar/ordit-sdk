@@ -64,8 +64,8 @@ export class Sat {
     if (this.#height === undefined) {
       this.#height = new Height(
         Math.floor(
-          this.epoch.startingHeight.n + this.epochPosition / this.epoch.subsidy
-        )
+          this.epoch.startingHeight.n + this.epochPosition / this.epoch.subsidy,
+        ),
       );
     }
     return this.#height;

@@ -8,7 +8,7 @@ describe("Height", () => {
       expect(new Height(0).startingSat).toEqual(new Sat(0));
       expect(new Height(1).startingSat).toEqual(new Sat(5000000000));
       expect(new Height(SUBSIDY_HALVING_INTERVAL).startingSat).toEqual(
-        STARTING_SATS[1]
+        STARTING_SATS[1],
       );
     });
   });
@@ -18,7 +18,7 @@ describe("Height", () => {
       expect(new Height(0).periodOffset).toStrictEqual(0);
       expect(new Height(1).periodOffset).toStrictEqual(1);
       expect(new Height(DIFFCHANGE_INTERVAL - 1).periodOffset).toStrictEqual(
-        2015
+        2015,
       );
       expect(new Height(DIFFCHANGE_INTERVAL).periodOffset).toStrictEqual(0);
       expect(new Height(DIFFCHANGE_INTERVAL + 1).periodOffset).toStrictEqual(1);
