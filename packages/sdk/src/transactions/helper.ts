@@ -1,8 +1,7 @@
-import * as ecc from "@bitcoinerlab/secp256k1";
-import { BIP32Factory } from "bip32";
 import { Buffer } from "buffer";
 
 import type { Network } from "../config/types";
+import { BIP32 } from "../constants";
 import { BaseDatasource, JsonRpcDatasource } from "../modules";
 import { createPayment, getNetwork, toXOnly } from "../utils";
 import type { UTXO, UTXOLimited } from "./types";
@@ -69,8 +68,6 @@ interface ProcessInputOptions {
   datasource?: BaseDatasource;
 }
 
-const bip32 = BIP32Factory(ecc);
-
 function generateTaprootInput({
   utxo,
   pubKey,
@@ -81,7 +78,7 @@ function generateTaprootInput({
   const chainCode = Buffer.alloc(32);
   chainCode.fill(1);
 
-  const key = bip32.fromPublicKey(
+  const key = BIP32.fromPublicKey(
     Buffer.from(pubKey, "hex"),
     chainCode,
     getNetwork(network),
