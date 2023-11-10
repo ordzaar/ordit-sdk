@@ -142,7 +142,14 @@ export interface UTXO {
 export type UTXOLimited = Pick<UTXO, "txid" | "n" | "sats" | "scriptPubKey">;
 
 export interface Output {
+  /**
+   * Address
+   */
   address: string;
+
+  /**
+   * Value in satoshis
+   */
   value: number;
 }
 

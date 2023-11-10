@@ -94,13 +94,14 @@ Indicates whether the browser wallet extension is installed.
 
 ### getAddresses
 
-`getAddresses(network)`
+`getAddresses([network, readOnly])`
 
 Gets a list of addresses for the browser wallet if authorized.
 
 **Parameters**:
 
-- `network` : `"mainnet" | "testnet"` (defaults to `mainnet`)
+- `network` : `"mainnet" | "testnet"` (defaults to `mainnet`) - Network
+- `readOnly` : boolean (defaults to `false`) - Read only (when set to true, the wallet modal appears)
 
 **Returns**: `Promise<WalletAddress[]>`
 
@@ -130,12 +131,14 @@ Signs a Partially Signed Bitcoin Transaction (PSBT) and returns a signature.
 
 **Parameters**:
 
-- `psbt` : `string` in hex or base64 format
+- `psbt` : `string` - hex or base64 format
 - `options` : `object` (optional)
   - `extractTx` : Extract transaction (defaults to `true`)
   - `finalize` : Finalize signing (defaults to `true`)
   - `network` (for Xverse only): `"mainnet" | "testnet"` (defaults to `mainnet`)
   - `inputsToSign` (for Xverse only): List of inputs and signing indexes to sign
+
+Note: Extracting a transaction is only possible when all transactions on the PSBT are finalized. Hence, when `extractTx` is `true`, `finalize` must also be `true` and all other inputs must have been finalized.
 
 Sample input (for Xverse):
 

@@ -1,5 +1,10 @@
-const SDK_NAME = "ORDIT_SDK";
+import * as ecc from "@bitcoinerlab/secp256k1";
+import { initEccLib } from "bitcoinjs-lib";
 
-export { SDK_NAME };
+// Required for all operations to function.
+// This function will manage its own instance.
+initEccLib(ecc);
 
+export * from "./modules";
 export * from "./ordinals/index";
+export * from "./transactions";

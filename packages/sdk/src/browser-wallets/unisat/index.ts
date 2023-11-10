@@ -3,6 +3,7 @@ import { Psbt } from "bitcoinjs-lib";
 import { getAddressFormat } from "../../addresses";
 import type { BrowserWalletNetwork } from "../../config/types";
 import {
+  BrowserWalletExtractTxFromNonFinalizedPsbtError,
   BrowserWalletNotInstalledError,
   BrowserWalletSigningError,
   OrditSDKError,
@@ -83,6 +84,10 @@ async function signPsbt(
     throw new BrowserWalletNotInstalledError("Unisat not installed");
   }
 
+  if (extractTx && !finalize) {
+    throw new BrowserWalletExtractTxFromNonFinalizedPsbtError();
+  }
+
   const psbtHex = psbt.toHex();
   const signedPsbtHex = await window.unisat.signPsbt(psbtHex, {
     autoFinalized: finalize,
@@ -92,15 +97,28 @@ async function signPsbt(
   }
 
   const signedPsbt = Psbt.fromHex(signedPsbtHex);
-  return extractTx
-    ? {
+
+  if (extractTx) {
+    try {
+      return {
         base64: null,
         hex: signedPsbt.extractTransaction().toHex(),
-      }
-    : {
-        base64: signedPsbt.toBase64(),
-        hex: signedPsbt.toHex(),
       };
+    } catch (error) {
+      // It is possible that not all inputs are finalized.
+      // extractTransaction will fail if there are any.
+      if (error instanceof Error && error.message === "Not finalized") {
+        throw new BrowserWalletExtractTxFromNonFinalizedPsbtError();
+      } else {
+        throw new OrditSDKError("Failed to extract transaction from PSBT");
+      }
+    }
+  } else {
+    return {
+      base64: signedPsbt.toBase64(),
+      hex: signedPsbt.toHex(),
+    };
+  }
 }
 
 /**

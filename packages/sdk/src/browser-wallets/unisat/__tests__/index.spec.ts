@@ -1,7 +1,10 @@
 // @vitest-environment happy-dom
 import { networks, Psbt } from "bitcoinjs-lib";
 
-import { OrditSDKError } from "../../../errors";
+import {
+  BrowserWalletExtractTxFromNonFinalizedPsbtError,
+  OrditSDKError,
+} from "../../../errors";
 import { WalletAddress } from "../../types";
 import { getAddresses, isInstalled, signMessage, signPsbt } from "..";
 import { NETWORK_TO_UNISAT_NETWORK } from "../constants";
@@ -94,7 +97,7 @@ describe("Unisat Wallet", () => {
         signPsbt: MOCK_SIGN_PSBT,
       });
       const psbt = new Psbt({ network: networks.bitcoin });
-      const signedPsbtResponse = await signPsbt(psbt);
+      const signedPsbtResponse = await signPsbt(psbt, { extractTx: true });
       expect(signedPsbtResponse).toEqual({
         base64: null,
         hex: "02000000000000000000",
@@ -122,16 +125,48 @@ describe("Unisat Wallet", () => {
         hex: "02000000000000000000",
       });
     });
-    test("should sign a psbt when finalize is false", async () => {
+    test("should sign a psbt when finalize is false and extractTx is false", async () => {
       vi.stubGlobal("unisat", {
         signPsbt: MOCK_SIGN_PSBT,
       });
+      const EXTRACTION_TRANSACTION_NON_FINALIZED_PSBT_ERROR =
+        new BrowserWalletExtractTxFromNonFinalizedPsbtError();
       const psbt = new Psbt({ network: networks.bitcoin });
-      const signedPsbtResponse = await signPsbt(psbt, { finalize: false });
-      expect(signedPsbtResponse).toEqual({
-        base64: null,
-        hex: "02000000000000000000",
+      const signedPsbtResponse = await signPsbt(psbt, {
+        finalize: false,
+        extractTx: false,
       });
+      expect(signedPsbtResponse).toEqual({
+        base64: "cHNidP8BAAoCAAAAAAAAAAAAAAAA",
+        hex: "70736274ff01000a02000000000000000000000000",
+      });
+    });
+    test("should throw an error when extractTx is true but finalize is false", async () => {
+      vi.stubGlobal("unisat", {
+        signPsbt: MOCK_SIGN_PSBT,
+      });
+      const EXTRACTION_TRANSACTION_NON_FINALIZED_PSBT_ERROR =
+        new BrowserWalletExtractTxFromNonFinalizedPsbtError();
+      const psbt = new Psbt({ network: networks.bitcoin });
+      await expect(() =>
+        signPsbt(psbt, { finalize: false }),
+      ).rejects.toThrowError(EXTRACTION_TRANSACTION_NON_FINALIZED_PSBT_ERROR);
+    });
+    test("should throw an error when extractTx is true but not all inputs are finalized", async () => {
+      const MOCK_UNFINALIZED_PSBT = vi
+        .fn()
+        .mockResolvedValue(
+          "70736274ff0100a00200000002ab0949a08c5af7c49b8212f417e2f15ab3f5c33dcf153821a8139f877a5b7be40000000000feffffffab0949a08c5af7c49b8212f417e2f15ab3f5c33dcf153821a8139f877a5b7be40100000000feffffff02603bea0b000000001976a914768a40bbd740cbe81d988e71de2a4d5c71396b1d88ac8e240000000000001976a9146f4620b553fa095e721b9ee0efe9fa039cca459788ac000000000001076a47304402204759661797c01b036b25928948686218347d89864b719e1f7fcf57d1e511658702205309eabf56aa4d8891ffd111fdf1336f3a29da866d7f8486d75546ceedaf93190121035cdc61fc7ba971c0b501a646a2a83b102cb43881217ca682dc86e2d73fa882920001012000e1f5050000000017a9143545e6e33b832c47050f24d3eeb93c9c03948bc787010416001485d13537f2e265405a34dbafa9e3dda01fb82308000000",
+        );
+      vi.stubGlobal("unisat", {
+        signPsbt: MOCK_UNFINALIZED_PSBT,
+      });
+      const EXTRACTION_TRANSACTION_NON_FINALIZED_PSBT_ERROR =
+        new BrowserWalletExtractTxFromNonFinalizedPsbtError();
+      const psbt = new Psbt({ network: networks.bitcoin });
+      await expect(() =>
+        signPsbt(psbt, { finalize: true }),
+      ).rejects.toThrowError(EXTRACTION_TRANSACTION_NON_FINALIZED_PSBT_ERROR);
     });
     test("should fail to sign a psbt when unisat returns an empty psbt hex string", async () => {
       const SIGN_PSBT_ERROR = new OrditSDKError(

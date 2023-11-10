@@ -2,6 +2,7 @@ import { resolve } from "path";
 import { defineConfig } from "vite";
 import dts from "vite-plugin-dts";
 import eslint from "vite-plugin-eslint";
+import { nodePolyfills } from "vite-plugin-node-polyfills";
 import * as packageJson from "./package.json";
 
 export default defineConfig({
@@ -29,6 +30,11 @@ export default defineConfig({
     },
   },
   plugins: [
+    nodePolyfills({
+      globals: {
+        Buffer: true,
+      },
+    }),
     dts({
       insertTypesEntry: true,
     }),
