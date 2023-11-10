@@ -121,6 +121,7 @@ Gets a list of addresses for the browser wallet if authorized.
 **Throws**:
 
 - `BrowserWalletNotInstalledError` Wallet is not installed
+- `BrowserWalletRequestCancelledByUserError` if user cancels the request on wallet popup
 
 ### signPsbt
 
@@ -131,11 +132,29 @@ Signs a Partially Signed Bitcoin Transaction (PSBT) and returns a signature.
 **Parameters**:
 
 - `psbt` : `string` - hex or base64 format
-- `options` : `object` (optional)
-  - `extractTx` : `boolean` - Extract transaction (defaults to `true`)
-  - `finalize` : `boolean` - Finalize signing (defaults to `true`)
+- `options` : `object` (optional for Unisat)
+  - `extractTx` : Extract transaction (defaults to `true`)
+  - `finalize` : Finalize signing (defaults to `true`)
+  - `network` (for Xverse only) : `"mainnet" | "testnet"` (defaults to `mainnet`)
+  - `inputsToSign` (for Xverse only) : List of inputs and signing indexes to sign
 
 Note: Extracting a transaction is only possible when all transactions on the PSBT are finalized. Hence, when `extractTx` is `true`, `finalize` must also be `true` and all other inputs must have been finalized.
+
+Sample input (for Xverse):
+
+```bash
+{
+  extractTx: true,
+  finalize: true
+  network: "mainnet",
+  inputsToSign: [
+    {
+      address: "bc1pr09enf3yc43cz8qh7xwaasuv3xzlgfttdr3wn0q2dy9frkhrpdtsk05jqq",
+      signingIndexes: [0, 1],
+    },
+  ],
+}
+```
 
 **Returns**: `Promise<BrowserWalletSignResponse>`
 
@@ -153,6 +172,8 @@ Note: Extracting a transaction is only possible when all transactions on the PSB
 - `BrowserWalletNotInstalledError` Wallet is not installed
 - `BrowserWalletSigningError` Signing failed
 - `BrowserWalletExtractTxFromNonFinalizedPsbtError` if `extractTx` is `true` but there are non-finalized transactions in the PSBT
+- `BrowserWalletRequestCancelledByUserError` if user cancels the request on wallet popup
+- `OrditSDKError` if invalid options are provided
 
 ### signMessage
 
@@ -163,7 +184,9 @@ Signs a message and returns a signature.
 **Parameters**:
 
 - `message` : `string`
-- `type` : `"bip322-simple" | "ecdsa"` (defaults to `ecdsa`)
+- `address` (for Xverse only) : `string` - Wallet address to sign message
+- `network` (for Xverse only) : `"mainnet" | "testnet"` (defaults to `mainnet`) - Network
+- `type` (for Unisat only) : `"bip322-simple" | "ecdsa"` (defaults to `ecdsa`)
 
 **Returns**: `Promise<BrowserWalletSignResponse>`
 
@@ -180,3 +203,5 @@ Signs a message and returns a signature.
 
 - `BrowserWalletNotInstalledError` Wallet is not installed
 - `BrowserWalletSigningError` Signing failed
+- `BrowserWalletRequestCancelledByUserError` if user cancels the request on wallet popup
+- `OrditSDKError` if invalid options are provided
