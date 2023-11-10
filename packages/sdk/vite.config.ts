@@ -15,7 +15,7 @@ export default defineConfig({
           "src/browser-wallets/unisat/index.ts",
         ),
       },
-      formats: ["es"],
+      formats: ["es", "cjs"],
     },
     rollupOptions: {
       external: Object.keys(packageJson.dependencies),

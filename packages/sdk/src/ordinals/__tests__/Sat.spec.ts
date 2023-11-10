@@ -1,5 +1,6 @@
 import { SAT_SUPPLY } from "../constants";
 import { Sat } from "../Sat";
+import { Sattribute, Sattributes } from "../Sattributes";
 
 describe("Sat", () => {
   describe("constructor", () => {
@@ -212,6 +213,23 @@ describe("Sat", () => {
     });
   });
 
+  describe("sattributes", () => {
+    test("should successfully return sattributes", () => {
+      expect(new Sat(0).sattributes).toEqual(
+        new Sattributes([Sattribute.Mythic, Sattribute.Palindrome]),
+      );
+      expect(new Sat(1).sattributes).toEqual(
+        new Sattributes([Sattribute.Common, Sattribute.Palindrome]),
+      );
+      expect(new Sat(2_067_187_500_000_000).sattributes).toEqual(
+        new Sattributes([Sattribute.Legendary]),
+      );
+      expect(new Sat(SAT_SUPPLY - 1).sattributes).toEqual(
+        new Sattributes([Sattribute.Uncommon]),
+      );
+    });
+  });
+
   describe("toJson", () => {
     test("should successfully return toJson", () => {
       expect(new Sat(0).toJSON()).toStrictEqual({
@@ -226,6 +244,7 @@ describe("Sat", () => {
         percentile: "0%",
         period: 0,
         rarity: "mythic",
+        sattributes: [Sattribute.Mythic, Sattribute.Palindrome],
       });
       expect(new Sat(1).toJSON()).toStrictEqual({
         block: 0,
@@ -239,6 +258,7 @@ describe("Sat", () => {
         percentile: "4.7619047671428595e-14%",
         period: 0,
         rarity: "common",
+        sattributes: [Sattribute.Common, Sattribute.Palindrome],
       });
       expect(new Sat(2_067_187_500_000_000 - 1).toJSON()).toStrictEqual({
         block: 1259999,
@@ -252,6 +272,7 @@ describe("Sat", () => {
         percentile: "98.43750010828126%",
         period: 624,
         rarity: "common",
+        sattributes: [Sattribute.Common],
       });
       expect(new Sat(2_067_187_500_000_000).toJSON()).toStrictEqual({
         block: 1260000,
@@ -265,6 +286,7 @@ describe("Sat", () => {
         percentile: "98.4375001082813%",
         period: 625,
         rarity: "legendary",
+        sattributes: [Sattribute.Legendary],
       });
       expect(new Sat(2_067_187_500_000_000 + 1).toJSON()).toStrictEqual({
         block: 1260000,
@@ -278,6 +300,7 @@ describe("Sat", () => {
         percentile: "98.43750010828134%",
         period: 625,
         rarity: "common",
+        sattributes: [Sattribute.Common],
       });
       expect(new Sat(SAT_SUPPLY - 1).toJSON()).toStrictEqual({
         block: 6929999,
@@ -291,6 +314,7 @@ describe("Sat", () => {
         percentile: "100%",
         period: 3437,
         rarity: "uncommon",
+        sattributes: [Sattribute.Uncommon],
       });
       expect(new Sat(SAT_SUPPLY - 2).toJSON()).toStrictEqual({
         block: 6929998,
@@ -304,6 +328,7 @@ describe("Sat", () => {
         percentile: "99.99999999999996%",
         period: 3437,
         rarity: "uncommon",
+        sattributes: [Sattribute.Uncommon],
       });
     });
   });
