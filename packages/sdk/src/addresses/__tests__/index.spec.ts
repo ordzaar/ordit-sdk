@@ -1,6 +1,6 @@
 import { Network } from "../../config/types";
 import { OrditSDKError } from "../../errors";
-import { getAddressFormat } from "..";
+import { getAddressesFromPublicKey, getAddressFormat } from "..";
 import { AddressFormat } from "../types";
 
 describe("addresses", () => {
@@ -184,6 +184,112 @@ describe("addresses", () => {
       expect(() =>
         getAddressFormat(ADDRESSES[TESTNET].taproot, REGTEST),
       ).toThrowError(INVALID_ADDRESS_ERROR);
+    });
+  });
+
+  describe("getAddressesFromPublicKey", () => {
+    const PUBLIC_KEY =
+      "039ce27aa7666731648421004ba943b90b8273e23a175d9c58e3ec2e643a9b01d1";
+    const NETWORK = "testnet";
+    const LEGACY_ADDRESSES = [
+      {
+        address: "n2w7jdyt3Dydowf9TxncCE8cF9Unki1Us2",
+        format: "legacy",
+        publicKey:
+          "039ce27aa7666731648421004ba943b90b8273e23a175d9c58e3ec2e643a9b01d1",
+      },
+    ];
+    const P2SH_ADDRESSES = [
+      {
+        address: "2NDMzJQiCD1o38NubeJbVNx49iT6Pr33Nfw",
+        format: "p2sh-p2wpkh",
+        publicKey:
+          "039ce27aa7666731648421004ba943b90b8273e23a175d9c58e3ec2e643a9b01d1",
+      },
+    ];
+    const SEGWIT_ADDRESSES = [
+      {
+        address: "tb1qatkgzm0hsk83ysqja5nq8ecdmtwl73zwurawww",
+        format: "segwit",
+        publicKey:
+          "039ce27aa7666731648421004ba943b90b8273e23a175d9c58e3ec2e643a9b01d1",
+      },
+    ];
+    const TAPROOT_ADDRESSES = [
+      {
+        address:
+          "tb1p98dv6f5jp5qr4z2dtaljvwrhq34xrr8zuaqgv4ajf36vg2mmsruqt5m3lv",
+        format: "taproot",
+        publicKey:
+          "039ce27aa7666731648421004ba943b90b8273e23a175d9c58e3ec2e643a9b01d1",
+        xKey: "9ce27aa7666731648421004ba943b90b8273e23a175d9c58e3ec2e643a9b01d1",
+      },
+    ];
+    const ALL_ADDRESSES = [
+      ...LEGACY_ADDRESSES,
+      ...P2SH_ADDRESSES,
+      ...SEGWIT_ADDRESSES,
+      ...TAPROOT_ADDRESSES,
+    ];
+
+    test("should return addresses from string public key", () => {
+      expect(
+        getAddressesFromPublicKey(PUBLIC_KEY, NETWORK, "all"),
+      ).toStrictEqual(ALL_ADDRESSES);
+    });
+    test("should return addresses from buffer public key", () => {
+      expect(
+        getAddressesFromPublicKey(
+          Buffer.from(PUBLIC_KEY, "hex"),
+          NETWORK,
+          "all",
+        ),
+      ).toStrictEqual(ALL_ADDRESSES);
+    });
+    test("should return address from public key when type is p2pkh", () => {
+      expect(
+        getAddressesFromPublicKey(
+          Buffer.from(PUBLIC_KEY, "hex"),
+          NETWORK,
+          "p2pkh",
+        ),
+      ).toContainEqual(LEGACY_ADDRESSES[0]);
+    });
+    test("should return address from public key when type is p2sh", () => {
+      expect(
+        getAddressesFromPublicKey(
+          Buffer.from(PUBLIC_KEY, "hex"),
+          NETWORK,
+          "p2sh",
+        ),
+      ).toContainEqual(P2SH_ADDRESSES[0]);
+    });
+    test("should return address from public key when type is segwit", () => {
+      expect(
+        getAddressesFromPublicKey(
+          Buffer.from(PUBLIC_KEY, "hex"),
+          NETWORK,
+          "p2wpkh",
+        ),
+      ).toContainEqual(SEGWIT_ADDRESSES[0]);
+    });
+    test("should return xKey from public key when type is p2tr", () => {
+      expect(
+        getAddressesFromPublicKey(
+          Buffer.from(PUBLIC_KEY, "hex"),
+          NETWORK,
+          "p2tr",
+        ),
+      ).toContainEqual(TAPROOT_ADDRESSES[0]);
+    });
+    test("should not return xKey from public key when type is not p2tr", () => {
+      const result = getAddressesFromPublicKey(
+        Buffer.from(PUBLIC_KEY, "hex"),
+        NETWORK,
+        "p2pkh",
+      );
+      expect(result).toContainEqual(LEGACY_ADDRESSES[0]);
+      expect(result[0].xKey).toBeUndefined();
     });
   });
 });
