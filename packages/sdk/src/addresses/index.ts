@@ -73,11 +73,9 @@ export function getAddressesFromPublicKey(
   childNodeXOnlyPubkey = keys.publicKey.subarray(1, 33);
 
   if (format === "all") {
-    const addressTypesList = Object.keys(
-      ADDRESS_TYPE_TO_FORMAT,
-    ) as AddressType[];
+    const addressTypes = Object.keys(ADDRESS_TYPE_TO_FORMAT) as AddressType[];
 
-    addressTypesList.forEach((addrType) => {
+    addressTypes.forEach((addrType) => {
       if (addrType === "p2tr") {
         const paymentObj = createPayment(
           childNodeXOnlyPubkey,
