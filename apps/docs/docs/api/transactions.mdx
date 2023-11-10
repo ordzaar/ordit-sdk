@@ -1,0 +1,94 @@
+---
+description: This is the API documentation for Transactions
+---
+
+# Transactions
+
+## Performing a Transaction
+
+The following code snippet shows the following steps:
+
+1. Create a Partially Signed Bitcoin Transaction (PSBT)
+2. Prepare the PSBT by fetching UTXOs to cover any transaction fees and add necessary outputs
+3. Sign the PSBT
+4. Relay the PSBT to the network
+
+```ts
+import { JsonRpcDatasource, PSBTBuilder } from "@ordzaar/ordit-sdk";
+import { signPsbt } from "@ordzaar/ordit-sdk/browser-wallets/unisat";
+
+async function performTransaction() {
+  // 1. Create psbt
+  const psbtBuilder = new PSBTBuilder({
+    address: "YOUR_ADDRESS",
+    publicKey: "YOUR_PUBLIC_KEY",
+    outputs: [
+      {
+        address: "YOUR_OUTPUT_ADDRESS",
+        value: 600, // amount in satoshis
+      },
+    ],
+    feeRate: 1,
+    network: "testnet",
+  });
+
+  // 2. Prepare psbt for sending by fetching UTXOs to cover any transaction fees and outputs
+  await psbtBuilder.prepare();
+
+  // 3. Sign psbt (using browser wallet API)
+  const signedPsbt = await signPsbt(psbtBuilder.toPSBT());
+
+  // 4. Relay psbt to the network
+  const datasource = new JsonRpcDatasource({ network });
+  const txId = await datasource.relay({ hex: signedPsbt.hex });
+
+  console.log("Transaction Id: ", txId);
+}
+
+performTransaction();
+```
+
+## API Reference
+
+### PSBTBuilder
+
+### constructor
+
+`constructor(options)`
+
+This class creates a PSBTBuilder object and encapsulates a `Psbt`.
+
+**Parameters**:
+
+- `options` : `object` (required)
+- `publicKey` : `string` - Public key
+- `feeRate` : `number` - Fee rate in sats per byte
+- `address` : `string` - Address of sender of transaction
+- `outputs` : `Output[]` - Recipients of transaction
+- `network` : `'mainnet' | 'testnet' | 'regtest'` (optional) (defaults to `mainnet`)
+
+**Returns**: `PSBTBuilder`
+
+### prepare
+
+`prepare()`
+
+Prepares PSBT to be set to a network, calculating and validating both inputs and outputs.
+
+**Returns**: `Promise<void>`
+
+### setRBF
+
+`setRBF(value)`
+
+Enables or disables the Replace-by-fee (RBF) feature (see [BIP-125](https://github.com/bitcoin/bips/blob/master/bip-0125.mediawiki)). This option is **enabled by default**.
+
+:::warning
+
+If RBF is disabled, it will not be possible to increase the transaction fee and low-fee transactions may remain unconfirmed or fail.
+
+:::
+
+**Parameters**:
+
+- `value` : `boolean`

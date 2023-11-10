@@ -7,7 +7,7 @@ import type {
   GetInscriptionsOptions,
   GetInscriptionUTXOOptions,
   GetSpendablesOptions,
-  GetTxOptions,
+  GetTransactionOptions,
   GetUnspentsOptions,
   GetUnspentsResponse,
   RelayOptions,
@@ -143,7 +143,7 @@ export class JsonRpcDatasource extends BaseDatasource {
     hex = false,
     witness = true,
     decodeMetadata = true,
-  }: GetTxOptions) {
+  }: GetTransactionOptions) {
     if (!txId) {
       throw new OrditSDKError("Invalid request");
     }

@@ -27,3 +27,7 @@ type MetaMask = {
   isMetaMask: boolean;
   request: (options: { method: string; params?: unknown }) => Promise<unknown>;
 };
+
+declare module "buffer-reverse" {
+  export = (_: Buffer): Buffer => {};
+}
