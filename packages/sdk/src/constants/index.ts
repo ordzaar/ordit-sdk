@@ -27,3 +27,8 @@ export const INSTANT_BUY_SELLER_INPUT_INDEX = 2;
  * BIP32 instance
  */
 export const BIP32 = BIP32Factory(ecc);
+
+/**
+ * Fixed chain code for public key operations
+ */
+export const CHAIN_CODE = Buffer.alloc(32, 1);

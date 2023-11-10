@@ -6,7 +6,7 @@ import {
 } from "bitcoin-address-validation";
 
 import type { Network } from "../config/types";
-import { BIP32 } from "../constants";
+import { BIP32, CHAIN_CODE } from "../constants";
 import { OrditSDKError } from "../errors";
 import { createPayment, getNetwork } from "../utils";
 import { ADDRESS_TYPE_TO_FORMAT } from "./constants";
@@ -77,7 +77,7 @@ export function getAddressesFromPublicKey(
     : Buffer.from(publicKey, "hex");
   const { publicKey: bip32PublicKey } = BIP32.fromPublicKey(
     publicKeyBuffer,
-    Buffer.alloc(32).fill(1), // fixed chainCode
+    CHAIN_CODE,
     getNetwork(network),
   );
 

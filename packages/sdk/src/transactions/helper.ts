@@ -1,7 +1,7 @@
 import { Buffer } from "buffer";
 
 import type { Network } from "../config/types";
-import { BIP32 } from "../constants";
+import { BIP32, CHAIN_CODE } from "../constants";
 import { BaseDatasource, JsonRpcDatasource } from "../modules";
 import { createPayment, getNetwork, toXOnly } from "../utils";
 import type { UTXO, UTXOLimited } from "./types";
@@ -77,7 +77,7 @@ function generateTaprootInput({
 }: ProcessInputOptions): TaprootInputType {
   const key = BIP32.fromPublicKey(
     Buffer.from(pubKey, "hex"),
-    Buffer.alloc(32).fill(1), // fixed chainCode
+    CHAIN_CODE,
     getNetwork(network),
   );
   const xOnlyPubKey = toXOnly(key.publicKey);
