@@ -35,6 +35,7 @@ function getAddressFormatForRegTest(address: string): AddressFormat {
     throw new OrditSDKError("Invalid address");
   }
 }
+
 export function getAddressFormat(
   address: string,
   network: Network,
@@ -107,3 +108,5 @@ export function getAddressesFromPublicKey(
 
   return [getAddressFromBip32PublicKey(bip32PublicKey, network, type)];
 }
+
+export * from "./types";
