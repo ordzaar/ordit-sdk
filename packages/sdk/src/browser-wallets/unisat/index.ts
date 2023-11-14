@@ -151,3 +151,6 @@ async function signMessage(
 }
 
 export { getAddresses, isInstalled, signMessage, signPsbt };
+
+export * from "../types";
+export * from "./types";

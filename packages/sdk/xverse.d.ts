@@ -1,1 +1,1 @@
-export * from "./dist/browser-wallets/xverse/index";
+export * from "./dist/xverse";
