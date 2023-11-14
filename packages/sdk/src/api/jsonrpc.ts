@@ -1,6 +1,6 @@
 import fetch from "cross-fetch";
 
-import { apiConfig } from "../config";
+import { API_CONFIG } from "../config";
 import { OrditSDKError } from "../errors";
 
 type JsonRpcId = string | number | null;
@@ -113,7 +113,7 @@ export const rpc = {
   get id() {
     return Math.floor(Math.random() * 100000);
   },
-  mainnet: new JsonRpc(getRpcUrl(apiConfig.apis.mainnet.batter)),
-  testnet: new JsonRpc(getRpcUrl(apiConfig.apis.testnet.batter)),
-  regtest: new JsonRpc(getRpcUrl(apiConfig.apis.regtest.batter)),
+  mainnet: new JsonRpc(getRpcUrl(API_CONFIG.apis.mainnet.batter)),
+  testnet: new JsonRpc(getRpcUrl(API_CONFIG.apis.testnet.batter)),
+  regtest: new JsonRpc(getRpcUrl(API_CONFIG.apis.regtest.batter)),
 } as const;

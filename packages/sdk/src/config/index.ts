@@ -1,4 +1,4 @@
-export const apiConfig = {
+export const API_CONFIG = {
   version: "0.0.0.10",
   apis: {
     mainnet: {
