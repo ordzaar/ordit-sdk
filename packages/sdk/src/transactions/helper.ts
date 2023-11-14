@@ -1,5 +1,6 @@
 import { Buffer } from "buffer";
 
+import type { AddressFormat } from "../addresses/types";
 import type { Network } from "../config/types";
 import { BIP32, CHAIN_CODE } from "../constants";
 import { BaseDatasource, JsonRpcDatasource } from "../modules";
@@ -14,7 +15,7 @@ interface BaseInputType {
 }
 
 type LegacyInputType = BaseInputType & {
-  type: "legacy";
+  type: Extract<AddressFormat, "legacy">;
   nonWitnessUtxo?: Buffer;
   witnessUtxo?: {
     script: Buffer;
@@ -23,7 +24,7 @@ type LegacyInputType = BaseInputType & {
 };
 
 type SegwitInputType = BaseInputType & {
-  type: "segwit";
+  type: Extract<AddressFormat, "segwit">;
   witnessUtxo?: {
     script: Buffer;
     value: number;
@@ -31,9 +32,9 @@ type SegwitInputType = BaseInputType & {
   witness?: Buffer[];
 };
 
-type NestedSegwitInputType = BaseInputType &
+type P2SHP2WPKHInputType = BaseInputType &
   Omit<SegwitInputType, "type"> & {
-    type: "nested-segwit";
+    type: Extract<AddressFormat, "p2sh-p2wpkh">;
     redeemScript: Buffer;
   };
 
@@ -48,7 +49,7 @@ export interface TapLeafScript extends TapScript {
 
 type TaprootInputType = BaseInputType &
   Omit<SegwitInputType, "type"> & {
-    type: "taproot";
+    type: Extract<AddressFormat, "taproot">;
     tapInternalKey: Buffer;
     tapLeafScript?: TapLeafScript[];
   };
@@ -56,7 +57,7 @@ type TaprootInputType = BaseInputType &
 export type InputType =
   | LegacyInputType
   | SegwitInputType
-  | NestedSegwitInputType
+  | P2SHP2WPKHInputType
   | TaprootInputType;
 
 interface ProcessInputOptions {
@@ -120,19 +121,19 @@ function generateSegwitInput({
   };
 }
 
-function generateNestedSegwitInput({
+function generateP2SHP2WPKHInput({
   utxo,
   pubKey,
   network,
   sighashType,
-}: ProcessInputOptions): NestedSegwitInputType {
+}: ProcessInputOptions): P2SHP2WPKHInputType {
   const p2sh = createPayment(Buffer.from(pubKey, "hex"), "p2sh", network);
   if (!p2sh || !p2sh.output || !p2sh.redeem) {
-    throw new Error("Unable to process Segwit input");
+    throw new Error("Unable to process P2SH input");
   }
 
   return {
-    type: "nested-segwit",
+    type: "p2sh-p2wpkh",
     hash: utxo.txid,
     index: utxo.n,
     redeemScript: p2sh.redeem.output!,
@@ -199,7 +200,7 @@ export async function processInput({
       return generateSegwitInput({ utxo, sighashType });
 
     case "scripthash":
-      return generateNestedSegwitInput({ utxo, pubKey, network, sighashType });
+      return generateP2SHP2WPKHInput({ utxo, pubKey, network, sighashType });
 
     case "pubkeyhash":
       return generateLegacyInput({

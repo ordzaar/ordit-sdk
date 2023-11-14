@@ -6,6 +6,7 @@ import { initEccLib } from "bitcoinjs-lib";
 initEccLib(ecc);
 
 export * from "./addresses";
+export * from "./errors";
 export * from "./modules";
 export * from "./ordinals/index";
 export * from "./transactions";
