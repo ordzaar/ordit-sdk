@@ -9,11 +9,11 @@ importers:
   .:
     devDependencies:
       '@ordzaar/standard-linter':
-        specifier: ^0.3.6
-        version: 0.3.6(eslint-plugin-import@2.29.0)(typescript@5.2.2)
+        specifier: ^0.3.7
+        version: 0.3.7(eslint-plugin-import@2.29.0)(typescript@5.2.2)
       '@ordzaar/standard-typescript':
-        specifier: ^0.3.6
-        version: 0.3.6(typescript@5.2.2)
+        specifier: ^0.3.7
+        version: 0.3.7(typescript@5.2.2)
       '@vitest/coverage-v8':
         specifier: ^0.34.6
         version: 0.34.6(vitest@0.34.6)
@@ -46,8 +46,8 @@ importers:
         version: link:../../packages/sdk
     devDependencies:
       '@ordzaar/standard-typescript':
-        specifier: ^0.3.6
-        version: 0.3.6(typescript@5.2.2)
+        specifier: ^0.3.7
+        version: 0.3.7(typescript@5.2.2)
       vite-plugin-node-polyfills:
         specifier: ^0.16.0
         version: 0.16.0(vite@4.5.0)
@@ -86,8 +86,8 @@ importers:
         specifier: 3.0.0
         version: 3.0.0(react-dom@18.2.0)(react@18.2.0)
       '@ordzaar/standard-typescript':
-        specifier: ^0.3.6
-        version: 0.3.6(typescript@5.2.2)
+        specifier: ^0.3.7
+        version: 0.3.7(typescript@5.2.2)
       '@tsconfig/docusaurus':
         specifier: ^2.0.2
         version: 2.0.2
@@ -132,8 +132,8 @@ importers:
         version: 1.1.2
     devDependencies:
       '@ordzaar/standard-typescript':
-        specifier: ^0.3.6
-        version: 0.3.6(typescript@5.2.2)
+        specifier: ^0.3.7
+        version: 0.3.7(typescript@5.2.2)
       '@types/node':
         specifier: ^20.9.0
         version: 20.9.0
@@ -2884,10 +2884,10 @@ packages:
       '@nodelib/fs.scandir': 2.1.5
       fastq: 1.15.0
 
-  /@ordzaar/standard-linter@0.3.6(eslint-plugin-import@2.29.0)(typescript@5.2.2):
-    resolution: {integrity: sha512-FvpX+o66lvNNEdf4pm3ChjVN9gMxAd3jfDZcdElnhBv5E8kSXIdr9ATjunhsfJN6sn2ZLTxS6AQbMnUuX1AMTg==}
+  /@ordzaar/standard-linter@0.3.7(eslint-plugin-import@2.29.0)(typescript@5.2.2):
+    resolution: {integrity: sha512-4ZpWQGFDYYOzQEVR9QoEWtvGNji4YrJ31Oi3bZxeucsu8QDE7S3FE8r1JMnACzM8DKSr85cwhshmoKJHggIOpQ==}
     dependencies:
-      '@ordzaar/standard-typescript': 0.3.6(typescript@5.2.2)
+      '@ordzaar/standard-typescript': 0.3.7(typescript@5.2.2)
       '@typescript-eslint/eslint-plugin': 6.10.0(@typescript-eslint/parser@6.10.0)(eslint@8.53.0)(typescript@5.2.2)
       '@typescript-eslint/parser': 6.10.0(eslint@8.53.0)(typescript@5.2.2)
       eslint: 8.53.0
@@ -2895,12 +2895,12 @@ packages:
       eslint-config-airbnb-typescript: 17.1.0(@typescript-eslint/eslint-plugin@6.10.0)(@typescript-eslint/parser@6.10.0)(eslint-plugin-import@2.29.0)(eslint@8.53.0)
       eslint-config-prettier: 9.0.0(eslint@8.53.0)
       eslint-plugin-check-file: 2.6.2(eslint@8.53.0)
-      eslint-plugin-prettier: 5.0.1(eslint-config-prettier@9.0.0)(eslint@8.53.0)(prettier@3.0.3)
+      eslint-plugin-prettier: 5.0.1(eslint-config-prettier@9.0.0)(eslint@8.53.0)(prettier@3.1.0)
       eslint-plugin-simple-import-sort: 10.0.0(eslint@8.53.0)
       eslint-plugin-unused-imports: 3.0.0(@typescript-eslint/eslint-plugin@6.10.0)(eslint@8.53.0)
       husky: 8.0.3
-      lint-staged: 15.0.2
-      prettier: 3.0.3
+      lint-staged: 15.1.0
+      prettier: 3.1.0
     transitivePeerDependencies:
       - '@types/eslint'
       - eslint-plugin-import
@@ -2908,8 +2908,8 @@ packages:
       - typescript
     dev: true
 
-  /@ordzaar/standard-typescript@0.3.6(typescript@5.2.2):
-    resolution: {integrity: sha512-wr0U5ftwD5t9r9yQQQuPbUPWr8nRG9jVnJyaNPfwJk1SbKV+B2qDuKW3w9h2yZ7fTFLRAt4Vx4LP2j0y6JE4qg==}
+  /@ordzaar/standard-typescript@0.3.7(typescript@5.2.2):
+    resolution: {integrity: sha512-YoumgagGdf+1eyx77WHRbJTozSTKs3BNGY8VmhF0/PZYVUdfeieJ2a11PhotgSHaP8J/HD6Nwz5jxw07ld/+AQ==}
     peerDependencies:
       typescript: 5.2.2
     dependencies:
@@ -6078,7 +6078,7 @@ packages:
       - supports-color
     dev: true
 
-  /eslint-plugin-prettier@5.0.1(eslint-config-prettier@9.0.0)(eslint@8.53.0)(prettier@3.0.3):
+  /eslint-plugin-prettier@5.0.1(eslint-config-prettier@9.0.0)(eslint@8.53.0)(prettier@3.1.0):
     resolution: {integrity: sha512-m3u5RnR56asrwV/lDC4GHorlW75DsFfmUcjfCYylTUs85dBRnB7VM6xG8eCMJdeDRnppzmxZVf1GEPJvl1JmNg==}
     engines: {node: ^14.18.0 || >=16.0.0}
     peerDependencies:
@@ -6094,7 +6094,7 @@ packages:
     dependencies:
       eslint: 8.53.0
       eslint-config-prettier: 9.0.0(eslint@8.53.0)
-      prettier: 3.0.3
+      prettier: 3.1.0
       prettier-linter-helpers: 1.0.0
       synckit: 0.8.5
     dev: true
@@ -7992,8 +7992,8 @@ packages:
     resolution: {integrity: sha512-7ylylesZQ/PV29jhEDl3Ufjo6ZX7gCqJr5F7PKrqc93v7fzSymt1BpwEU8nAUXs8qzzvqhbjhK5QZg6Mt/HkBg==}
     dev: false
 
-  /lint-staged@15.0.2:
-    resolution: {integrity: sha512-vnEy7pFTHyVuDmCAIFKR5QDO8XLVlPFQQyujQ/STOxe40ICWqJ6knS2wSJ/ffX/Lw0rz83luRDh+ET7toN+rOw==}
+  /lint-staged@15.1.0:
+    resolution: {integrity: sha512-ZPKXWHVlL7uwVpy8OZ7YQjYDAuO5X4kMh0XgZvPNxLcCCngd0PO5jKQyy3+s4TL2EnHoIXIzP1422f/l3nZKMw==}
     engines: {node: '>=18.12.0'}
     hasBin: true
     dependencies:
@@ -8006,7 +8006,7 @@ packages:
       micromatch: 4.0.5
       pidtree: 0.6.0
       string-argv: 0.3.2
-      yaml: 2.3.3
+      yaml: 2.3.4
     transitivePeerDependencies:
       - supports-color
     dev: true
@@ -9946,8 +9946,8 @@ packages:
       fast-diff: 1.3.0
     dev: true
 
-  /prettier@3.0.3:
-    resolution: {integrity: sha512-L/4pUDMxcNa8R/EthV08Zt42WBO4h1rarVtK0K+QJG0X187OLo7l699jWw0GKuwzkPQ//jMFA/8Xm6Fh3J/DAg==}
+  /prettier@3.1.0:
+    resolution: {integrity: sha512-TQLvXjq5IAibjh8EpBIkNKxO749UEWABoiIZehEPiY4GNpVdhaFKqSTu+QrlU6D2dPAfubRmtJTi4K4YkQ5eXw==}
     engines: {node: '>=14'}
     hasBin: true
     dev: true
@@ -12477,8 +12477,8 @@ packages:
     engines: {node: '>= 6'}
     dev: false
 
-  /yaml@2.3.3:
-    resolution: {integrity: sha512-zw0VAJxgeZ6+++/su5AFoqBbZbrEakwu+X0M5HmcwUiBL7AzcuPKjj5we4xfQLp78LkEMpD0cOnUhmgOVy3KdQ==}
+  /yaml@2.3.4:
+    resolution: {integrity: sha512-8aAvwVUSHpfEqTQ4w/KMlf3HcRdt50E5ODIQJBw1fQ5RL34xabzxtUlzTXVqc4rkZsPbvrXKWnABCD7kWSmocA==}
     engines: {node: '>= 14'}
     dev: true
 
