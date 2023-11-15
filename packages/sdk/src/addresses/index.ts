@@ -109,4 +109,5 @@ export function getAddressesFromPublicKey(
   return [getAddressFromBip32PublicKey(bip32PublicKey, network, type)];
 }
 
+export * from "./constants";
 export * from "./types";
