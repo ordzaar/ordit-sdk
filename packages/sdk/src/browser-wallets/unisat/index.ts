@@ -5,12 +5,15 @@ import type { BrowserWalletNetwork } from "../../config/types";
 import {
   BrowserWalletExtractTxFromNonFinalizedPsbtError,
   BrowserWalletNotInstalledError,
+  BrowserWalletRequestCancelledByUserError,
   BrowserWalletSigningError,
   OrditSDKError,
 } from "../../errors";
 import type { BrowserWalletSignResponse, WalletAddress } from "../types";
 import { NETWORK_TO_UNISAT_NETWORK } from "./constants";
 import type { UnisatSignPSBTOptions } from "./types";
+
+type UnisatError = { code?: number; message: string };
 
 /**
  * Checks if the browser wallet extension is installed.
@@ -32,6 +35,8 @@ function isInstalled() {
  * @param readOnly Read only (when set to true, the wallet modal appears)
  * @returns An array of WalletAddress objects.
  * @throws {BrowserWalletNotInstalledError} Wallet is not installed
+ * @throws {BrowserWalletRequestCancelledByUserError} Request was cancelled by user
+ * @throws {OrditSDKError} Internal error
  */
 async function getAddresses(
   network: BrowserWalletNetwork = "mainnet",
@@ -40,30 +45,43 @@ async function getAddresses(
   if (!isInstalled()) {
     throw new BrowserWalletNotInstalledError("Unisat not installed");
   }
+  try {
+    const connectedNetwork = await window.unisat.getNetwork();
+    const targetNetwork = NETWORK_TO_UNISAT_NETWORK[network];
+    if (connectedNetwork !== targetNetwork) {
+      await window.unisat.switchNetwork(targetNetwork);
+    }
 
-  const connectedNetwork = await window.unisat.getNetwork();
-  const targetNetwork = NETWORK_TO_UNISAT_NETWORK[network];
-  if (connectedNetwork !== targetNetwork) {
-    await window.unisat.switchNetwork(targetNetwork);
+    const accounts = readOnly
+      ? await window.unisat.getAccounts()
+      : await window.unisat.requestAccounts();
+    const publicKey = await window.unisat.getPublicKey();
+
+    const address = accounts[0];
+    if (!address) {
+      return [];
+    }
+    const format = getAddressFormat(address, network);
+    return [
+      {
+        publicKey,
+        address,
+        format,
+      },
+    ];
+  } catch (err) {
+    if (err instanceof OrditSDKError) {
+      // internal error caused by getAddressFormat
+      throw err;
+    }
+
+    // Unisat does not use Error object prototype
+    const unisatError = err as UnisatError;
+    if (unisatError?.code === 4001) {
+      throw new BrowserWalletRequestCancelledByUserError();
+    }
+    throw new OrditSDKError(unisatError.message);
   }
-
-  const accounts = readOnly
-    ? await window.unisat.getAccounts()
-    : await window.unisat.requestAccounts();
-  const publicKey = await window.unisat.getPublicKey();
-
-  const address = accounts[0];
-  if (!address) {
-    return [];
-  }
-  const format = getAddressFormat(address, network);
-  return [
-    {
-      publicKey,
-      address,
-      format,
-    },
-  ];
 }
 
 /**
@@ -89,9 +107,20 @@ async function signPsbt(
   }
 
   const psbtHex = psbt.toHex();
-  const signedPsbtHex = await window.unisat.signPsbt(psbtHex, {
-    autoFinalized: finalize,
-  });
+
+  let signedPsbtHex: string = "";
+  try {
+    signedPsbtHex = await window.unisat.signPsbt(psbtHex, {
+      autoFinalized: finalize,
+    });
+  } catch (err) {
+    // Unisat does not use Error object prototype
+    const unisatError = err as UnisatError;
+    if (unisatError?.code === 4001) {
+      throw new BrowserWalletRequestCancelledByUserError();
+    }
+  }
+
   if (!signedPsbtHex) {
     throw new BrowserWalletSigningError("Failed to sign psbt hex using Unisat");
   }
@@ -138,7 +167,16 @@ async function signMessage(
     throw new BrowserWalletNotInstalledError("Unisat not installed");
   }
 
-  const signature = await window.unisat.signMessage(message, type);
+  let signature: string = "";
+  try {
+    signature = await window.unisat.signMessage(message, type);
+  } catch (err) {
+    // Unisat does not use Error object prototype
+    const unisatError = err as UnisatError;
+    if (unisatError?.code === 4001) {
+      throw new BrowserWalletRequestCancelledByUserError();
+    }
+  }
 
   if (!signature) {
     throw new BrowserWalletSigningError("Failed to sign message using Unisat");
