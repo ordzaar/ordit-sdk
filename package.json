@@ -17,8 +17,8 @@
     "docs:clean": "turbo run clean --filter=docs"
   },
   "devDependencies": {
-    "@ordzaar/standard-linter": "^0.3.7",
-    "@ordzaar/standard-typescript": "^0.3.7",
+    "@ordzaar/standard-linter": "^0.4.0",
+    "@ordzaar/standard-typescript": "^0.4.0",
     "@vitest/coverage-v8": "^0.34.6",
     "husky": "^8.0.3",
     "rimraf": "^5.0.5",
