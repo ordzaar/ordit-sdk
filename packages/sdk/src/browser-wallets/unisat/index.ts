@@ -13,6 +13,8 @@ import type { BrowserWalletSignResponse, WalletAddress } from "../types";
 import { NETWORK_TO_UNISAT_NETWORK } from "./constants";
 import type { UnisatSignPSBTOptions } from "./types";
 
+type UnisatError = { code?: number; message: string };
+
 /**
  * Checks if the browser wallet extension is installed.
  *
@@ -74,7 +76,7 @@ async function getAddresses(
     }
 
     // Unisat does not use Error object prototype
-    const unisatError = err as { code?: number; message: string };
+    const unisatError = err as UnisatError;
     if (unisatError?.code === 4001) {
       throw new BrowserWalletRequestCancelledByUserError();
     }
@@ -105,9 +107,20 @@ async function signPsbt(
   }
 
   const psbtHex = psbt.toHex();
-  const signedPsbtHex = await window.unisat.signPsbt(psbtHex, {
-    autoFinalized: finalize,
-  });
+
+  let signedPsbtHex: string = "";
+  try {
+    signedPsbtHex = await window.unisat.signPsbt(psbtHex, {
+      autoFinalized: finalize,
+    });
+  } catch (err) {
+    // Unisat does not use Error object prototype
+    const unisatError = err as UnisatError;
+    if (unisatError?.code === 4001) {
+      throw new BrowserWalletRequestCancelledByUserError();
+    }
+  }
+
   if (!signedPsbtHex) {
     throw new BrowserWalletSigningError("Failed to sign psbt hex using Unisat");
   }
@@ -154,7 +167,16 @@ async function signMessage(
     throw new BrowserWalletNotInstalledError("Unisat not installed");
   }
 
-  const signature = await window.unisat.signMessage(message, type);
+  let signature: string = "";
+  try {
+    signature = await window.unisat.signMessage(message, type);
+  } catch (err) {
+    // Unisat does not use Error object prototype
+    const unisatError = err as UnisatError;
+    if (unisatError?.code === 4001) {
+      throw new BrowserWalletRequestCancelledByUserError();
+    }
+  }
 
   if (!signature) {
     throw new BrowserWalletSigningError("Failed to sign message using Unisat");

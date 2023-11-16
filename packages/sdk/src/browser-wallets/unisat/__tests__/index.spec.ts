@@ -16,6 +16,13 @@ describe("Unisat Wallet", () => {
   });
 
   const MOCK_EMPTY_VALUE_RESULT = vi.fn().mockResolvedValue("");
+  // unisat uses eth-rpc-providers which does not throw Error object
+  const UNISAT_REJECT_ERROR = {
+    code: 4001,
+    message: "User rejected the request.",
+  };
+  const CANCELLED_BY_USER_ERROR =
+    new BrowserWalletRequestCancelledByUserError();
 
   describe("isInstalled", () => {
     test("should return true if installed", () => {
@@ -77,21 +84,14 @@ describe("Unisat Wallet", () => {
         format: "segwit",
       };
       const network = "testnet";
-      const UNISAT_ERROR = {
-        code: 4001,
-        message: "User rejected the request.",
-      };
-      const CANCELLED_BY_USER_ERROR =
-        new BrowserWalletRequestCancelledByUserError();
 
       vi.stubGlobal("unisat", {
         getNetwork: vi
           .fn()
           .mockResolvedValue(NETWORK_TO_UNISAT_NETWORK[network]),
-        requestAccounts: vi.fn().mockImplementation(async () => {
-          // unisat uses eth-rpc-providers which does not throw Error object
+        requestAccounts: vi.fn().mockImplementation(() => {
           // eslint-disable-next-line @typescript-eslint/no-throw-literal
-          throw UNISAT_ERROR;
+          throw UNISAT_REJECT_ERROR;
         }),
         getPublicKey: vi.fn().mockResolvedValue(mockData.publicKey),
       });
@@ -211,6 +211,18 @@ describe("Unisat Wallet", () => {
       const psbt = new Psbt({ network: networks.bitcoin });
       await expect(() => signPsbt(psbt)).rejects.toThrowError(SIGN_PSBT_ERROR);
     });
+    test("should throw an error when user rejects or cancels request", async () => {
+      vi.stubGlobal("unisat", {
+        signPsbt: vi.fn().mockImplementation(() => {
+          // eslint-disable-next-line @typescript-eslint/no-throw-literal
+          throw UNISAT_REJECT_ERROR;
+        }),
+      });
+      const psbt = new Psbt({ network: networks.bitcoin });
+      await expect(() => signPsbt(psbt)).rejects.toThrowError(
+        CANCELLED_BY_USER_ERROR,
+      );
+    });
   });
 
   describe("signMessage", () => {
@@ -239,6 +251,17 @@ describe("Unisat Wallet", () => {
       await expect(() =>
         signMessage("abcdefghijk123456789"),
       ).rejects.toThrowError(SIGN_MESSAGE_ERROR);
+    });
+    test("should throw an error when user rejects or cancels request", async () => {
+      vi.stubGlobal("unisat", {
+        signMessage: vi.fn().mockImplementation(() => {
+          // eslint-disable-next-line @typescript-eslint/no-throw-literal
+          throw UNISAT_REJECT_ERROR;
+        }),
+      });
+      await expect(() =>
+        signMessage("abcdefghijk123456789"),
+      ).rejects.toThrowError(CANCELLED_BY_USER_ERROR);
     });
   });
 });
