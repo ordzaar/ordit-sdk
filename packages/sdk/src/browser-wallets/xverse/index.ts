@@ -151,6 +151,8 @@ async function signPsbt(
           try {
             signedPsbt.finalizeInput(index);
           } catch (error) {
+            // eslint-disable-next-line no-console
+            console.error("Sign psbt error", error);
             throw new OrditSDKError("Failed to finalize input");
           }
         });
