@@ -1,4 +1,5 @@
-import { Psbt } from "bitcoinjs-lib";
+import * as ecc from "@bitcoinerlab/secp256k1";
+import { initEccLib, Psbt } from "bitcoinjs-lib";
 import {
   AddressPurpose,
   getAddress,
@@ -25,6 +26,11 @@ import type { BrowserWalletSignResponse, WalletAddress } from "../types";
 import { NETWORK_TO_BITCOIN_NETWORK_TYPE } from "./constants";
 import type { XverseSignPSBTOptions } from "./types";
 import { fromXOnlyToFullPubkey } from "./utils";
+
+// Included here as browser-wallets is an individual entry-point.
+// Required for all signing operations to function within xverse since inputs need to be finalized.
+// This function will manage its own instance.
+initEccLib(ecc);
 
 /**
  * Checks if the browser wallet extension is installed.
