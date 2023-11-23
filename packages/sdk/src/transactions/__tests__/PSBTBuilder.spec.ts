@@ -5,62 +5,56 @@ import { OrditSDKError } from "../..";
 import * as jsonrpc from "../../api/jsonrpc";
 import { convertBTCToSatoshis } from "../../utils";
 import {
-  ADDRESS_GETSPENDABLES_RESPONSE,
-  ADDRESS_GETSPENDABLES_TWO_UTXOS_RESPONSE,
-  ADDRESS_GETSPENDABLES_TWO_UTXOS_RESPONSE_INSUFFICIENT,
+  ADDRESS_TO_GETSPENDABLES_RESPONSE,
+  TAPROOT_ADDRESS_1,
+  TAPROOT_ADDRESS_2,
+  TAPROOT_ADDRESS_3,
 } from "../__fixtures__/PSBTBuilder.fixture";
 import { PSBTBuilder } from "../PSBTBuilder";
 import { UTXOLimited } from "../types";
 
 const INSUFFICIENT_FUNDS_ERROR = new OrditSDKError("Insufficient funds");
 
-const createGetSpendablesMock = (mockResponse: { result: UTXOLimited[] }) =>
-  vi.fn((method, _params) => {
-    const params = _params as { value: number; filter: string[] };
-    if (method === "Address.GetSpendables") {
-      const satsRequest = convertBTCToSatoshis(params.value);
-      const utxos = mockResponse.result
-        .filter((tx) => !params.filter.includes(`${tx.txid}:${tx.n}`))
-        .reduce((acc, utxo) => {
-          const totalAmountFetched = acc.reduce(
-            (ac, curr) => ac + curr.sats,
-            0,
-          );
-          if (totalAmountFetched < satsRequest) {
-            return [...acc, utxo];
-          }
-          return acc;
-        }, [] as Array<UTXOLimited>);
+const mockCall = vi.fn((method, _params) => {
+  const params = _params as {
+    address: string;
+    value: number;
+    filter: string[];
+  };
+  if (method === "Address.GetSpendables") {
+    const satsRequest = convertBTCToSatoshis(params.value);
+    const utxos = ADDRESS_TO_GETSPENDABLES_RESPONSE[params.address].result
+      .filter((tx) => !params.filter.includes(`${tx.txid}:${tx.n}`))
+      .reduce((acc, utxo) => {
+        const totalAmountFetched = acc.reduce((ac, curr) => ac + curr.sats, 0);
+        if (totalAmountFetched < satsRequest) {
+          return [...acc, utxo];
+        }
+        return acc;
+      }, [] as Array<UTXOLimited>);
 
-      if (utxos.length === 0) {
-        return Promise.reject(INSUFFICIENT_FUNDS_ERROR);
-      }
-      return Promise.resolve(utxos);
+    if (utxos.length === 0) {
+      return Promise.reject(INSUFFICIENT_FUNDS_ERROR);
     }
-    throw new Error(`Unexpected mock call to RPC method ${method}`);
-  });
+    return Promise.resolve(utxos);
+  }
+  throw new Error(`Unexpected mock call to RPC method ${method}`);
+});
 
 describe("PSBTBuilder", () => {
   beforeAll(() => {
     initEccLib(ecc);
   });
 
-  const INPUT_ADDRESS =
-    "tb1p98dv6f5jp5qr4z2dtaljvwrhq34xrr8zuaqgv4ajf36vg2mmsruqt5m3lv";
   const OUTPUT_ADDRESS = "tb1qatkgzm0hsk83ysqja5nq8ecdmtwl73zwurawww";
+
+  // used by INPUT_ADDRESS_1
   const PUBLIC_KEY =
     "039ce27aa7666731648421004ba943b90b8273e23a175d9c58e3ec2e643a9b01d1";
 
   const PSBT_ARGS = {
-    address: INPUT_ADDRESS,
     feeRate: 1,
     publicKey: PUBLIC_KEY,
-    outputs: [
-      {
-        address: OUTPUT_ADDRESS,
-        value: 600,
-      },
-    ],
     network: "testnet" as const,
   };
 
@@ -68,6 +62,13 @@ describe("PSBTBuilder", () => {
     test("should create a psbt", () => {
       const psbt = new PSBTBuilder({
         ...PSBT_ARGS,
+        address: TAPROOT_ADDRESS_1,
+        outputs: [
+          {
+            address: OUTPUT_ADDRESS,
+            value: 600,
+          },
+        ],
       });
 
       expect(psbt).toBeTruthy();
@@ -80,19 +81,17 @@ describe("PSBTBuilder", () => {
       notify: vi.fn().mockResolvedValue(undefined),
       url: "",
     };
-    const jsonrpcSpy = vi.spyOn(jsonrpc, "rpc", "get");
     const mockJsonRpcReturnParams = {
       id: 1,
       mainnet: mockJsonRpc,
       testnet: mockJsonRpc,
       regtest: mockJsonRpc,
     };
-
-    afterEach(() => {
+    afterAll(() => {
       vi.resetAllMocks();
     });
-    test("should fetch utxo using GetSpendables RPC and prepare psbt for sending", async () => {
-      const mockCall = createGetSpendablesMock(ADDRESS_GETSPENDABLES_RESPONSE);
+    beforeAll(() => {
+      const jsonrpcSpy = vi.spyOn(jsonrpc, "rpc", "get");
       jsonrpcSpy.mockReturnValue({
         ...mockJsonRpcReturnParams,
         testnet: {
@@ -100,9 +99,18 @@ describe("PSBTBuilder", () => {
           call: mockCall,
         },
       });
+    });
 
+    test("should fetch utxo using GetSpendables RPC and prepare psbt for sending", async () => {
       const psbt = new PSBTBuilder({
         ...PSBT_ARGS,
+        address: TAPROOT_ADDRESS_1,
+        outputs: [
+          {
+            address: OUTPUT_ADDRESS,
+            value: 600,
+          },
+        ],
       });
 
       expect(psbt).toBeTruthy();
@@ -125,19 +133,9 @@ describe("PSBTBuilder", () => {
     });
 
     test("should fetch utxo that is sufficient to cover fee, and utxo is more than that fee", async () => {
-      const mockCall = createGetSpendablesMock(
-        ADDRESS_GETSPENDABLES_TWO_UTXOS_RESPONSE,
-      );
-      jsonrpcSpy.mockReturnValue({
-        ...mockJsonRpcReturnParams,
-        testnet: {
-          ...mockJsonRpc,
-          call: mockCall,
-        },
-      });
-
       const psbt = new PSBTBuilder({
         ...PSBT_ARGS,
+        address: TAPROOT_ADDRESS_2,
         outputs: [
           {
             address: OUTPUT_ADDRESS,
@@ -170,19 +168,9 @@ describe("PSBTBuilder", () => {
     );
 
     test("should fail when utxos are sufficient for output but insufficient to cover fee", async () => {
-      const mockCall = createGetSpendablesMock(
-        ADDRESS_GETSPENDABLES_TWO_UTXOS_RESPONSE_INSUFFICIENT,
-      );
-      jsonrpcSpy.mockReturnValue({
-        ...mockJsonRpcReturnParams,
-        testnet: {
-          ...mockJsonRpc,
-          call: mockCall,
-        },
-      });
-
       const psbt = new PSBTBuilder({
         ...PSBT_ARGS,
+        address: TAPROOT_ADDRESS_3,
         outputs: [
           {
             address: OUTPUT_ADDRESS,
@@ -198,17 +186,9 @@ describe("PSBTBuilder", () => {
     });
 
     test("should fail when utxos are insufficient to cover output", async () => {
-      const mockCall = createGetSpendablesMock(ADDRESS_GETSPENDABLES_RESPONSE);
-      jsonrpcSpy.mockReturnValue({
-        ...mockJsonRpcReturnParams,
-        testnet: {
-          ...mockJsonRpc,
-          call: mockCall,
-        },
-      });
-
       const psbt = new PSBTBuilder({
         ...PSBT_ARGS,
+        address: TAPROOT_ADDRESS_1,
         outputs: [
           {
             address: OUTPUT_ADDRESS,
