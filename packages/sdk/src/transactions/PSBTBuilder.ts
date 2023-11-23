@@ -180,7 +180,7 @@ export class PSBTBuilder extends FeeEstimator {
   get inputsToSign() {
     const instantTradeSellerFlow =
       this.instantTradeMode && !this.autoAdjustment;
-    return this.psbt.txInputs.reduce(
+    return this.psbt.txInputs.reduce<InputsToSign>(
       (acc, _, index) => {
         if (
           !this.instantTradeMode ||
@@ -200,7 +200,7 @@ export class PSBTBuilder extends FeeEstimator {
       {
         address: this.address,
         signingIndexes: [],
-      } as InputsToSign,
+      },
     );
   }
 
