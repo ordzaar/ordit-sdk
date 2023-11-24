@@ -1,8 +1,15 @@
+import * as ecc from "@bitcoinerlab/secp256k1";
+import { initEccLib } from "bitcoinjs-lib";
+
 import { OrditSDKError } from "../../errors";
 import { FeeEstimator } from "../FeeEstimator";
 import { createMockPsbt } from "./utils";
 
 describe("FeeEstimator", () => {
+  beforeAll(() => {
+    initEccLib(ecc);
+  });
+
   describe("constructor", () => {
     const INVALID_FEE_RATE_ERROR = new OrditSDKError("Invalid feeRate");
 

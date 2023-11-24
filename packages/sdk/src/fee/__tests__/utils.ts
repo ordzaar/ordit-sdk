@@ -1,5 +1,4 @@
-import * as ecc from "@bitcoinerlab/secp256k1";
-import { initEccLib, networks, Psbt } from "bitcoinjs-lib";
+import { networks, Psbt } from "bitcoinjs-lib";
 
 import { AddressFormat } from "../../addresses/types";
 import { P2SH_P2WPKH, P2TR, P2WPKH } from "../__fixtures__/psbt.fixture";
@@ -25,7 +24,6 @@ function createMockPsbt(format: Exclude<AddressFormat, "legacy">) {
         .addOutputs(P2WPKH.OUTPUTS);
     case "taproot":
       // taproot psbt script contains OP_CHECKSEQUENCEVERIFY, requires Ecc lib
-      initEccLib(ecc);
       return new Psbt({ network: networks.regtest })
         .addInputs(P2TR.INPUTS)
         .addOutputs(P2TR.OUTPUTS);
