@@ -33,8 +33,8 @@ importers:
         specifier: ^5.2.2
         version: 5.2.2
       vite:
-        specifier: ^4.5.0
-        version: 4.5.0(@types/node@20.9.0)
+        specifier: ^4.5.1
+        version: 4.5.1(@types/node@20.9.0)
       vitest:
         specifier: ^0.34.6
         version: 0.34.6
@@ -50,7 +50,7 @@ importers:
         version: 0.4.3(typescript@5.2.2)
       vite-plugin-node-polyfills:
         specifier: ^0.16.0
-        version: 0.16.0(vite@4.5.0)
+        version: 0.16.0(vite@4.5.1)
 
   apps/docs:
     dependencies:
@@ -142,13 +142,13 @@ importers:
         version: 12.10.3
       vite-plugin-dts:
         specifier: ^3.6.3
-        version: 3.6.3(@types/node@20.9.0)(typescript@5.2.2)(vite@4.5.0)
+        version: 3.6.3(@types/node@20.9.0)(typescript@5.2.2)(vite@4.5.1)
       vite-plugin-eslint:
         specifier: ^1.8.1
-        version: 1.8.1(eslint@8.54.0)(vite@4.5.0)
+        version: 1.8.1(eslint@8.54.0)(vite@4.5.1)
       vite-plugin-node-polyfills:
         specifier: ^0.16.0
-        version: 0.16.0(vite@4.5.0)
+        version: 0.16.0(vite@4.5.1)
 
 packages:
 
@@ -11905,7 +11905,7 @@ packages:
       mlly: 1.4.2
       pathe: 1.1.1
       picocolors: 1.0.0
-      vite: 4.5.0(@types/node@20.9.0)
+      vite: 4.5.1(@types/node@20.9.0)
     transitivePeerDependencies:
       - '@types/node'
       - less
@@ -11917,7 +11917,7 @@ packages:
       - terser
     dev: true
 
-  /vite-plugin-dts@3.6.3(@types/node@20.9.0)(typescript@5.2.2)(vite@4.5.0):
+  /vite-plugin-dts@3.6.3(@types/node@20.9.0)(typescript@5.2.2)(vite@4.5.1):
     resolution: {integrity: sha512-NyRvgobl15rYj65coi/gH7UAEH+CpSjh539DbGb40DfOTZSvDLNYTzc8CK4460W+LqXuMK7+U3JAxRB3ksrNPw==}
     engines: {node: ^14.18.0 || >=16.0.0}
     peerDependencies:
@@ -11933,7 +11933,7 @@ packages:
       debug: 4.3.4
       kolorist: 1.8.0
       typescript: 5.2.2
-      vite: 4.5.0(@types/node@20.9.0)
+      vite: 4.5.1(@types/node@20.9.0)
       vue-tsc: 1.8.22(typescript@5.2.2)
     transitivePeerDependencies:
       - '@types/node'
@@ -11941,7 +11941,7 @@ packages:
       - supports-color
     dev: true
 
-  /vite-plugin-eslint@1.8.1(eslint@8.54.0)(vite@4.5.0):
+  /vite-plugin-eslint@1.8.1(eslint@8.54.0)(vite@4.5.1):
     resolution: {integrity: sha512-PqdMf3Y2fLO9FsNPmMX+//2BF5SF8nEWspZdgl4kSt7UvHDRHVVfHvxsD7ULYzZrJDGRxR81Nq7TOFgwMnUang==}
     peerDependencies:
       eslint: '>=7'
@@ -11951,10 +11951,10 @@ packages:
       '@types/eslint': 8.44.7
       eslint: 8.54.0
       rollup: 2.79.1
-      vite: 4.5.0(@types/node@20.9.0)
+      vite: 4.5.1(@types/node@20.9.0)
     dev: true
 
-  /vite-plugin-node-polyfills@0.16.0(vite@4.5.0):
+  /vite-plugin-node-polyfills@0.16.0(vite@4.5.1):
     resolution: {integrity: sha512-uj1ymOmk7TliMxiivmXokpMY5gVMBpFPSZPLQSCv/LjkJGGKwyLjpbFL64dbYZEdFSUQ3tM7pbrxNh25yvhqOA==}
     peerDependencies:
       vite: ^2.0.0 || ^3.0.0 || ^4.0.0
@@ -11963,13 +11963,13 @@ packages:
       buffer-polyfill: /buffer@6.0.3
       node-stdlib-browser: 1.2.0
       process: 0.11.10
-      vite: 4.5.0(@types/node@20.9.0)
+      vite: 4.5.1(@types/node@20.9.0)
     transitivePeerDependencies:
       - rollup
     dev: true
 
-  /vite@4.5.0(@types/node@20.9.0):
-    resolution: {integrity: sha512-ulr8rNLA6rkyFAlVWw2q5YJ91v098AFQ2R0PRFwPzREXOUJQPtFUG0t+/ZikhaOCDqFoDhN6/v8Sq0o4araFAw==}
+  /vite@4.5.1(@types/node@20.9.0):
+    resolution: {integrity: sha512-AXXFaAJ8yebyqzoNB9fu2pHoo/nWX+xZlaRwoeYUxEqBO+Zj4msE5G+BhGBll9lYEKv9Hfks52PAF2X7qDYXQA==}
     engines: {node: ^14.18.0 || >=16.0.0}
     hasBin: true
     peerDependencies:
@@ -12056,7 +12056,7 @@ packages:
       strip-literal: 1.3.0
       tinybench: 2.5.1
       tinypool: 0.7.0
-      vite: 4.5.0(@types/node@20.9.0)
+      vite: 4.5.1(@types/node@20.9.0)
       vite-node: 0.34.6(@types/node@20.9.0)
       why-is-node-running: 2.2.2
     transitivePeerDependencies:
