@@ -79,12 +79,8 @@ function getAddressFromBip32PublicKey(
 export function getAddressesFromPublicKey(
   publicKey: string | Buffer,
   network: Network = "mainnet",
-  type: AddressType | "all" = "all",
+  type: Exclude<AddressType, "p2wsh"> | "all" = "all",
 ): Address[] {
-  if (type === "p2wsh") {
-    throw new OrditSDKError("P2WSH is not supported");
-  }
-
   const publicKeyBuffer = Buffer.isBuffer(publicKey)
     ? publicKey
     : Buffer.from(publicKey, "hex");
