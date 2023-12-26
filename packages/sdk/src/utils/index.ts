@@ -297,16 +297,6 @@ export const isP2WPKH = (
   };
 };
 
-export const isP2WSHScript = (
-  script: Buffer,
-  network: Network,
-): IsBitcoinPaymentResponse => {
-  const p2wsh = isPaymentFactory(payments.p2wsh, network)(script);
-  return {
-    type: "p2wsh",
-    payload: p2wsh,
-  };
-};
 export const isP2SHScript = (
   script: Buffer,
   network: Network,
