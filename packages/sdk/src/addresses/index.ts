@@ -13,10 +13,6 @@ import { ADDRESS_TYPE_TO_FORMAT } from "./constants";
 import type { Address, AddressFormat, AddressType } from "./types";
 
 function getAddressFormatFromType(type: AddressTypeEnum): AddressFormat {
-  if (type === AddressTypeEnum.p2wsh) {
-    // p2wsh is not supported by browser wallets
-    throw new OrditSDKError("Invalid address");
-  }
   return ADDRESS_TYPE_TO_FORMAT[type];
 }
 
@@ -90,6 +86,10 @@ export function getAddressesFromPublicKey(
   network: Network = "mainnet",
   type: AddressType | "all" = "all",
 ): Address[] {
+  if (type === "p2wsh") {
+    throw new OrditSDKError("P2WSH is not supported");
+  }
+
   const publicKeyBuffer = Buffer.isBuffer(publicKey)
     ? publicKey
     : Buffer.from(publicKey, "hex");
@@ -100,7 +100,10 @@ export function getAddressesFromPublicKey(
   );
 
   if (type === "all") {
-    const addressTypes = Object.keys(ADDRESS_TYPE_TO_FORMAT) as AddressType[];
+    // p2wsh is not supported by browser wallets
+    const addressTypes = (
+      Object.keys(ADDRESS_TYPE_TO_FORMAT) as AddressType[]
+    ).filter((addressType) => addressType !== "p2wsh");
     return addressTypes.map((addressType) =>
       getAddressFromBip32PublicKey(bip32PublicKey, network, addressType),
     );

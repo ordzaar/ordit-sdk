@@ -18,6 +18,7 @@ describe("addresses", () => {
         segwit: "bc1qw508d6qejxtdg4y5r3zarvary0c5xw7kv8f3t4",
         taproot:
           "bc1p5d7rjq7g6rdk2yhzks9smlaqtedr4dekq08ge8ztwac72sfr9rusxg3297",
+        p2wsh: "bc1qrp33g0q5c5txsp9arysrx4k6zdkfs4nce4xj0gdcccefvpysxf3qccfmv3",
       },
       [TESTNET]: {
         legacy: "mipcBbFg9gMiCh81Kj8tqqdgoZub1ZJRfn",
@@ -25,6 +26,7 @@ describe("addresses", () => {
         segwit: "tb1qw508d6qejxtdg4y5r3zarvary0c5xw7kxpjzsx",
         taproot:
           "tb1p3gqcaq2xs0qzm5wvkht64xppcz9h5k0q2q97kf6n80gu7v037dksatsuhz",
+        p2wsh: "tb1qrp33g0q5c5txsp9arysrx4k6zdkfs4nce4xj0gdcccefvpysxf3q0sl5k7",
       },
       [REGTEST]: {
         legacy: "mipcBbFg9gMiCh81Kj8tqqdgoZub1ZJRfn",
@@ -32,6 +34,8 @@ describe("addresses", () => {
         segwit: "bcrt1q3v3tujtu443ukyhvzsqmnjgxfv4yevvhcqyqak",
         taproot:
           "bcrt1p0xlxvlhemja6c4dqv22uapctqupfhlxm9h8z3k2e72q4k9hcz7vqc8gma6",
+        p2wsh:
+          "bcrt1qpj7ehqa8q585n3srsl7a5njfjemd2nagdak5qflswkxd9c7fakxqgg545v",
       },
     };
 
@@ -49,6 +53,7 @@ describe("addresses", () => {
       expect(getAddressFormat(ADDRESSES[network].taproot, network)).toBe(
         "taproot",
       );
+      expect(getAddressFormat(ADDRESSES[network].p2wsh, network)).toBe("p2wsh");
     });
 
     test("should return correct address format for testnet", () => {
@@ -65,6 +70,7 @@ describe("addresses", () => {
       expect(getAddressFormat(ADDRESSES[network].taproot, network)).toBe(
         "taproot",
       );
+      expect(getAddressFormat(ADDRESSES[network].p2wsh, network)).toBe("p2wsh");
 
       // non-bech32 addresses from regtest will work on testnet
       expect(() =>
@@ -89,6 +95,7 @@ describe("addresses", () => {
       expect(getAddressFormat(ADDRESSES[network].taproot, network)).toBe(
         "taproot",
       );
+      expect(getAddressFormat(ADDRESSES[network].p2wsh, network)).toBe("p2wsh");
 
       // non-bech32 addresses from testnet will work on regtest
       expect(() =>
@@ -119,6 +126,9 @@ describe("addresses", () => {
         getAddressFormat(ADDRESSES[TESTNET].taproot, MAINNET),
       ).toThrowError(INVALID_ADDRESS_ERROR);
       expect(() =>
+        getAddressFormat(ADDRESSES[TESTNET].p2wsh, MAINNET),
+      ).toThrowError(INVALID_ADDRESS_ERROR);
+      expect(() =>
         getAddressFormat(ADDRESSES[REGTEST].legacy, MAINNET),
       ).toThrowError(INVALID_ADDRESS_ERROR);
       expect(() =>
@@ -129,6 +139,9 @@ describe("addresses", () => {
       ).toThrowError(INVALID_ADDRESS_ERROR);
       expect(() =>
         getAddressFormat(ADDRESSES[REGTEST].taproot, MAINNET),
+      ).toThrowError(INVALID_ADDRESS_ERROR);
+      expect(() =>
+        getAddressFormat(ADDRESSES[REGTEST].p2wsh, MAINNET),
       ).toThrowError(INVALID_ADDRESS_ERROR);
     });
 
@@ -152,10 +165,16 @@ describe("addresses", () => {
         getAddressFormat(ADDRESSES[MAINNET].taproot, TESTNET),
       ).toThrowError(INVALID_ADDRESS_ERROR);
       expect(() =>
+        getAddressFormat(ADDRESSES[MAINNET].p2wsh, TESTNET),
+      ).toThrowError(INVALID_ADDRESS_ERROR);
+      expect(() =>
         getAddressFormat(ADDRESSES[REGTEST].segwit, TESTNET),
       ).toThrowError(INVALID_ADDRESS_ERROR);
       expect(() =>
         getAddressFormat(ADDRESSES[REGTEST].taproot, TESTNET),
+      ).toThrowError(INVALID_ADDRESS_ERROR);
+      expect(() =>
+        getAddressFormat(ADDRESSES[REGTEST].p2wsh, TESTNET),
       ).toThrowError(INVALID_ADDRESS_ERROR);
     });
 
@@ -179,10 +198,16 @@ describe("addresses", () => {
         getAddressFormat(ADDRESSES[MAINNET].taproot, REGTEST),
       ).toThrowError(INVALID_ADDRESS_ERROR);
       expect(() =>
+        getAddressFormat(ADDRESSES[MAINNET].p2wsh, REGTEST),
+      ).toThrowError(INVALID_ADDRESS_ERROR);
+      expect(() =>
         getAddressFormat(ADDRESSES[TESTNET].segwit, REGTEST),
       ).toThrowError(INVALID_ADDRESS_ERROR);
       expect(() =>
         getAddressFormat(ADDRESSES[TESTNET].taproot, REGTEST),
+      ).toThrowError(INVALID_ADDRESS_ERROR);
+      expect(() =>
+        getAddressFormat(ADDRESSES[TESTNET].p2wsh, REGTEST),
       ).toThrowError(INVALID_ADDRESS_ERROR);
     });
   });

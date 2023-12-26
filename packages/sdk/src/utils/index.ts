@@ -70,7 +70,12 @@ export function getDerivationPath(
   account = 0,
   addressIndex = 0,
 ) {
-  const pathFormat: Record<AddressFormat, string> = {
+  if (formatType === "p2wsh") {
+    // No supported derivation path
+    return "";
+  }
+
+  const pathFormat: Record<Exclude<AddressFormat, "p2wsh">, string> = {
     legacy: `m/44'/0'/${account}'/0/${addressIndex}`,
     "p2sh-p2wpkh": `m/49'/0'/${account}'/0/${addressIndex}`,
     segwit: `m/84'/0'/${account}'/0/${addressIndex}`,
@@ -298,7 +303,7 @@ export const isP2WSHScript = (
 ): IsBitcoinPaymentResponse => {
   const p2wsh = isPaymentFactory(payments.p2wsh, network)(script);
   return {
-    type: "p2sh",
+    type: "p2wsh",
     payload: p2wsh,
   };
 };
