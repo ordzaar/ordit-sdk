@@ -1,5 +1,4 @@
 import {
-  AddressType as AddressTypeEnum,
   getAddressInfo,
   Network as NetworkEnum,
   validate,
@@ -12,10 +11,6 @@ import { createPayment, getNetwork } from "../utils";
 import { ADDRESS_TYPE_TO_FORMAT } from "./constants";
 import type { Address, AddressFormat, AddressType } from "./types";
 
-function getAddressFormatFromType(type: AddressTypeEnum): AddressFormat {
-  return ADDRESS_TYPE_TO_FORMAT[type];
-}
-
 function getAddressFormatForRegTest(address: string): AddressFormat {
   try {
     const { type, network: validatedNetwork, bech32 } = getAddressInfo(address);
@@ -26,7 +21,7 @@ function getAddressFormatForRegTest(address: string): AddressFormat {
       // This type Error is intentional, we'll forward the top-level one anyway
       throw new Error("Invalid address");
     }
-    return getAddressFormatFromType(type);
+    return ADDRESS_TYPE_TO_FORMAT[type];
   } catch (_) {
     throw new OrditSDKError("Invalid address");
   }
@@ -47,7 +42,7 @@ export function getAddressFormat(
   }
 
   const { type } = getAddressInfo(address);
-  return getAddressFormatFromType(type);
+  return ADDRESS_TYPE_TO_FORMAT[type];
 }
 
 function getTaprootAddressFromBip32PublicKey(
