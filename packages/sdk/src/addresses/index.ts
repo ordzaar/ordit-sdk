@@ -1,5 +1,4 @@
 import {
-  AddressType as AddressTypeEnum,
   getAddressInfo,
   Network as NetworkEnum,
   validate,
@@ -12,14 +11,6 @@ import { createPayment, getNetwork } from "../utils";
 import { ADDRESS_TYPE_TO_FORMAT } from "./constants";
 import type { Address, AddressFormat, AddressType } from "./types";
 
-function getAddressFormatFromType(type: AddressTypeEnum): AddressFormat {
-  if (type === AddressTypeEnum.p2wsh) {
-    // p2wsh is not supported by browser wallets
-    throw new OrditSDKError("Invalid address");
-  }
-  return ADDRESS_TYPE_TO_FORMAT[type];
-}
-
 function getAddressFormatForRegTest(address: string): AddressFormat {
   try {
     const { type, network: validatedNetwork, bech32 } = getAddressInfo(address);
@@ -30,7 +21,7 @@ function getAddressFormatForRegTest(address: string): AddressFormat {
       // This type Error is intentional, we'll forward the top-level one anyway
       throw new Error("Invalid address");
     }
-    return getAddressFormatFromType(type);
+    return ADDRESS_TYPE_TO_FORMAT[type];
   } catch (_) {
     throw new OrditSDKError("Invalid address");
   }
@@ -51,7 +42,7 @@ export function getAddressFormat(
   }
 
   const { type } = getAddressInfo(address);
-  return getAddressFormatFromType(type);
+  return ADDRESS_TYPE_TO_FORMAT[type];
 }
 
 function getTaprootAddressFromBip32PublicKey(
@@ -88,7 +79,7 @@ function getAddressFromBip32PublicKey(
 export function getAddressesFromPublicKey(
   publicKey: string | Buffer,
   network: Network = "mainnet",
-  type: AddressType | "all" = "all",
+  type: Exclude<AddressType, "p2wsh"> | "all" = "all",
 ): Address[] {
   const publicKeyBuffer = Buffer.isBuffer(publicKey)
     ? publicKey
@@ -100,7 +91,10 @@ export function getAddressesFromPublicKey(
   );
 
   if (type === "all") {
-    const addressTypes = Object.keys(ADDRESS_TYPE_TO_FORMAT) as AddressType[];
+    // p2wsh is not supported by browser wallets
+    const addressTypes = (
+      Object.keys(ADDRESS_TYPE_TO_FORMAT) as AddressType[]
+    ).filter((addressType) => addressType !== "p2wsh");
     return addressTypes.map((addressType) =>
       getAddressFromBip32PublicKey(bip32PublicKey, network, addressType),
     );
