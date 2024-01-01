@@ -51,7 +51,7 @@
     "buffer-reverse": "1.0.1",
     "cross-fetch": "4.0.0",
     "ecpair": "2.1.0",
-    "ethers": "6.8.1",
+    "ethers": "6.9.1",
     "sats-connect": "1.1.2"
   },
   "devDependencies": {
