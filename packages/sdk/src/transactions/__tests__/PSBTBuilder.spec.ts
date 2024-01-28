@@ -2,7 +2,7 @@ import * as ecc from "@bitcoinerlab/secp256k1";
 import { initEccLib } from "bitcoinjs-lib";
 
 import { OrditSDKError } from "../..";
-import * as jsonrpc from "../../api/jsonrpc";
+import * as jsonrpc from "../../api/jsonrpc/jsonrpc";
 import { convertBTCToSatoshis } from "../../utils";
 import {
   ADDRESS_TO_GETSPENDABLES_RESPONSE,

@@ -3,12 +3,15 @@ export const API_CONFIG = {
   apis: {
     mainnet: {
       batter: "https://mainnet.ordit.io/",
+      ordexer: "",
     },
     regtest: {
       batter: "https://regtest.ordit.io/",
+      ordexer: "",
     },
     testnet: {
       batter: "https://testnet.ordit.io/",
+      ordexer: "",
     },
   },
 };

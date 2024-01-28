@@ -1,21 +1,10 @@
 import fetch from "cross-fetch";
 
-import { API_CONFIG } from "../config";
-import { OrditSDKError } from "../errors";
+import { API_CONFIG } from "../../config";
+import { OrditSDKError } from "../../errors";
+import { getUrl, Params } from "../utils";
 
 type JsonRpcId = string | number | null;
-
-export type ParamRecord = { [k in string]: Params };
-export type Params =
-  | string
-  | string[]
-  | number
-  | number[]
-  | boolean
-  | boolean[]
-  | null
-  | undefined
-  | ParamRecord;
 
 function isNumber(value: unknown): value is number {
   return (
@@ -35,13 +24,6 @@ function isString(value: unknown): value is string {
 
 function isJsonRpcId(value: unknown): value is JsonRpcId {
   return isString(value) || isInteger(value) || value === null;
-}
-
-function getRpcUrl(value: string): string {
-  if (value[value.length - 1] === "/") {
-    return value.substring(0, value.length - 1);
-  }
-  return value;
 }
 
 class JsonRpc {
@@ -113,7 +95,7 @@ export const rpc = {
   get id() {
     return Math.floor(Math.random() * 100000);
   },
-  mainnet: new JsonRpc(getRpcUrl(API_CONFIG.apis.mainnet.batter)),
-  testnet: new JsonRpc(getRpcUrl(API_CONFIG.apis.testnet.batter)),
-  regtest: new JsonRpc(getRpcUrl(API_CONFIG.apis.regtest.batter)),
+  mainnet: new JsonRpc(getUrl(API_CONFIG.apis.mainnet.batter)),
+  testnet: new JsonRpc(getUrl(API_CONFIG.apis.testnet.batter)),
+  regtest: new JsonRpc(getUrl(API_CONFIG.apis.regtest.batter)),
 } as const;

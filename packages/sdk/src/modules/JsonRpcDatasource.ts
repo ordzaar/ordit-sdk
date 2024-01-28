@@ -1,6 +1,6 @@
 import { Transaction as BTCTransaction } from "bitcoinjs-lib";
 
-import { rpc } from "../api/jsonrpc";
+import { rpc } from "../api/jsonrpc/jsonrpc";
 import type {
   GetBalanceOptions,
   GetInscriptionOptions,

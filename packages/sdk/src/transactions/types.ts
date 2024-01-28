@@ -30,7 +30,7 @@ export type Vout = {
   /**
    * Is spent (Ordit RPC), can be Outpoint `{txid}:{vout}`, or `false` if not spent
    */
-  spent: string | false;
+  spent: boolean;
 
   /**
    * Public key script
@@ -95,7 +95,7 @@ export type Vin = {
   /**
    * Hex-encoded witness data
    */
-  txinwitness: string[];
+  txinwitness?: string[];
 
   /**
    * Script sequence number
