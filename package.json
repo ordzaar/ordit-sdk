@@ -19,14 +19,14 @@
   "devDependencies": {
     "@ordzaar/standard-linter": "^1.2.0",
     "@ordzaar/standard-typescript": "^1.2.0",
-    "@vitest/coverage-v8": "^0.34.6",
+    "@vitest/coverage-v8": "^1.2.2",
     "husky": "^9.0.6",
     "rimraf": "^5.0.5",
     "semver": "^7.5.4",
     "turbo": "^1.11.3",
     "typescript": "^5.3.3",
     "vite": "^4.5.0",
-    "vitest": "^0.34.6"
+    "vitest": "^1.2.2"
   },
   "lint-staged": {
     "*": "prettier --write --ignore-unknown"
