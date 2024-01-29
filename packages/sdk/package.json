@@ -55,9 +55,9 @@
     "sats-connect": "1.1.2"
   },
   "devDependencies": {
-    "@ordzaar/standard-typescript": "^0.4.15",
+    "@ordzaar/standard-typescript": "^1.2.0",
     "@types/node": "^20.9.0",
-    "happy-dom": "^12.10.3",
+    "happy-dom": "^13.3.1",
     "vite-plugin-dts": "^3.7.2",
     "vite-plugin-eslint": "^1.8.1",
     "vite-plugin-node-polyfills": "^0.19.0"
