@@ -3,7 +3,7 @@ import { Buffer } from "buffer";
 import type { AddressFormat } from "../addresses/types";
 import type { Network } from "../config/types";
 import { BIP32, CHAIN_CODE } from "../constants";
-import { BaseDatasource, JsonRpcDatasource } from "../modules";
+import { BaseDatasource, DataSource } from "../modules";
 import { createPayment, getNetwork, toXOnly } from "../utils";
 import type { UTXO, UTXOLimited } from "./types";
 
@@ -184,7 +184,7 @@ export async function processInput({
   witness,
   datasource: _datasource,
 }: ProcessInputOptions): Promise<InputType> {
-  const datasource = _datasource || new JsonRpcDatasource({ network });
+  const datasource = _datasource || new DataSource.Jsonrpc({ network });
   switch (utxo.scriptPubKey.type) {
     case "witness_v1_taproot":
       return generateTaprootInput({
