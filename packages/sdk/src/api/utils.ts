@@ -11,5 +11,5 @@ export type Params =
   | ParamRecord;
 
 export function removeTrailingSlash(str: string): string {
-  return str.replace(/\/+$/, '');
+  return str.replace(/\/+$/, "");
 }
