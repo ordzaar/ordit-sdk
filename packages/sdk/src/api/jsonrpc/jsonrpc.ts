@@ -2,7 +2,7 @@ import fetch from "cross-fetch";
 
 import { API_CONFIG } from "../../config";
 import { OrditSDKError } from "../../errors";
-import { getUrl, Params } from "../utils";
+import { Params, removeTrailingSlash } from "../utils";
 
 type JsonRpcId = string | number | null;
 
@@ -95,7 +95,7 @@ export const rpc = {
   get id() {
     return Math.floor(Math.random() * 100000);
   },
-  mainnet: new JsonRpc(getUrl(API_CONFIG.apis.mainnet.batter)),
-  testnet: new JsonRpc(getUrl(API_CONFIG.apis.testnet.batter)),
-  regtest: new JsonRpc(getUrl(API_CONFIG.apis.regtest.batter)),
+  mainnet: new JsonRpc(removeTrailingSlash(API_CONFIG.apis.mainnet.batter)),
+  testnet: new JsonRpc(removeTrailingSlash(API_CONFIG.apis.testnet.batter)),
+  regtest: new JsonRpc(removeTrailingSlash(API_CONFIG.apis.regtest.batter)),
 } as const;

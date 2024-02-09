@@ -2,7 +2,7 @@ import axios from "axios";
 
 import { API_CONFIG } from "../../config";
 import { OrditSDKError } from "../../errors";
-import { getUrl, Params } from "../utils";
+import { Params, removeTrailingSlash } from "../utils";
 
 class OrdexerApi {
   constructor(readonly url: string) {}
@@ -42,7 +42,7 @@ export const ordexer = {
   get id() {
     return Math.floor(Math.random() * 100000);
   },
-  mainnet: new OrdexerApi(getUrl(API_CONFIG.apis.mainnet.ordexer)),
-  testnet: new OrdexerApi(getUrl(API_CONFIG.apis.testnet.ordexer)),
-  regtest: new OrdexerApi(getUrl(API_CONFIG.apis.regtest.ordexer)),
+  mainnet: new OrdexerApi(removeTrailingSlash(API_CONFIG.apis.mainnet.ordexer)),
+  testnet: new OrdexerApi(removeTrailingSlash(API_CONFIG.apis.testnet.ordexer)),
+  regtest: new OrdexerApi(removeTrailingSlash(API_CONFIG.apis.regtest.ordexer)),
 } as const;
