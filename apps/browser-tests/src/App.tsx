@@ -1,5 +1,11 @@
 import { useCallback, useMemo, useState } from "react";
-import { Address, PSBTBuilder, PSBTBuilderOptions } from "@ordzaar/ordit-sdk";
+import type { DataSourceType, UTXOLimited } from "@ordzaar/ordit-sdk";
+import {
+  Address,
+  DataSource,
+  PSBTBuilder,
+  PSBTBuilderOptions,
+} from "@ordzaar/ordit-sdk";
 import * as unisat from "@ordzaar/ordit-sdk/unisat";
 import * as xverse from "@ordzaar/ordit-sdk/xverse";
 
@@ -210,6 +216,270 @@ function Transactions({
   );
 }
 
+function GetBalanceAPI({
+  connectedAddresses,
+  datasource,
+}: {
+  connectedAddresses: Address[];
+  datasource: DataSourceType;
+}) {
+  const [walletBalance, setWalletBalance] = useState<number | undefined>();
+  const [inputAddressInfo, setInputAddress] = useState(connectedAddresses[0]);
+  const inputAddressesSelectOptions = useMemo(
+    () =>
+      connectedAddresses.map((addr) => ({
+        name: addr.address,
+        value: addr.address,
+      })),
+    [connectedAddresses],
+  );
+
+  const handleGetBalance = useCallback(async () => {
+    const balance = await datasource.getBalance({
+      address: inputAddressInfo.address,
+    });
+    setWalletBalance(balance);
+  }, [inputAddressInfo.address, datasource]);
+
+  return (
+    <div
+      className="flex flex-col"
+      style={{ maxWidth: "600px", gap: "4px", width: "100%" }}
+    >
+      <h2>GetBalance API</h2>
+      <label className="flex" htmlFor="inputAddress">
+        Input Address
+      </label>
+      <Select
+        options={inputAddressesSelectOptions}
+        name="inputAddress"
+        id="inputAddress"
+        defaultValue={inputAddressesSelectOptions[0].value}
+        onChange={(newInputAddress) =>
+          setInputAddress(
+            connectedAddresses.find(
+              (connectedAddr) => connectedAddr.address === newInputAddress,
+            )!,
+          )
+        }
+      />
+      <button
+        type="button"
+        onClick={handleGetBalance}
+        disabled={!connectedAddresses}
+      >
+        Get Balance
+      </button>
+      <p>Balance: {walletBalance}</p>
+    </div>
+  );
+}
+
+function GetSpendablesAPI({
+  connectedAddresses,
+  datasource,
+}: {
+  connectedAddresses: Address[];
+  datasource: DataSourceType;
+}) {
+  const [spendables, setSpendables] = useState<UTXOLimited[] | undefined>();
+  const [inputAddressInfo, setInputAddress] = useState(connectedAddresses[0]);
+  const inputAddressesSelectOptions = useMemo(
+    () =>
+      connectedAddresses.map((addr) => ({
+        name: addr.address,
+        value: addr.address,
+      })),
+    [connectedAddresses],
+  );
+
+  const handleGetSpendables = useCallback(async () => {
+    const spendablesData = await datasource.getSpendables({
+      address: inputAddressInfo.address,
+      value: 0,
+    });
+    setSpendables(spendablesData);
+  }, [inputAddressInfo.address, datasource]);
+
+  return (
+    <div
+      className="flex flex-col"
+      style={{ maxWidth: "600px", gap: "4px", width: "100%" }}
+    >
+      <h2>GetSpendables API</h2>
+      <label className="flex" htmlFor="inputAddress">
+        Input Address
+      </label>
+      <Select
+        options={inputAddressesSelectOptions}
+        name="inputAddress"
+        id="inputAddress"
+        defaultValue={inputAddressesSelectOptions[0].value}
+        onChange={(newInputAddress) =>
+          setInputAddress(
+            connectedAddresses.find(
+              (connectedAddr) => connectedAddr.address === newInputAddress,
+            )!,
+          )
+        }
+      />
+      <button
+        type="button"
+        onClick={handleGetSpendables}
+        disabled={!connectedAddresses}
+      >
+        Get Spendables
+      </button>
+      <div>
+        {spendables && spendables.length > 0 ? (
+          <div style={{ marginTop: "12px", maxWidth: "800px" }}>
+            <h3>Connected Wallet Spendables</h3>
+            {spendables.map((spendable) => (
+              <div
+                key={spendable.txid}
+                style={{
+                  padding: "8px",
+                  border: "1px solid black",
+                }}
+              >
+                <p>txid: {spendable.txid}</p>
+                <p>n: {spendable.n}</p>
+                <p>sats: {spendable.sats}</p>
+                <p>scriptPubKey: {String(spendable.scriptPubKey)}</p>
+              </div>
+            ))}
+          </div>
+        ) : null}
+      </div>
+    </div>
+  );
+}
+
+function GetUnspentsAPI({
+  connectedAddresses,
+  datasource,
+}: {
+  connectedAddresses: Address[];
+  datasource: DataSourceType;
+}) {
+  const [unspents, setUnspents] = useState<UTXOLimited[] | undefined>();
+  const [inputAddressInfo, setInputAddress] = useState(connectedAddresses[0]);
+  const inputAddressesSelectOptions = useMemo(
+    () =>
+      connectedAddresses.map((addr) => ({
+        name: addr.address,
+        value: addr.address,
+      })),
+    [connectedAddresses],
+  );
+
+  const handleGetUnspents = useCallback(async () => {
+    const unspentsData = await datasource.getUnspents({
+      address: inputAddressInfo.address,
+    });
+    setUnspents(unspentsData.spendableUTXOs);
+  }, [inputAddressInfo.address, datasource]);
+
+  return (
+    <div
+      className="flex flex-col"
+      style={{ maxWidth: "600px", gap: "4px", width: "100%" }}
+    >
+      <h2>GetUnspents API</h2>
+      <label className="flex" htmlFor="inputAddress">
+        Input Address
+      </label>
+      <Select
+        options={inputAddressesSelectOptions}
+        name="inputAddress"
+        id="inputAddress"
+        defaultValue={inputAddressesSelectOptions[0].value}
+        onChange={(newInputAddress) =>
+          setInputAddress(
+            connectedAddresses.find(
+              (connectedAddr) => connectedAddr.address === newInputAddress,
+            )!,
+          )
+        }
+      />
+      <button
+        type="button"
+        onClick={handleGetUnspents}
+        disabled={!connectedAddresses}
+      >
+        Get Unspents
+      </button>
+      <div>
+        {unspents && unspents.length > 0 ? (
+          <div style={{ marginTop: "12px", maxWidth: "800px" }}>
+            <h3>Connected Wallet Unspents</h3>
+            {unspents.map((unspent) => (
+              <div
+                key={unspent.txid}
+                style={{
+                  padding: "8px",
+                  border: "1px solid black",
+                }}
+              >
+                <p>txid: {unspent.txid}</p>
+                <p>n: {unspent.n}</p>
+                <p>sats: {unspent.sats}</p>
+                <p>script : {String(unspent.script)}</p>
+              </div>
+            ))}
+          </div>
+        ) : null}
+      </div>
+    </div>
+  );
+}
+
+function APITest({ connectedAddresses }: { connectedAddresses: Address[] }) {
+  const [selectedDatasource, setSelectedDatasource] =
+    useState<string>("jsonrpc");
+  const datasource = useMemo(() => {
+    if (selectedDatasource === "jsonrpc") {
+      return new DataSource.Jsonrpc({ network: "testnet" });
+    }
+    if (selectedDatasource === "ordexer") {
+      return new DataSource.Ordexer({ network: "testnet" });
+    }
+    return undefined;
+  }, [selectedDatasource]);
+
+  return (
+    <div>
+      <h1>Test Datasource APIs</h1>
+      <RadioInput
+        name="selectedDatasource"
+        onChange={(option) =>
+          selectedDatasource !== option.value
+            ? setSelectedDatasource(option.value)
+            : undefined
+        }
+        options={[
+          { name: "Jsonrpc", value: "jsonrpc" },
+          { name: "Ordexer", value: "ordexer" },
+        ]}
+        value={selectedDatasource}
+      />
+      <h1>API Tester</h1>
+      <GetBalanceAPI
+        connectedAddresses={connectedAddresses}
+        datasource={datasource}
+      />
+      <GetSpendablesAPI
+        connectedAddresses={connectedAddresses}
+        datasource={datasource}
+      />
+      <GetUnspentsAPI
+        connectedAddresses={connectedAddresses}
+        datasource={datasource}
+      />
+    </div>
+  );
+}
+
 function App() {
   const [provider, setProvider] = useState<WalletProvider>("unisat");
   const [connectedAddresses, setConnectedAddresses] = useState<
@@ -291,6 +561,7 @@ function App() {
             provider={provider}
             connectedAddresses={connectedAddresses}
           />
+          <APITest connectedAddresses={connectedAddresses} />
         </>
       ) : null}
     </div>
