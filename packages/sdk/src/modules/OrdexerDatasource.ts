@@ -202,7 +202,7 @@ export class OrdexerDatasource extends BaseDatasource {
       );
 
       inscriptions = inscriptions.concat(responseInscriptions);
-      next = response.page.next;
+      next = response.page?.next ?? null;
     } while (next !== null);
 
     return DatasourceUtility.parseInscriptions(inscriptions, {
@@ -380,7 +380,7 @@ export class OrdexerDatasource extends BaseDatasource {
       }));
 
       utxos = utxos.concat(responseUTXOs);
-      next = response.page.next;
+      next = response.page?.next ?? null;
     } while (next !== null);
 
     return DatasourceUtility.segregateUTXOsBySpendStatus({ utxos });

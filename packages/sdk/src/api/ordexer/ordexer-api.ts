@@ -1,6 +1,6 @@
 import axios from "axios";
 
-import { API_CONFIG } from "../../config";
+import { API_CONFIG, ORDEXER_AUTH_TOKEN } from "../../config";
 import { OrditSDKError } from "../../errors";
 import { Params, removeTrailingSlash } from "../utils";
 
@@ -12,6 +12,9 @@ class OrdexerApi {
       method: "get",
       baseURL: this.url,
       url: endpoint,
+      headers: {
+        Authorization: `Bearer ${ORDEXER_AUTH_TOKEN}`,
+      },
       params,
     });
 
@@ -27,6 +30,9 @@ class OrdexerApi {
       method: "post",
       baseURL: this.url,
       url: endpoint,
+      headers: {
+        Authorization: `Bearer ${ORDEXER_AUTH_TOKEN}`,
+      },
       data,
     });
 
