@@ -9,7 +9,7 @@ import {
 import { FeeEstimator } from "../fee/FeeEstimator";
 import type { InputsToSign } from "../inscription/types";
 import { BaseDatasource } from "../modules/BaseDatasource";
-import { JsonRpcDatasource } from "../modules/JsonRpcDatasource";
+import { DataSource } from "../modules/DataSource";
 import {
   convertSatoshisToBTC,
   generateTxUniqueIdentifier,
@@ -134,7 +134,7 @@ export class PSBTBuilder extends FeeEstimator {
     this.address = address;
     this.changeAddress = changeAddress;
     this.datasource =
-      datasource || new JsonRpcDatasource({ network: this.network });
+      datasource || new DataSource.Jsonrpc({ network: this.network });
     this.outputs = outputs;
     this.publicKey = publicKey;
 
