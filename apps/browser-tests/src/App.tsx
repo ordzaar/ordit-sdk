@@ -434,7 +434,11 @@ function GetUnspentsAPI({
   );
 }
 
-function APITest({ connectedAddresses }: { connectedAddresses: Address[] }) {
+function AddressesAPITest({
+  connectedAddresses,
+}: {
+  connectedAddresses: Address[];
+}) {
   const [selectedDatasource, setSelectedDatasource] =
     useState<string>("jsonrpc");
   const datasource = useMemo(() => {
@@ -463,7 +467,7 @@ function APITest({ connectedAddresses }: { connectedAddresses: Address[] }) {
         ]}
         value={selectedDatasource}
       />
-      <h1>API Tester</h1>
+      <h1>Addresses API Tester</h1>
       <GetBalanceAPI
         connectedAddresses={connectedAddresses}
         datasource={datasource}
@@ -476,6 +480,144 @@ function APITest({ connectedAddresses }: { connectedAddresses: Address[] }) {
         connectedAddresses={connectedAddresses}
         datasource={datasource}
       />
+    </div>
+  );
+}
+
+function GetTransactionAPI({ datasource }: { datasource: DataSourceType }) {
+  const [txid, setTxid] = useState<string>("");
+  const [transaction, setTransaction] = useState<any | undefined>();
+  const [error, setError] = useState<string | undefined>();
+
+  const handleGetTransaction = useCallback(async () => {
+    setError(undefined);
+    if (!txid) {
+      setError("Txid is required");
+      return;
+    }
+
+    try {
+      const transactionData = await datasource.getTransaction({ txId: txid });
+      setTransaction(transactionData);
+    } catch (e) {
+      setError((e as Error).message);
+    }
+  }, [txid, datasource]);
+
+  return (
+    <div
+      className="flex flex-col"
+      style={{ maxWidth: "600px", gap: "4px", width: "100%" }}
+    >
+      <h2>GetTransaction API</h2>
+      <label className="flex" htmlFor="txid">
+        Txid
+      </label>
+      <input
+        type="text"
+        id="txid"
+        name="txid"
+        value={txid}
+        onChange={(e) => setTxid(e.target.value)}
+      />
+      <button type="button" onClick={handleGetTransaction}>
+        Get Transaction
+      </button>
+      <div>
+        {transaction ? (
+          <div style={{ marginTop: "12px", maxWidth: "800px" }}>
+            <h3>Transaction</h3>
+            <pre>{JSON.stringify(transaction, null, 2)}</pre>
+          </div>
+        ) : null}
+      </div>
+      <p>{error ? `Error: ${error}` : null}</p>
+    </div>
+  );
+}
+
+function GetInscriptionAPI({ datasource }: { datasource: DataSourceType }) {
+  const [inscriptionId, setInscriptionId] = useState<string>("");
+  const [inscription, setInscription] = useState<any | undefined>();
+  const [error, setError] = useState<string | undefined>();
+
+  const handleGetInscription = useCallback(async () => {
+    setError(undefined);
+
+    try {
+      const inscriptionData = await datasource.getInscription({
+        id: inscriptionId,
+      });
+      setInscription(inscriptionData);
+    } catch (e) {
+      setError((e as Error).message);
+    }
+  }, [inscriptionId, datasource]);
+
+  return (
+    <div
+      className="flex flex-col"
+      style={{ maxWidth: "600px", gap: "4px", width: "100%" }}
+    >
+      <h2>GetInscription API</h2>
+      <label className="flex" htmlFor="inscriptionId">
+        Inscription ID
+      </label>
+      <input
+        type="text"
+        id="inscriptionId"
+        name="inscriptionId"
+        value={inscriptionId}
+        onChange={(e) => setInscriptionId(e.target.value)}
+      />
+      <button type="button" onClick={handleGetInscription}>
+        Get Inscription
+      </button>
+      <div>
+        {inscription ? (
+          <div style={{ marginTop: "12px", maxWidth: "800px" }}>
+            <h3>Inscription</h3>
+            <pre>{JSON.stringify(inscription, null, 2)}</pre>
+          </div>
+        ) : null}
+      </div>
+      <p>{error ? `Error: ${error}` : null}</p>
+    </div>
+  );
+}
+
+function NonAddressAPITest() {
+  const [selectedDatasource, setSelectedDatasource] =
+    useState<string>("jsonrpc");
+  const datasource = useMemo(() => {
+    if (selectedDatasource === "jsonrpc") {
+      return new DataSource.Jsonrpc({ network: "testnet" });
+    }
+    if (selectedDatasource === "ordexer") {
+      return new DataSource.Ordexer({ network: "testnet" });
+    }
+    return undefined;
+  }, [selectedDatasource]);
+
+  return (
+    <div>
+      <h1>Test Datasource APIs</h1>
+      <RadioInput
+        name="selectedDatasource"
+        onChange={(option) =>
+          selectedDatasource !== option.value
+            ? setSelectedDatasource(option.value)
+            : undefined
+        }
+        options={[
+          { name: "Jsonrpc", value: "jsonrpc" },
+          { name: "Ordexer", value: "ordexer" },
+        ]}
+        value={selectedDatasource}
+      />
+      <h1>Non Address API Tester</h1>
+      <GetInscriptionAPI datasource={datasource} />
+      <GetTransactionAPI datasource={datasource} />
     </div>
   );
 }
@@ -561,9 +703,10 @@ function App() {
             provider={provider}
             connectedAddresses={connectedAddresses}
           />
-          <APITest connectedAddresses={connectedAddresses} />
+          <AddressesAPITest connectedAddresses={connectedAddresses} />
         </>
       ) : null}
+      <NonAddressAPITest />
     </div>
   );
 }
