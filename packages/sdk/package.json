@@ -10,6 +10,10 @@
       "import": "./dist/index.js",
       "require": "./dist/index.cjs"
     },
+    "./magiceden": {
+      "import": "./dist/magiceden.js",
+      "require": "./dist/magiceden.cjs"
+    },
     "./unisat": {
       "import": "./dist/unisat.js",
       "require": "./dist/unisat.cjs"
@@ -23,6 +27,7 @@
   "files": [
     "dist/*",
     "index.d.ts",
+    "magiceden.d.ts",
     "unisat.d.ts",
     "xverse.d.ts"
   ],
