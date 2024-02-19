@@ -152,8 +152,8 @@ importers:
         specifier: 6.10.0
         version: 6.10.0
       sats-connect:
-        specifier: 1.1.2
-        version: 1.1.2
+        specifier: 1.4.1
+        version: 1.4.1
     devDependencies:
       '@ordzaar/standard-typescript':
         specifier: ^1.2.0
@@ -11714,8 +11714,8 @@ packages:
   /safer-buffer@2.1.2:
     resolution: {integrity: sha512-YZo3K82SD7Riyi0E1EQPojLz7kpepnSQI9IyPbHHg1XXXevb5dJI7tpyN2ADxGcQbHG7vcyRHk0cbwqcQriUtg==}
 
-  /sats-connect@1.1.2:
-    resolution: {integrity: sha512-nJmCV69WgMNGH9H2cTTH/HsO9wEYS7g0AvnCNNgY5fezEJmA6jNpRMP4Xidv/c0xWL1uGOUHPLJEEOSG4NoneQ==}
+  /sats-connect@1.4.1:
+    resolution: {integrity: sha512-IDGbgZS+NmURyQ01pUBnDgTuHx7uF9lUrDqKU7+M2YpDLe5NDIkc7oyXh3r+lDWnwfAGCyO31L1tK1+xgT9ThQ==}
     dependencies:
       jsontokens: 4.0.1
       process: 0.11.10
