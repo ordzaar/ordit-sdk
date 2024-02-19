@@ -1,9 +1,9 @@
 import type { BrowserWalletNetwork } from "../../config/types";
 import { InputsToSign } from "../../inscription/types";
 
-export type XverseNetwork = "Mainnet" | "Testnet";
+export type SatsConnectNetwork = "Mainnet" | "Testnet";
 
-export type XverseSignPSBTOptions = {
+export type SatsConnectSignPSBTOptions = {
   finalize?: boolean;
   extractTx?: boolean;
   network: BrowserWalletNetwork;
