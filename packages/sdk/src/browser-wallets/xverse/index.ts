@@ -1,4 +1,3 @@
-// @vitest-environment happy-dom
 import { Psbt } from "bitcoinjs-lib";
 import { BitcoinProvider } from "sats-connect";
 
