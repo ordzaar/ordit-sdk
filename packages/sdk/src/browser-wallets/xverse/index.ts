@@ -8,8 +8,8 @@ import {
   satsConnectWalletGetAddresses,
   satsConnectWalletSignMessage,
   satsConnectWalletSignPsbt,
-} from "../sats-connect";
-import type { SatsConnectSignPSBTOptions } from "../sats-connect/types";
+} from "../internal/sats-connect";
+import type { SatsConnectSignPSBTOptions } from "../internal/sats-connect/types";
 import { BrowserWalletSignResponse, WalletAddress } from "../types";
 
 /**
@@ -26,12 +26,12 @@ function isInstalled(): boolean {
   return typeof window.XverseProviders?.BitcoinProvider !== "undefined";
 }
 
-async function getXverseWalletProvider(): Promise<BitcoinProvider | undefined> {
+async function getXverseWalletProvider(): Promise<BitcoinProvider> {
   if (!isInstalled()) {
     throw new BrowserWalletNotInstalledError("Selected wallet not installed");
   }
 
-  return window.XverseProviders?.BitcoinProvider;
+  return window.XverseProviders!.BitcoinProvider!;
 }
 
 async function getAddresses(

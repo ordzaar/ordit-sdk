@@ -14,15 +14,15 @@ import {
   SignTransactionResponse,
 } from "sats-connect";
 
-import { getAddressFormat } from "../../addresses";
-import type { BrowserWalletNetwork } from "../../config/types";
+import { getAddressFormat } from "../../../addresses";
+import type { BrowserWalletNetwork } from "../../../config/types";
 import {
   BrowserWalletExtractTxFromNonFinalizedPsbtError,
   BrowserWalletRequestCancelledByUserError,
   BrowserWalletSigningError,
   OrditSDKError,
-} from "../../errors";
-import type { BrowserWalletSignResponse, WalletAddress } from "../types";
+} from "../../../errors";
+import type { BrowserWalletSignResponse, WalletAddress } from "../../types";
 import { NETWORK_TO_BITCOIN_NETWORK_TYPE } from "./constants";
 import type { SatsConnectSignPSBTOptions } from "./types";
 import { fromXOnlyToFullPubkey } from "./utils";
@@ -42,7 +42,7 @@ initEccLib(ecc);
  * @throws {BrowserWalletRequestCancelledByUserError} Request was cancelled by user
  */
 async function satsConnectWalletGetAddresses(
-  getProvider: () => Promise<BitcoinProvider | undefined>,
+  getProvider: () => Promise<BitcoinProvider>,
   network: BrowserWalletNetwork = "mainnet",
 ): Promise<WalletAddress[]> {
   const result: WalletAddress[] = [];
@@ -75,7 +75,7 @@ async function satsConnectWalletGetAddresses(
     throw new BrowserWalletRequestCancelledByUserError();
   };
 
-  const SatsConnectOptions: GetAddressOptions = {
+  const options: GetAddressOptions = {
     payload: {
       purposes: ["ordinals", "payment"] as AddressPurpose[],
       message: "Provide access to Payment address and Ordinals address",
@@ -88,7 +88,7 @@ async function satsConnectWalletGetAddresses(
     onCancel: handleOnCancel,
   };
 
-  await getAddress(SatsConnectOptions);
+  await getAddress(options);
 
   return result;
 }
@@ -107,7 +107,7 @@ async function satsConnectWalletGetAddresses(
  * @throws {BrowserWalletRequestCancelledByUserError} Request was cancelled by user
  */
 async function satsConnectWalletSignPsbt(
-  getProvider: () => Promise<BitcoinProvider | undefined>,
+  getProvider: () => Promise<BitcoinProvider>,
   psbt: Psbt,
   {
     finalize = true,
@@ -172,7 +172,7 @@ async function satsConnectWalletSignPsbt(
     throw new BrowserWalletRequestCancelledByUserError();
   };
 
-  const SatsConnectOptions: SignTransactionOptions = {
+  const options: SignTransactionOptions = {
     payload: {
       network: {
         type: NETWORK_TO_BITCOIN_NETWORK_TYPE[network],
@@ -187,7 +187,7 @@ async function satsConnectWalletSignPsbt(
     getProvider,
   };
 
-  await signTransaction(SatsConnectOptions);
+  await signTransaction(options);
 
   // The Return is supplied by the await statement above, which extracts the hex and optional base64 from the response.
   // Hex is always returned, hence the not null assertion.
@@ -208,7 +208,7 @@ async function satsConnectWalletSignPsbt(
  * @throws {BrowserWalletRequestCancelledByUserError} Request was cancelled by user
  */
 async function satsConnectWalletSignMessage(
-  getProvider: () => Promise<BitcoinProvider | undefined>,
+  getProvider: () => Promise<BitcoinProvider>,
   message: string,
   address: string,
   network: BrowserWalletNetwork = "mainnet",
@@ -235,7 +235,7 @@ async function satsConnectWalletSignMessage(
     throw new BrowserWalletRequestCancelledByUserError();
   };
 
-  const satsConnectOptions: SatsConnectSignMessageOptions = {
+  const options: SatsConnectSignMessageOptions = {
     payload: {
       network: {
         type: NETWORK_TO_BITCOIN_NETWORK_TYPE[network],
@@ -248,7 +248,7 @@ async function satsConnectWalletSignMessage(
     onCancel: handleOnCancel,
   };
 
-  await satsConnectSignMessage(satsConnectOptions);
+  await satsConnectSignMessage(options);
 
   // The Return is supplied by the await statement above, which extracts the hex and optional base64 from the response.
   // Hex is always returned, hence the not null assertion.
@@ -262,5 +262,5 @@ export {
   satsConnectWalletSignPsbt,
 };
 
-export * from "../types";
+export * from "../../types";
 export * from "./types";
