@@ -9,7 +9,12 @@ import { Select } from "./components/Select";
 
 type WalletProvider = "unisat" | "xverse" | "magiceden";
 
-const network = "testnet" as const;
+const TESTNET = "testnet" as const;
+const MAINNET = "mainnet" as const;
+
+// Change here to use the network you want to use
+// MagicEden only supports mainnet
+const network = TESTNET;
 
 async function createAndPreparePsbt(psbtParams: PSBTBuilderOptions) {
   const psbt = new PSBTBuilder(psbtParams);
