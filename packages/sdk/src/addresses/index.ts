@@ -103,5 +103,24 @@ export function getAddressesFromPublicKey(
   return [getAddressFromBip32PublicKey(bip32PublicKey, network, type)];
 }
 
+export function getNetworkByAddress(address: string): Network {
+  const testnetAddressPrefix = ["m", "n", "2", "tb1q", "tb1p"];
+  // for legacy address testnet and regtest has same prefix, prioritize testnet over regtest
+  const regtestAddressPrefix = ["m", "n", "2", "bcrt1q", "bcrt1p"];
+  const mainnetAddressPrefix = ["1", "3", "bc1q", "bc1p"];
+
+  for (let i = 0; i < testnetAddressPrefix.length; i += 1) {
+    if (address.startsWith(testnetAddressPrefix[i])) return "testnet";
+  }
+  for (let i = 0; i < regtestAddressPrefix.length; i += 1) {
+    if (address.startsWith(regtestAddressPrefix[i])) return "regtest";
+  }
+  for (let i = 0; i < mainnetAddressPrefix.length; i += 1) {
+    if (address.startsWith(mainnetAddressPrefix[i])) return "mainnet";
+  }
+
+  throw new OrditSDKError("Invalid or unsupported address");
+}
+
 export * from "./constants";
 export * from "./types";

@@ -1,5 +1,6 @@
 declare interface Window {
   unisat: Unisat;
+  LeatherProvider: LeatherProvider;
   ethereum: MetaMask;
 }
 
@@ -21,6 +22,14 @@ type Unisat = {
     message: string,
     type: MessageSignatureTypes,
   ) => Promise<string>;
+};
+
+interface BtcKitRequestFn {
+  (arg: object | string, params?: object | string[]): Promise<object>;
+}
+
+type LeatherProvider = {
+  request: BtcKitRequestFn;
 };
 
 type MetaMask = {
