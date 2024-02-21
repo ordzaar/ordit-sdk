@@ -81,10 +81,4 @@ async function signMessage(
   );
 }
 
-export {
-  getAddresses,
-  getXverseWalletProvider,
-  isInstalled,
-  signMessage,
-  signPsbt,
-};
+export { getAddresses, isInstalled, signMessage, signPsbt };

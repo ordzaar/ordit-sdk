@@ -1,4 +1,3 @@
-// @vitest-environment happy-dom
 import { Psbt } from "bitcoinjs-lib";
 import { BitcoinProvider } from "sats-connect";
 
@@ -8,8 +7,8 @@ import {
   satsConnectWalletGetAddresses,
   satsConnectWalletSignMessage,
   satsConnectWalletSignPsbt,
-} from "../sats-connect";
-import type { SatsConnectSignPSBTOptions } from "../sats-connect/types";
+} from "../internal/sats-connect";
+import type { SatsConnectSignPSBTOptions } from "../internal/sats-connect/types";
 import { BrowserWalletSignResponse, WalletAddress } from "../types";
 
 export interface MagicEdenBitcoinProvider extends BitcoinProvider {
@@ -37,16 +36,14 @@ function isInstalled(): boolean {
   );
 }
 
-async function getMagicEdenWalletProvider(): Promise<
-  BitcoinProvider | undefined
-> {
+async function getMagicEdenWalletProvider(): Promise<BitcoinProvider> {
   if (!isInstalled()) {
     throw new BrowserWalletNotInstalledError(
       "Magic Eden not installed or set as prioritised wallet.",
     );
   }
 
-  return window.BitcoinProvider;
+  return window.BitcoinProvider!;
 }
 
 async function getAddresses(
@@ -103,10 +100,4 @@ async function signMessage(
   );
 }
 
-export {
-  getAddresses,
-  getMagicEdenWalletProvider,
-  isInstalled,
-  signMessage,
-  signPsbt,
-};
+export { getAddresses, isInstalled, signMessage, signPsbt };
