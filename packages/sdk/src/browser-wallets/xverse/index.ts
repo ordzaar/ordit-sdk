@@ -81,9 +81,4 @@ async function signMessage(
   );
 }
 
-export {
-  getAddresses,
-  isInstalled,
-  signMessage,
-  signPsbt,
-};
+export { getAddresses, isInstalled, signMessage, signPsbt };
