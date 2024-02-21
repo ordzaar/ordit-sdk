@@ -73,8 +73,8 @@ importers:
         specifier: ^0.4.5
         version: 0.4.5(eslint@8.56.0)
       vite-plugin-node-polyfills:
-        specifier: ^0.19.0
-        version: 0.19.0(vite@4.5.0)
+        specifier: ^0.21.0
+        version: 0.21.0(vite@4.5.0)
 
   apps/docs:
     dependencies:
@@ -171,8 +171,8 @@ importers:
         specifier: ^1.8.1
         version: 1.8.1(eslint@8.56.0)(vite@4.5.0)
       vite-plugin-node-polyfills:
-        specifier: ^0.19.0
-        version: 0.19.0(vite@4.5.0)
+        specifier: ^0.21.0
+        version: 0.21.0(vite@4.5.0)
 
 packages:
 
@@ -3391,7 +3391,7 @@ packages:
       rollup:
         optional: true
     dependencies:
-      '@rollup/pluginutils': 5.0.5
+      '@rollup/pluginutils': 5.1.0
       estree-walker: 2.0.2
       magic-string: 0.30.5
     dev: true
@@ -3400,20 +3400,6 @@ packages:
     resolution: {integrity: sha512-iKnFXr7NkdZAIHiIWE+BX5ULi/ucVFYWD6TbAV+rZctiRTY2PL6tsIKhoIOaoskiWAkgu+VsbXgUVDNLHf+InQ==}
     engines: {node: '>= 8.0.0'}
     dependencies:
-      estree-walker: 2.0.2
-      picomatch: 2.3.1
-    dev: true
-
-  /@rollup/pluginutils@5.0.5:
-    resolution: {integrity: sha512-6aEYR910NyP73oHiJglti74iRyOwgFU4x3meH/H8OJx6Ry0j6cOVZ5X/wTvub7G7Ao6qaHBEaNsV3GLJkSsF+Q==}
-    engines: {node: '>=14.0.0'}
-    peerDependencies:
-      rollup: ^1.20.0||^2.0.0||^3.0.0||^4.0.0
-    peerDependenciesMeta:
-      rollup:
-        optional: true
-    dependencies:
-      '@types/estree': 1.0.5
       estree-walker: 2.0.2
       picomatch: 2.3.1
     dev: true
@@ -12995,8 +12981,8 @@ packages:
       vite: 4.5.0(@types/node@20.9.0)
     dev: true
 
-  /vite-plugin-node-polyfills@0.19.0(vite@4.5.0):
-    resolution: {integrity: sha512-AhdVxAmVnd1doUlIRGUGV6ZRPfB9BvIwDF10oCOmL742IsvsFIAV4tSMxSfu5e0Px0QeJLgWVOSbtHIvblzqMw==}
+  /vite-plugin-node-polyfills@0.21.0(vite@4.5.0):
+    resolution: {integrity: sha512-Sk4DiKnmxN8E0vhgEhzLudfJQfaT8k4/gJ25xvUPG54KjLJ6HAmDKbr4rzDD/QWEY+Lwg80KE85fGYBQihEPQA==}
     peerDependencies:
       vite: ^2.0.0 || ^3.0.0 || ^4.0.0 || ^5.0.0
     dependencies:
