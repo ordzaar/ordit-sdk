@@ -12,6 +12,14 @@ import {
 import type { SatsConnectSignPSBTOptions } from "../sats-connect/types";
 import { BrowserWalletSignResponse, WalletAddress } from "../types";
 
+export interface MagicEdenBitcoinProvider extends BitcoinProvider {
+  isMagicEden: boolean | undefined;
+}
+
+export interface MagicEdenWindow extends Window {
+  BitcoinProvider?: MagicEdenBitcoinProvider;
+}
+
 /**
  * Checks if the MagicEden Wallet extension is installed.
  *
@@ -23,14 +31,19 @@ function isInstalled(): boolean {
     throw new OrditSDKError("Cannot call this function outside a browser");
   }
 
-  return typeof window.BitcoinProvider !== "undefined";
+  return (
+    typeof (window as MagicEdenWindow).BitcoinProvider?.isMagicEden !==
+    "undefined"
+  );
 }
 
 async function getMagicEdenWalletProvider(): Promise<
   BitcoinProvider | undefined
 > {
   if (!isInstalled()) {
-    throw new BrowserWalletNotInstalledError("Selected wallet not installed");
+    throw new BrowserWalletNotInstalledError(
+      "Magic Eden not installed or set as prioritised wallet.",
+    );
   }
 
   return window.BitcoinProvider;
@@ -40,7 +53,9 @@ async function getAddresses(
   network: BrowserWalletNetwork = "mainnet",
 ): Promise<WalletAddress[]> {
   if (!isInstalled()) {
-    throw new BrowserWalletNotInstalledError("Selected wallet not installed");
+    throw new BrowserWalletNotInstalledError(
+      "Magic Eden not installed or set as prioritised wallet.",
+    );
   }
 
   return satsConnectWalletGetAddresses(getMagicEdenWalletProvider, network);
@@ -56,7 +71,9 @@ async function signPsbt(
   }: SatsConnectSignPSBTOptions = { network: "mainnet", inputsToSign: [] },
 ): Promise<BrowserWalletSignResponse> {
   if (!isInstalled()) {
-    throw new BrowserWalletNotInstalledError("Selected wallet not installed");
+    throw new BrowserWalletNotInstalledError(
+      "Magic Eden not installed or set as prioritised wallet.",
+    );
   }
 
   return satsConnectWalletSignPsbt(getMagicEdenWalletProvider, psbt, {
@@ -73,7 +90,9 @@ async function signMessage(
   network: BrowserWalletNetwork = "mainnet",
 ): Promise<BrowserWalletSignResponse> {
   if (!isInstalled()) {
-    throw new BrowserWalletNotInstalledError("Selected wallet not installed");
+    throw new BrowserWalletNotInstalledError(
+      "Magic Eden not installed or set as prioritised wallet.",
+    );
   }
 
   return satsConnectWalletSignMessage(
