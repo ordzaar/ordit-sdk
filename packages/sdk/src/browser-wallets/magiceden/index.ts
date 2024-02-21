@@ -103,10 +103,4 @@ async function signMessage(
   );
 }
 
-export {
-  getAddresses,
-  getMagicEdenWalletProvider,
-  isInstalled,
-  signMessage,
-  signPsbt,
-};
+export { getAddresses, isInstalled, signMessage, signPsbt };
