@@ -1,8 +1,8 @@
 import { useCallback, useMemo, useState } from "react";
 import { Address, PSBTBuilder, PSBTBuilderOptions } from "@ordzaar/ordit-sdk";
+import * as magiceden from "@ordzaar/ordit-sdk/magiceden";
 import * as unisat from "@ordzaar/ordit-sdk/unisat";
 import * as xverse from "@ordzaar/ordit-sdk/xverse";
-import * as magiceden from "@ordzaar/ordit-sdk/magiceden";
 
 import { RadioInput } from "./components/RadioInput";
 import { Select } from "./components/Select";
@@ -10,7 +10,7 @@ import { Select } from "./components/Select";
 type WalletProvider = "unisat" | "xverse" | "magiceden";
 
 const TESTNET = "testnet" as const;
-const MAINNET = "mainnet" as const;
+// const MAINNET = "mainnet" as const;
 
 // Change here to use the network you want to use
 // MagicEden only supports mainnet
@@ -62,7 +62,7 @@ function Transactions({
           value: amount,
         },
       ],
-      network: network,
+      network,
     }),
     [
       amount,
@@ -95,7 +95,7 @@ function Transactions({
         signPsbtResponse = await unisat.signPsbt(psbt.toPSBT());
       } else if (provider === "xverse") {
         signPsbtResponse = await xverse.signPsbt(psbt.toPSBT(), {
-          network: network,
+          network,
           inputsToSign: [
             {
               address: inputAddressInfo.address,
@@ -105,7 +105,7 @@ function Transactions({
         });
       } else if (provider === "magiceden") {
         signPsbtResponse = await magiceden.signPsbt(psbt.toPSBT(), {
-          network: network,
+          network,
           inputsToSign: [
             {
               address: inputAddressInfo.address,
