@@ -276,7 +276,7 @@ function App() {
         options={[
           { name: "Unisat", value: "unisat" },
           { name: "Xverse", value: "xverse" },
-          { name: "MagicEden", value: "magiceden" },
+          { name: "Magic Eden", value: "magiceden" },
         ]}
         value={provider}
         disabled={!!connectedAddresses}
