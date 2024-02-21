@@ -127,7 +127,10 @@ function Transactions({
           "testnet",
         );
       } else if (provider === "leather") {
-        signMessageResponse = await leather.signMessage(message, "testnet");
+        signMessageResponse = await leather.signMessage(message, {
+          network: "testnet",
+          paymentType: "p2tr",
+        });
       } else {
         throw new Error("Unknown provider");
       }
