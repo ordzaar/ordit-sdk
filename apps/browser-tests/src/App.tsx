@@ -1,13 +1,21 @@
 import { useCallback, useMemo, useState } from "react";
 import { Address, PSBTBuilder, PSBTBuilderOptions } from "@ordzaar/ordit-sdk";
 import * as leather from "@ordzaar/ordit-sdk/leather";
+import * as magiceden from "@ordzaar/ordit-sdk/magiceden";
 import * as unisat from "@ordzaar/ordit-sdk/unisat";
 import * as xverse from "@ordzaar/ordit-sdk/xverse";
 
 import { RadioInput } from "./components/RadioInput";
 import { Select } from "./components/Select";
 
-type WalletProvider = "unisat" | "xverse";
+type WalletProvider = "unisat" | "xverse" | "magiceden";
+
+const TESTNET = "testnet" as const;
+// const MAINNET = "mainnet" as const;
+
+// Change here to use the network you want to use
+// MagicEden only supports mainnet
+const network = TESTNET;
 
 async function createAndPreparePsbt(psbtParams: PSBTBuilderOptions) {
   const psbt = new PSBTBuilder(psbtParams);
@@ -55,7 +63,7 @@ function Transactions({
           value: amount,
         },
       ],
-      network: "testnet" as const,
+      network,
     }),
     [
       amount,
@@ -88,7 +96,17 @@ function Transactions({
         signPsbtResponse = await unisat.signPsbt(psbt.toPSBT());
       } else if (provider === "xverse") {
         signPsbtResponse = await xverse.signPsbt(psbt.toPSBT(), {
-          network: "testnet",
+          network,
+          inputsToSign: [
+            {
+              address: inputAddressInfo.address,
+              signingIndexes: [0],
+            },
+          ],
+        });
+      } else if (provider === "magiceden") {
+        signPsbtResponse = await magiceden.signPsbt(psbt.toPSBT(), {
+          network,
           inputsToSign: [
             {
               address: inputAddressInfo.address,
@@ -124,7 +142,13 @@ function Transactions({
         signMessageResponse = await xverse.signMessage(
           message,
           inputAddressInfo.address,
-          "testnet",
+          network,
+        );
+      } else if (provider === "magiceden") {
+        signMessageResponse = await magiceden.signMessage(
+          message,
+          inputAddressInfo.address,
+          network,
         );
       } else if (provider === "leather") {
         signMessageResponse = await leather.signMessage(message, {
@@ -229,17 +253,21 @@ function App() {
 
   const handleConnect = useCallback(async () => {
     if (provider === "unisat") {
-      const addresses = await unisat.getAddresses("testnet");
+      const addresses = await unisat.getAddresses(network);
       console.log("Unisat Connected: ", addresses);
       setConnectedAddresses(addresses);
     } else if (provider === "xverse") {
-      const addresses = await xverse.getAddresses("testnet");
+      const addresses = await xverse.getAddresses(network);
       setConnectedAddresses(addresses);
       console.log("Xverse Connected: ", addresses);
     } else if (provider === "leather") {
       const addresses = await leather.getAddresses("testnet");
       setConnectedAddresses(addresses);
       console.log("Leather Connected: ", addresses);
+    } else if (provider === "magiceden") {
+      const addresses = await magiceden.getAddresses(network);
+      setConnectedAddresses(addresses);
+      console.log("MagicEden Connected: ", addresses);
     } else {
       console.log("Unknown provider", provider);
     }
@@ -264,11 +292,12 @@ function App() {
           { name: "Unisat", value: "unisat" },
           { name: "Xverse", value: "xverse" },
           { name: "Leather", value: "leather" },
+          { name: "Magic Eden", value: "magiceden" },
         ]}
         value={provider}
         disabled={!!connectedAddresses}
       />
-      <p>Network: Testnet</p>
+      <p>Network: {network} </p>
       <button
         type="button"
         style={{ marginTop: "12px" }}

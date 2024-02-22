@@ -31,8 +31,12 @@ describe("Xverse Wallet", () => {
 
   describe("isInstalled", () => {
     test("should return true if installed", () => {
-      vi.stubGlobal("BitcoinProvider", {});
-      expect(typeof window).not.toBeUndefined();
+      vi.stubGlobal("window", {
+        XverseProviders: {
+          BitcoinProvider: {},
+        },
+      });
+      expect(typeof window.XverseProviders).not.toBeUndefined();
       expect(isInstalled()).toBeTruthy();
     });
 
@@ -83,7 +87,11 @@ describe("Xverse Wallet", () => {
         ],
       };
 
-      vi.stubGlobal("BitcoinProvider", {});
+      vi.stubGlobal("window", {
+        XverseProviders: {
+          BitcoinProvider: {},
+        },
+      });
 
       const getAddressSpy = vi.spyOn(satsConnect, "getAddress");
 
@@ -131,7 +139,11 @@ describe("Xverse Wallet", () => {
         ],
       };
 
-      vi.stubGlobal("BitcoinProvider", {});
+      vi.stubGlobal("window", {
+        XverseProviders: {
+          BitcoinProvider: {},
+        },
+      });
 
       const getAddressSpy = vi.spyOn(satsConnect, "getAddress");
 
@@ -144,7 +156,11 @@ describe("Xverse Wallet", () => {
     });
 
     test("should throw error on user cancel", () => {
-      vi.stubGlobal("BitcoinProvider", {});
+      vi.stubGlobal("window", {
+        XverseProviders: {
+          BitcoinProvider: {},
+        },
+      });
 
       const getAddressSpy = vi.spyOn(satsConnect, "getAddress");
 
@@ -170,7 +186,11 @@ describe("Xverse Wallet", () => {
     });
 
     beforeEach(() => {
-      vi.stubGlobal("BitcoinProvider", {});
+      vi.stubGlobal("window", {
+        XverseProviders: {
+          BitcoinProvider: {},
+        },
+      });
     });
 
     test("should sign a psbt with finalize and extractTx set to true when options is not defined", async () => {
@@ -427,7 +447,11 @@ describe("Xverse Wallet", () => {
     });
 
     beforeEach(() => {
-      vi.stubGlobal("BitcoinProvider", {});
+      vi.stubGlobal("window", {
+        XverseProviders: {
+          BitcoinProvider: {},
+        },
+      });
     });
 
     test("should sign a message", async () => {
