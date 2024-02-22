@@ -287,6 +287,7 @@ describe("Leather Wallet", () => {
           finalize: true,
           extractTx: true,
           network: "testnet",
+          signAtIndexes: [0],
         }),
       ).resolves.toEqual({
         base64: null,
@@ -306,6 +307,7 @@ describe("Leather Wallet", () => {
           finalize: true,
           extractTx: false,
           network: "testnet",
+          signAtIndexes: [0],
         }),
       ).resolves.toEqual({
         base64:
@@ -326,6 +328,7 @@ describe("Leather Wallet", () => {
           finalize: false,
           extractTx: false,
           network: "testnet",
+          signAtIndexes: [0],
         }),
       ).resolves.toEqual({
         base64:
@@ -346,6 +349,7 @@ describe("Leather Wallet", () => {
           finalize: false,
           extractTx: true,
           network: "testnet",
+          signAtIndexes: [0],
         }),
       ).rejects.toThrowError(
         new BrowserWalletExtractTxFromNonFinalizedPsbtError(),
