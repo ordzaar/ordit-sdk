@@ -119,8 +119,8 @@ importers:
   packages/sdk:
     dependencies:
       '@bitcoinerlab/secp256k1':
-        specifier: 1.0.5
-        version: 1.0.5
+        specifier: 1.1.1
+        version: 1.1.1
       bignumber.js:
         specifier: 9.1.2
         version: 9.1.2
@@ -1659,8 +1659,8 @@ packages:
     resolution: {integrity: sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==}
     dev: true
 
-  /@bitcoinerlab/secp256k1@1.0.5:
-    resolution: {integrity: sha512-8gT+ukTCFN2rTxn4hD9Jq3k+UJwcprgYjfK/SQUSLgznXoIgsBnlPuARMkyyuEjycQK9VvnPiejKdszVTflh+w==}
+  /@bitcoinerlab/secp256k1@1.1.1:
+    resolution: {integrity: sha512-uhjW51WfVLpnHN7+G0saDcM/k9IqcyTbZ+bDgLF3AX8V/a3KXSE9vn7UPBrcdU72tp0J4YPR7BHp2m7MLAZ/1Q==}
     dependencies:
       '@noble/hashes': 1.3.2
       '@noble/secp256k1': 1.7.1
