@@ -116,8 +116,9 @@ function Transactions({
         });
       } else if (provider === "leather") {
         signPsbtResponse = await leather.signPsbt(psbt.toPSBT(), {
-          network: "testnet",
+          network,
           finalize: true,
+          signAtIndexes: [0],
         });
       } else {
         throw new Error("Unknown provider");

@@ -87,7 +87,7 @@ async function signPsbt(
     allowedSighash,
     accountNumber,
     network = "mainnet",
-    signAtIndex,
+    signAtIndexes = [],
   }: LeatherSignPSBTOptions = {},
 ): Promise<BrowserWalletSignResponse> {
   if (!isInstalled()) {
@@ -105,14 +105,23 @@ async function signPsbt(
     allowedSighash,
     account: accountNumber,
     network,
-    signAtIndex,
+    signAtIndex: signAtIndexes,
     broadcast: false,
   });
 
   const signedPsbt = Psbt.fromHex(res.hex);
 
   if (finalize) {
-    signedPsbt.finalizeAllInputs();
+    signAtIndexes.forEach((index) => {
+      // console.log({ index });
+      try {
+        signedPsbt.finalizeInput(index);
+      } catch (error) {
+        // eslint-disable-next-line no-console
+        console.error("Sign psbt error", error);
+        throw new OrditSDKError("Failed to finalize input");
+      }
+    });
   }
 
   if (extractTx) {

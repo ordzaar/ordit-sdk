@@ -50,10 +50,7 @@ export type LeatherSignPSBTOptions = {
    * default is user's current account
    */
   accountNumber?: number;
-  /**
-   * default is sign to all indexes
-   */
-  signAtIndex?: number | number[];
+  signAtIndexes?: number[];
 };
 
 export type LeatherSignMessageOptions = {
