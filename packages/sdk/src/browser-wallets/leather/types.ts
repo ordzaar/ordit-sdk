@@ -42,9 +42,18 @@ export type LeatherSignPSBTOptions = {
   allowedSighash?: LeatherSignatureHash[];
   finalize?: boolean;
   extractTx?: boolean;
-  network?: BrowserWalletNetwork; // default is user's current network
-  accountNumber?: number; // default is user's current account
-  signAtIndex?: number | number[]; // default is sign to all indexes
+  /**
+   * default is user's current network
+   */
+  network?: BrowserWalletNetwork;
+  /**
+   * default is user's current account
+   */
+  accountNumber?: number;
+  /**
+   * default is sign to all indexes
+   */
+  signAtIndex?: number | number[];
 };
 
 export type LeatherSignMessageOptions = {
