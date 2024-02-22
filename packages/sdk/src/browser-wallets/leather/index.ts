@@ -113,7 +113,6 @@ async function signPsbt(
 
   if (finalize) {
     signAtIndexes.forEach((index) => {
-      // console.log({ index });
       try {
         signedPsbt.finalizeInput(index);
       } catch (error) {
