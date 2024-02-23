@@ -1,12 +1,17 @@
 import { BrowserWalletNetwork } from "../../config/types";
 
-export declare enum LeatherSignatureHash {
+export enum LeatherSignatureHash {
   ALL = 1,
   NONE = 2,
   SINGLE = 3,
   ALL_ANYONECANPAY = 129,
   NONE_ANYONECANPAY = 130,
   SINGLE_ANYONECANPAY = 131,
+}
+
+export enum LeatherAddressType {
+  P2WPKH = "p2wpkh",
+  P2TR = "p2tr",
 }
 
 export type LeatherJsonRPCResponse<T> = {
@@ -17,7 +22,7 @@ export type LeatherJsonRPCResponse<T> = {
 
 export type LeatherAddress = {
   symbol: string;
-  type?: string;
+  type?: LeatherAddressType;
   address: string;
   publicKey?: string;
   derivationPath?: string;
@@ -55,5 +60,5 @@ export type LeatherSignPSBTOptions = {
 
 export type LeatherSignMessageOptions = {
   network: BrowserWalletNetwork;
-  paymentType: "p2tr" | "p2wpkh";
+  paymentType: LeatherAddressType;
 };

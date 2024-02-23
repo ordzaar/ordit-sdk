@@ -153,7 +153,7 @@ function Transactions({
         );
       } else if (provider === "leather") {
         signMessageResponse = await leather.signMessage(message, {
-          network: "testnet",
+          network,
           paymentType: "p2tr",
         });
       } else {

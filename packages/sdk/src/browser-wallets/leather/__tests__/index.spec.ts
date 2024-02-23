@@ -8,6 +8,7 @@ import {
   BrowserWalletRequestCancelledByUserError,
 } from "../../..";
 import { getAddresses, isInstalled, signMessage, signPsbt } from "..";
+import { LeatherAddressType } from "../types";
 import { LeatherErrorResponse } from "../utils";
 
 describe("Leather Wallet", () => {
@@ -206,7 +207,7 @@ describe("Leather Wallet", () => {
       });
       const signedMessageResponse = await signMessage("abcdefghijk123456789", {
         network: "mainnet",
-        paymentType: "p2tr",
+        paymentType: LeatherAddressType.P2TR,
       });
 
       expect(signedMessageResponse).toEqual({
@@ -234,7 +235,7 @@ describe("Leather Wallet", () => {
       });
       const signedMessageResponse = signMessage("abcdefghijk123456789", {
         network: "mainnet",
-        paymentType: "p2tr",
+        paymentType: LeatherAddressType.P2TR,
       });
 
       expect(signedMessageResponse).rejects.toThrowError(

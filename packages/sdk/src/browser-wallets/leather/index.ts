@@ -1,10 +1,10 @@
 import { Psbt } from "bitcoinjs-lib";
 
 import {
+  ADDRESS_TYPE_TO_FORMAT,
   BrowserWalletExtractTxFromNonFinalizedPsbtError,
   BrowserWalletNetworkMismatchError,
   BrowserWalletNotInstalledError,
-  getAddressFormat,
   getNetworkByAddress,
   OrditSDKError,
 } from "../..";
@@ -53,7 +53,7 @@ async function getAddresses(
   return addresses.map((v) => ({
     publicKey: v.publicKey!,
     address: v.address,
-    format: getAddressFormat(v.address, network),
+    format: ADDRESS_TYPE_TO_FORMAT[v.type!],
   }));
 }
 
