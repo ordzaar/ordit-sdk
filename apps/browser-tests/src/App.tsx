@@ -8,7 +8,7 @@ import * as xverse from "@ordzaar/ordit-sdk/xverse";
 import { RadioInput } from "./components/RadioInput";
 import { Select } from "./components/Select";
 
-type WalletProvider = "unisat" | "xverse" | "magiceden";
+type WalletProvider = "unisat" | "xverse" | "magiceden" | "leather";
 
 const TESTNET = "testnet" as const;
 // const MAINNET = "mainnet" as const;
