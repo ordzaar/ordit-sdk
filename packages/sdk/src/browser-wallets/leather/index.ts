@@ -66,11 +66,14 @@ async function signMessage(
     throw new BrowserWalletNotInstalledError("Leather not installed");
   }
 
-  const { signature } = await leatherRequest<LeatherSignMessage>("signMessage", {
-    message,
-    paymentType,
-    network,
-  });
+  const { signature } = await leatherRequest<LeatherSignMessage>(
+    "signMessage",
+    {
+      message,
+      paymentType,
+      network,
+    },
+  );
 
   return {
     base64: signature,
