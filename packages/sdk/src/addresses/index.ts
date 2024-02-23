@@ -104,8 +104,12 @@ export function getAddressesFromPublicKey(
 }
 
 export function getNetworkByAddress(address: string): Network {
-  const { network: validatedNetwork } = getAddressInfo(address);
-  return validatedNetwork;
+  try {
+    const { network: validatedNetwork } = getAddressInfo(address);
+    return validatedNetwork;
+  } catch {
+    throw new OrditSDKError("Invalid address");
+  }
 }
 
 export * from "./constants";
