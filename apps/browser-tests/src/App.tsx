@@ -154,7 +154,7 @@ function Transactions({
       } else if (provider === "leather") {
         signMessageResponse = await leather.signMessage(message, {
           network,
-          paymentType: "p2tr",
+          paymentType: leather.LeatherAddressType.P2TR,
         });
       } else {
         throw new Error("Unknown provider");

@@ -148,3 +148,4 @@ async function signPsbt(
 }
 
 export { getAddresses, isInstalled, signMessage, signPsbt };
+export * from "./types";
