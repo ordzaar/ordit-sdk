@@ -103,5 +103,14 @@ export function getAddressesFromPublicKey(
   return [getAddressFromBip32PublicKey(bip32PublicKey, network, type)];
 }
 
+export function getNetworkByAddress(address: string): Network {
+  try {
+    const { network: validatedNetwork } = getAddressInfo(address);
+    return validatedNetwork;
+  } catch {
+    throw new OrditSDKError("Invalid address");
+  }
+}
+
 export * from "./constants";
 export * from "./types";

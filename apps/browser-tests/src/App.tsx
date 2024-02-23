@@ -1,5 +1,6 @@
 import { useCallback, useMemo, useState } from "react";
 import { Address, PSBTBuilder, PSBTBuilderOptions } from "@ordzaar/ordit-sdk";
+import * as leather from "@ordzaar/ordit-sdk/leather";
 import * as magiceden from "@ordzaar/ordit-sdk/magiceden";
 import * as unisat from "@ordzaar/ordit-sdk/unisat";
 import * as xverse from "@ordzaar/ordit-sdk/xverse";
@@ -7,7 +8,7 @@ import * as xverse from "@ordzaar/ordit-sdk/xverse";
 import { RadioInput } from "./components/RadioInput";
 import { Select } from "./components/Select";
 
-type WalletProvider = "unisat" | "xverse" | "magiceden";
+type WalletProvider = "unisat" | "xverse" | "magiceden" | "leather";
 
 const TESTNET = "testnet" as const;
 // const MAINNET = "mainnet" as const;
@@ -113,6 +114,12 @@ function Transactions({
             },
           ],
         });
+      } else if (provider === "leather") {
+        signPsbtResponse = await leather.signPsbt(psbt.toPSBT(), {
+          network,
+          finalize: true,
+          signAtIndexes: [0],
+        });
       } else {
         throw new Error("Unknown provider");
       }
@@ -144,6 +151,11 @@ function Transactions({
           inputAddressInfo.address,
           network,
         );
+      } else if (provider === "leather") {
+        signMessageResponse = await leather.signMessage(message, {
+          network,
+          paymentType: leather.LeatherAddressType.P2TR,
+        });
       } else {
         throw new Error("Unknown provider");
       }
@@ -249,6 +261,10 @@ function App() {
       const addresses = await xverse.getAddresses(network);
       setConnectedAddresses(addresses);
       console.log("Xverse Connected: ", addresses);
+    } else if (provider === "leather") {
+      const addresses = await leather.getAddresses("testnet");
+      setConnectedAddresses(addresses);
+      console.log("Leather Connected: ", addresses);
     } else if (provider === "magiceden") {
       const addresses = await magiceden.getAddresses(network);
       setConnectedAddresses(addresses);
@@ -276,6 +292,7 @@ function App() {
         options={[
           { name: "Unisat", value: "unisat" },
           { name: "Xverse", value: "xverse" },
+          { name: "Leather", value: "leather" },
           { name: "Magic Eden", value: "magiceden" },
         ]}
         value={provider}

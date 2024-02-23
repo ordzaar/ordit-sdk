@@ -21,6 +21,10 @@
     "./xverse": {
       "import": "./dist/xverse.js",
       "require": "./dist/xverse.cjs"
+    },
+    "./leather": {
+      "import": "./dist/leather.js",
+      "require": "./dist/leather.cjs"
     }
   },
   "types": "./index.d.ts",
@@ -29,7 +33,8 @@
     "index.d.ts",
     "magiceden.d.ts",
     "unisat.d.ts",
-    "xverse.d.ts"
+    "xverse.d.ts",
+    "leather.d.ts"
   ],
   "keywords": [
     "ordit",

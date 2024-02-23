@@ -14,6 +14,7 @@ export default defineConfig({
         magiceden: resolve(__dirname, "src/browser-wallets/magiceden/index.ts"),
         unisat: resolve(__dirname, "src/browser-wallets/unisat/index.ts"),
         xverse: resolve(__dirname, "src/browser-wallets/xverse/index.ts"),
+        leather: resolve(__dirname, "src/browser-wallets/leather/index.ts"),
       },
       formats: ["es", "cjs"],
     },
