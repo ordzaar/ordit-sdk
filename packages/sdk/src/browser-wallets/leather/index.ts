@@ -11,6 +11,7 @@ import {
 import { BrowserWalletNetwork } from "../../config/types";
 import type { BrowserWalletSignResponse, WalletAddress } from "../types";
 import {
+  LeatherAddressType,
   LeatherGetAddresses,
   LeatherSignMessage,
   LeatherSignMessageOptions,
@@ -39,7 +40,9 @@ async function getAddresses(
   });
 
   const addresses = res.addresses.filter(
-    (address) => address.type === "p2tr" || address.type === "p2wpkh",
+    (address) =>
+      address.type === LeatherAddressType.P2TR ||
+      address.type === LeatherAddressType.P2WPKH,
   );
 
   // Hacky validation: there's no parameter to specify the network value when getting the address.
