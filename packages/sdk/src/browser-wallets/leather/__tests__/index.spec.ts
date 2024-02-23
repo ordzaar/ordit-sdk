@@ -10,24 +10,6 @@ import {
 import { getAddresses, isInstalled, signMessage, signPsbt } from "..";
 import { LeatherErrorResponse } from "../utils";
 
-class LeatherError extends Error {
-  id: string;
-
-  jsonrpc: string;
-
-  error: {
-    code: number;
-    message: string;
-  };
-
-  constructor(err: LeatherErrorResponse) {
-    super(err.error.message);
-    this.id = err.id;
-    this.jsonrpc = err.jsonrpc;
-    this.error = err.error;
-  }
-}
-
 describe("Leather Wallet", () => {
   afterEach(() => {
     vi.unstubAllGlobals();
@@ -246,7 +228,8 @@ describe("Leather Wallet", () => {
               message: errMessage,
             },
           };
-          throw new LeatherError(error);
+          // eslint-disable-next-line @typescript-eslint/no-throw-literal
+          throw error;
         }),
       });
       const signedMessageResponse = signMessage("abcdefghijk123456789", {
@@ -368,7 +351,8 @@ describe("Leather Wallet", () => {
               message: errMessage,
             },
           };
-          throw new LeatherError(error);
+          // eslint-disable-next-line @typescript-eslint/no-throw-literal
+          throw error;
         }),
       });
 
