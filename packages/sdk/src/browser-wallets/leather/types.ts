@@ -55,5 +55,5 @@ export type LeatherSignPSBTOptions = {
 
 export type LeatherSignMessageOptions = {
   network: BrowserWalletNetwork;
-  paymentType: "p2tr" | "p2wphk";
+  paymentType: "p2tr" | "p2wpkh";
 };
