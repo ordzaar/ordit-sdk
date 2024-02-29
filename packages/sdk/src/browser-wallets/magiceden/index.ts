@@ -1,3 +1,4 @@
+import { getWallets, Wallet } from "@wallet-standard/core";
 import { Psbt } from "bitcoinjs-lib";
 import { BitcoinProvider } from "sats-connect";
 
@@ -19,31 +20,47 @@ export interface MagicEdenWindow extends Window {
   BitcoinProvider?: MagicEdenBitcoinProvider;
 }
 
+export interface MagicEdenWallet extends Wallet {
+  name: "Magic Eden";
+  features: {
+    "sats-connect:": {
+      provider: MagicEdenBitcoinProvider;
+    };
+  };
+}
+
+async function getMagicEdenWalletProvider(): Promise<BitcoinProvider> {
+  const meWallet = getWallets()
+    .get()
+    .find((wallet) => wallet.name === "Magic Eden");
+
+  if (!meWallet) {
+    throw new BrowserWalletNotInstalledError("Magic Eden not installed.");
+  }
+
+  const magicEdenWalletProvider = (meWallet as MagicEdenWallet).features[
+    "sats-connect:"
+  ]!.provider;
+  return magicEdenWalletProvider!;
+}
+
 /**
  * Checks if the MagicEden Wallet extension is installed.
  *
  * @returns `true` if installed, `false` otherwise.
  * @throws {OrditSDKError} Function is called outside a browser without `window` object
  */
-function isInstalled(): boolean {
+async function isInstalled(): Promise<boolean> {
   if (typeof window === "undefined") {
     throw new OrditSDKError("Cannot call this function outside a browser");
   }
 
+  const meProvider =
+    (await getMagicEdenWalletProvider()) as MagicEdenBitcoinProvider;
+
   return (
-    typeof (window as MagicEdenWindow).BitcoinProvider?.isMagicEden !==
-    "undefined"
+    meProvider.isMagicEden !== undefined && meProvider.isMagicEden === true
   );
-}
-
-async function getMagicEdenWalletProvider(): Promise<BitcoinProvider> {
-  if (!isInstalled()) {
-    throw new BrowserWalletNotInstalledError(
-      "Magic Eden not installed or set as prioritised wallet.",
-    );
-  }
-
-  return window.BitcoinProvider!;
 }
 
 async function getAddresses(
