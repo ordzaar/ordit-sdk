@@ -1,3 +1,4 @@
+import { Wallet } from "@wallet-standard/base";
 import { Psbt } from "bitcoinjs-lib";
 import { BitcoinProvider } from "sats-connect";
 
@@ -19,6 +20,14 @@ export interface MagicEdenWindow extends Window {
   BitcoinProvider?: MagicEdenBitcoinProvider;
 }
 
+export interface MagicEdenWallet extends Wallet {
+  features: {
+    "sats-connect:": {
+      provider: Promise<BitcoinProvider>;
+    };
+  };
+}
+
 /**
  * Checks if the MagicEden Wallet extension is installed.
  *
@@ -36,17 +45,8 @@ function isInstalled(): boolean {
   );
 }
 
-async function getMagicEdenWalletProvider(): Promise<BitcoinProvider> {
-  if (!isInstalled()) {
-    throw new BrowserWalletNotInstalledError(
-      "Magic Eden not installed or set as prioritised wallet.",
-    );
-  }
-
-  return window.BitcoinProvider!;
-}
-
 async function getAddresses(
+  getMeProvider: () => Promise<BitcoinProvider>,
   network: BrowserWalletNetwork = "mainnet",
 ): Promise<WalletAddress[]> {
   if (!isInstalled()) {
@@ -55,10 +55,11 @@ async function getAddresses(
     );
   }
 
-  return satsConnectWalletGetAddresses(getMagicEdenWalletProvider, network);
+  return satsConnectWalletGetAddresses(getMeProvider, network);
 }
 
 async function signPsbt(
+  getMeProvider: () => Promise<BitcoinProvider>,
   psbt: Psbt,
   {
     finalize = true,
@@ -73,7 +74,7 @@ async function signPsbt(
     );
   }
 
-  return satsConnectWalletSignPsbt(getMagicEdenWalletProvider, psbt, {
+  return satsConnectWalletSignPsbt(getMeProvider, psbt, {
     finalize,
     extractTx,
     network,
@@ -82,6 +83,7 @@ async function signPsbt(
 }
 
 async function signMessage(
+  getMeProvider: () => Promise<BitcoinProvider>,
   message: string,
   address: string,
   network: BrowserWalletNetwork = "mainnet",
@@ -92,12 +94,7 @@ async function signMessage(
     );
   }
 
-  return satsConnectWalletSignMessage(
-    getMagicEdenWalletProvider,
-    message,
-    address,
-    network,
-  );
+  return satsConnectWalletSignMessage(getMeProvider, message, address, network);
 }
 
 export { getAddresses, isInstalled, signMessage, signPsbt };

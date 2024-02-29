@@ -4,6 +4,9 @@ import * as leather from "@ordzaar/ordit-sdk/leather";
 import * as magiceden from "@ordzaar/ordit-sdk/magiceden";
 import * as unisat from "@ordzaar/ordit-sdk/unisat";
 import * as xverse from "@ordzaar/ordit-sdk/xverse";
+import { useWallets } from "@wallet-standard/react";
+import { MagicEdenWallet } from "@ordzaar/ordit-sdk/magiceden";
+import { Wallet } from "@wallet-standard/base";
 
 import { RadioInput } from "./components/RadioInput";
 import { Select } from "./components/Select";
@@ -31,9 +34,11 @@ async function createAndPreparePsbt(psbtParams: PSBTBuilderOptions) {
 function Transactions({
   provider,
   connectedAddresses,
+  satsConnectWallets,
 }: {
   provider: WalletProvider;
   connectedAddresses: Address[];
+  satsConnectWallets?: Wallet[];
 }) {
   const [inputAddressInfo, setInputAddress] = useState(connectedAddresses[0]);
   const inputAddressesSelectOptions = useMemo(
@@ -105,15 +110,25 @@ function Transactions({
           ],
         });
       } else if (provider === "magiceden") {
-        signPsbtResponse = await magiceden.signPsbt(psbt.toPSBT(), {
-          network,
-          inputsToSign: [
-            {
-              address: inputAddressInfo.address,
-              signingIndexes: [0],
-            },
-          ],
-        });
+        const meWallet = satsConnectWallets!.find(
+          (wallet) => wallet.name === "Magic Eden",
+        );
+        const magicEdenWalletProvider = (meWallet as MagicEdenWallet)?.features[
+          "sats-connect:"
+        ]!.provider;
+        signPsbtResponse = await magiceden.signPsbt(
+          () => magicEdenWalletProvider,
+          psbt.toPSBT(),
+          {
+            network,
+            inputsToSign: [
+              {
+                address: inputAddressInfo.address,
+                signingIndexes: [0],
+              },
+            ],
+          },
+        );
       } else if (provider === "leather") {
         signPsbtResponse = await leather.signPsbt(psbt.toPSBT(), {
           network,
@@ -146,7 +161,14 @@ function Transactions({
           network,
         );
       } else if (provider === "magiceden") {
+        const meWallet = satsConnectWallets!.find(
+          (wallet) => wallet.name === "Magic Eden",
+        );
+        const magicEdenWalletProvider = (meWallet as MagicEdenWallet)?.features[
+          "sats-connect:"
+        ]!.provider;
         signMessageResponse = await magiceden.signMessage(
+          () => magicEdenWalletProvider,
           message,
           inputAddressInfo.address,
           network,
@@ -251,6 +273,7 @@ function App() {
   const [connectedAddresses, setConnectedAddresses] = useState<
     Address[] | undefined
   >();
+  const { wallets } = useWallets();
 
   const handleConnect = useCallback(async () => {
     if (provider === "unisat") {
@@ -266,7 +289,14 @@ function App() {
       setConnectedAddresses(addresses);
       console.log("Leather Connected: ", addresses);
     } else if (provider === "magiceden") {
-      const addresses = await magiceden.getAddresses(network);
+      const meWallet = wallets.find((wallet) => wallet.name === "Magic Eden");
+      const magicEdenWalletProvider = (meWallet as MagicEdenWallet)?.features[
+        "sats-connect:"
+      ]!.provider;
+      const addresses = await magiceden.getAddresses(
+        () => magicEdenWalletProvider,
+        network,
+      );
       setConnectedAddresses(addresses);
       console.log("MagicEden Connected: ", addresses);
     } else {
