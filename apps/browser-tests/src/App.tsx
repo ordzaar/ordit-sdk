@@ -366,6 +366,7 @@ function App() {
           <Transactions
             provider={provider}
             connectedAddresses={connectedAddresses}
+            satsConnectWallets={wallets as Wallet[]}
           />
         </>
       ) : null}
