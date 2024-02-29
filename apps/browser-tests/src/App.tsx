@@ -4,7 +4,10 @@ import * as leather from "@ordzaar/ordit-sdk/leather";
 import * as magiceden from "@ordzaar/ordit-sdk/magiceden";
 import * as unisat from "@ordzaar/ordit-sdk/unisat";
 import * as xverse from "@ordzaar/ordit-sdk/xverse";
-import { MagicEdenWallet } from "@ordzaar/ordit-sdk/magiceden";
+import {
+  MagicEdenBitcoinProvider,
+  MagicEdenWallet,
+} from "@ordzaar/ordit-sdk/magiceden";
 import { Wallet } from "@wallet-standard/base";
 import { getWallets } from "@wallet-standard/core";
 
@@ -29,6 +32,17 @@ async function createAndPreparePsbt(psbtParams: PSBTBuilderOptions) {
   await clonedPSBT.prepare();
   console.log("Prepared Psbt: ", clonedPSBT);
   return clonedPSBT;
+}
+
+function getMagicEdenProvider(
+  wallets: Wallet[],
+): Promise<MagicEdenBitcoinProvider> {
+  const meWallet = wallets.find((wallet) => wallet.name === "Magic Eden");
+  if (!meWallet) {
+    throw new Error("No Magic Eden wallet found.");
+  }
+  return (meWallet as MagicEdenWallet)?.features["sats-connect:"]
+    .provider as Promise<MagicEdenBitcoinProvider>;
 }
 
 function Transactions({
@@ -110,14 +124,11 @@ function Transactions({
           ],
         });
       } else if (provider === "magiceden") {
-        const meWallet = satsConnectWallets!.find(
-          (wallet) => wallet.name === "Magic Eden",
-        );
-        const magicEdenWalletProvider = (meWallet as MagicEdenWallet)?.features[
-          "sats-connect:"
-        ]!.provider;
+        if (!satsConnectWallets) {
+          throw new Error("No sats-connect wallets found.");
+        }
         signPsbtResponse = await magiceden.signPsbt(
-          () => magicEdenWalletProvider,
+          () => getMagicEdenProvider(satsConnectWallets),
           psbt.toPSBT(),
           {
             network,
@@ -161,14 +172,12 @@ function Transactions({
           network,
         );
       } else if (provider === "magiceden") {
-        const meWallet = satsConnectWallets!.find(
-          (wallet) => wallet.name === "Magic Eden",
-        );
-        const magicEdenWalletProvider = (meWallet as MagicEdenWallet)?.features[
-          "sats-connect:"
-        ]!.provider;
+        if (!satsConnectWallets) {
+          throw new Error("No sats-connect wallets found.");
+        }
+
         signMessageResponse = await magiceden.signMessage(
-          () => magicEdenWalletProvider,
+          () => getMagicEdenProvider(satsConnectWallets),
           message,
           inputAddressInfo.address,
           network,
@@ -290,12 +299,8 @@ function App() {
       setConnectedAddresses(addresses);
       console.log("Leather Connected: ", addresses);
     } else if (provider === "magiceden") {
-      const meWallet = wallets.find((wallet) => wallet.name === "Magic Eden");
-      const magicEdenWalletProvider = (meWallet as MagicEdenWallet)?.features[
-        "sats-connect:"
-      ]!.provider;
       const addresses = await magiceden.getAddresses(
-        () => magicEdenWalletProvider,
+        () => getMagicEdenProvider(wallets as Wallet[]),
         network,
       );
       setConnectedAddresses(addresses);
