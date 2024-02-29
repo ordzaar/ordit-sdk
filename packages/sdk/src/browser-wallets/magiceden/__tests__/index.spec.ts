@@ -24,7 +24,7 @@ vi.mock("sats-connect", async (originalImport) => {
   };
 });
 
-describe("Xverse Wallet", () => {
+describe("Magic Eden Wallet", () => {
   afterEach(() => {
     vi.unstubAllGlobals();
   });
@@ -32,11 +32,11 @@ describe("Xverse Wallet", () => {
   describe("isInstalled", () => {
     test("should return true if installed", () => {
       vi.stubGlobal("window", {
-        XverseProviders: {
-          BitcoinProvider: {},
+        BitcoinProvider: {
+          isMagicEden: true,
         },
       });
-      expect(typeof window.XverseProviders).not.toBeUndefined();
+      expect(typeof window.BitcoinProvider).not.toBeUndefined();
       expect(isInstalled()).toBeTruthy();
     });
 
@@ -63,10 +63,10 @@ describe("Xverse Wallet", () => {
         },
         {
           // https://bitcoin.design/guide/glossary/address/
-          address: "3J98t1WpEZ73CNmQviecrnyiWrnqRhWNLy",
+          address: "bc1qar0srrr7xfkvy5l643lydnw9re59gtzzwf5mdq",
           publicKey:
             "0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798",
-          format: "p2sh-p2wpkh",
+          format: "segwit",
         },
       ];
       const mockResponse: GetAddressResponse = {
@@ -79,7 +79,7 @@ describe("Xverse Wallet", () => {
             purpose: satsConnect.AddressPurpose.Ordinals,
           },
           {
-            address: "3J98t1WpEZ73CNmQviecrnyiWrnqRhWNLy",
+            address: "bc1qar0srrr7xfkvy5l643lydnw9re59gtzzwf5mdq",
             publicKey:
               "0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798",
             purpose: satsConnect.AddressPurpose.Payment,
@@ -88,8 +88,8 @@ describe("Xverse Wallet", () => {
       };
 
       vi.stubGlobal("window", {
-        XverseProviders: {
-          BitcoinProvider: {},
+        BitcoinProvider: {
+          isMagicEden: true,
         },
       });
 
@@ -140,8 +140,8 @@ describe("Xverse Wallet", () => {
       };
 
       vi.stubGlobal("window", {
-        XverseProviders: {
-          BitcoinProvider: {},
+        BitcoinProvider: {
+          isMagicEden: true,
         },
       });
 
@@ -157,8 +157,8 @@ describe("Xverse Wallet", () => {
 
     test("should throw error on user cancel", () => {
       vi.stubGlobal("window", {
-        XverseProviders: {
-          BitcoinProvider: {},
+        BitcoinProvider: {
+          isMagicEden: true,
         },
       });
 
@@ -187,8 +187,8 @@ describe("Xverse Wallet", () => {
 
     beforeEach(() => {
       vi.stubGlobal("window", {
-        XverseProviders: {
-          BitcoinProvider: {},
+        BitcoinProvider: {
+          isMagicEden: true,
         },
       });
     });
@@ -448,8 +448,8 @@ describe("Xverse Wallet", () => {
 
     beforeEach(() => {
       vi.stubGlobal("window", {
-        XverseProviders: {
-          BitcoinProvider: {},
+        BitcoinProvider: {
+          isMagicEden: true,
         },
       });
     });
