@@ -4,9 +4,9 @@ import * as leather from "@ordzaar/ordit-sdk/leather";
 import * as magiceden from "@ordzaar/ordit-sdk/magiceden";
 import * as unisat from "@ordzaar/ordit-sdk/unisat";
 import * as xverse from "@ordzaar/ordit-sdk/xverse";
-import { useWallets } from "@wallet-standard/react";
 import { MagicEdenWallet } from "@ordzaar/ordit-sdk/magiceden";
 import { Wallet } from "@wallet-standard/base";
+import { getWallets } from "@wallet-standard/core";
 
 import { RadioInput } from "./components/RadioInput";
 import { Select } from "./components/Select";
@@ -273,7 +273,8 @@ function App() {
   const [connectedAddresses, setConnectedAddresses] = useState<
     Address[] | undefined
   >();
-  const { wallets } = useWallets();
+  const { get, on } = getWallets();
+  const wallets = get();
 
   const handleConnect = useCallback(async () => {
     if (provider === "unisat") {
