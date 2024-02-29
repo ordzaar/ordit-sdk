@@ -68,7 +68,7 @@
   "devDependencies": {
     "@ordzaar/standard-typescript": "^1.4.1",
     "@types/node": "^20.9.0",
-    "happy-dom": "^13.4.1",
+    "happy-dom": "^13.6.2",
     "vite-plugin-dts": "^3.7.2",
     "vite-plugin-eslint": "^1.8.1",
     "vite-plugin-node-polyfills": "^0.21.0"
