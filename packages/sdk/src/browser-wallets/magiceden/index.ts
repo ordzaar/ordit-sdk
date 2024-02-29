@@ -34,13 +34,17 @@ export interface MagicEdenWallet extends Wallet {
  * @returns `true` if installed, `false` otherwise.
  * @throws {OrditSDKError} Function is called outside a browser without `window` object
  */
-function isInstalled(): boolean {
+async function isInstalled(
+  getMeProvider: () => Promise<BitcoinProvider>,
+): Promise<boolean> {
   if (typeof window === "undefined") {
     throw new OrditSDKError("Cannot call this function outside a browser");
   }
 
+  const magicEdenProvider = await getMeProvider();
+
   return (
-    typeof (window as MagicEdenWindow).BitcoinProvider?.isMagicEden !==
+    typeof (magicEdenProvider as MagicEdenBitcoinProvider).isMagicEden !==
     "undefined"
   );
 }
@@ -49,7 +53,7 @@ async function getAddresses(
   getMeProvider: () => Promise<BitcoinProvider>,
   network: BrowserWalletNetwork = "mainnet",
 ): Promise<WalletAddress[]> {
-  if (!isInstalled()) {
+  if (!isInstalled(getMeProvider)) {
     throw new BrowserWalletNotInstalledError(
       "Magic Eden not installed or set as prioritised wallet.",
     );
@@ -68,7 +72,7 @@ async function signPsbt(
     inputsToSign,
   }: SatsConnectSignPSBTOptions = { network: "mainnet", inputsToSign: [] },
 ): Promise<BrowserWalletSignResponse> {
-  if (!isInstalled()) {
+  if (!isInstalled(getMeProvider)) {
     throw new BrowserWalletNotInstalledError(
       "Magic Eden not installed or set as prioritised wallet.",
     );
@@ -88,7 +92,7 @@ async function signMessage(
   address: string,
   network: BrowserWalletNetwork = "mainnet",
 ): Promise<BrowserWalletSignResponse> {
-  if (!isInstalled()) {
+  if (!isInstalled(getMeProvider)) {
     throw new BrowserWalletNotInstalledError(
       "Magic Eden not installed or set as prioritised wallet.",
     );
