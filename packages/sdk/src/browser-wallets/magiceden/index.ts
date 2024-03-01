@@ -38,7 +38,12 @@ async function getMagicEdenWalletProvider(): Promise<BitcoinProvider> {
 
   const wallets = get();
 
-  const meWallet = wallets.find((wallet) => wallet.name === "Magic Eden");
+  const meWallet = wallets.find(
+    (wallet) =>
+      wallet.name === "Magic Eden" &&
+      (wallet as MagicEdenWallet).features["sats-connect:"]?.provider
+        ?.isMagicEden === true,
+  );
 
   if (!meWallet) {
     throw new BrowserWalletNotInstalledError(
