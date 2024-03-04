@@ -1,4 +1,6 @@
 // @vitest-environment happy-dom
+import * as walletStandardCore from "@wallet-standard/core";
+import { Wallet, Wallets } from "@wallet-standard/core";
 import type {
   GetAddressOptions,
   GetAddressResponse,
@@ -10,6 +12,7 @@ import * as satsConnect from "sats-connect";
 
 import {
   BrowserWalletExtractTxFromNonFinalizedPsbtError,
+  BrowserWalletNotInstalledError,
   BrowserWalletRequestCancelledByUserError,
 } from "../../../errors";
 import { createMockPsbt } from "../../../fee/__tests__/utils";
@@ -24,25 +27,66 @@ vi.mock("sats-connect", async (originalImport) => {
   };
 });
 
+vi.mock("@wallet-standard/core", async (originalImport) => {
+  const mod = (await originalImport()) as typeof walletStandardCore;
+  return {
+    __esModule: true,
+    ...mod,
+  };
+});
+
 describe("Magic Eden Wallet", () => {
   afterEach(() => {
     vi.unstubAllGlobals();
   });
 
+  beforeEach(() => {
+    const mockWalletsResponse: Wallets = {
+      get: () =>
+        [
+          {
+            name: "Magic Eden",
+            features: {
+              "sats-connect:": {
+                provider: {},
+              },
+            },
+            version: "1.0.0",
+            icon: "data:image/svg+xml;base64,magiceden-wallet.svg",
+            chains: [],
+            accounts: [],
+          },
+        ] as Wallet[],
+      on: () => () => {},
+      register: () => () => {},
+    } as Wallets;
+
+    const getWalletSpy = vi.spyOn(walletStandardCore, "getWallets");
+
+    getWalletSpy.mockImplementation(() => mockWalletsResponse);
+  });
+
   describe("isInstalled", () => {
     test("should return true if installed", () => {
-      vi.stubGlobal("window", {
-        BitcoinProvider: {
-          isMagicEden: true,
-        },
-      });
       expect(typeof window.BitcoinProvider).not.toBeUndefined();
       expect(isInstalled()).toBeTruthy();
     });
 
     test("should return false if not installed", () => {
+      const mockWalletsResponse: Wallets = {
+        get: () => [] as Wallet[],
+        on: () => () => {},
+        register: () => () => {},
+      } as Wallets;
+
+      const getWalletSpy = vi.spyOn(walletStandardCore, "getWallets");
+
+      getWalletSpy.mockImplementation(() => mockWalletsResponse);
+
       expect(typeof window).not.toBeUndefined();
-      expect(isInstalled()).toBeFalsy();
+      expect(isInstalled()).rejects.toThrowError(
+        BrowserWalletNotInstalledError,
+      );
     });
   });
 
@@ -86,12 +130,6 @@ describe("Magic Eden Wallet", () => {
           },
         ],
       };
-
-      vi.stubGlobal("window", {
-        BitcoinProvider: {
-          isMagicEden: true,
-        },
-      });
 
       const getAddressSpy = vi.spyOn(satsConnect, "getAddress");
 
@@ -139,12 +177,6 @@ describe("Magic Eden Wallet", () => {
         ],
       };
 
-      vi.stubGlobal("window", {
-        BitcoinProvider: {
-          isMagicEden: true,
-        },
-      });
-
       const getAddressSpy = vi.spyOn(satsConnect, "getAddress");
 
       getAddressSpy.mockImplementation((options: GetAddressOptions) => {
@@ -156,12 +188,6 @@ describe("Magic Eden Wallet", () => {
     });
 
     test("should throw error on user cancel", () => {
-      vi.stubGlobal("window", {
-        BitcoinProvider: {
-          isMagicEden: true,
-        },
-      });
-
       const getAddressSpy = vi.spyOn(satsConnect, "getAddress");
 
       getAddressSpy.mockImplementation((options: GetAddressOptions) => {
@@ -183,14 +209,6 @@ describe("Magic Eden Wallet", () => {
 
     afterEach(() => {
       vi.resetAllMocks();
-    });
-
-    beforeEach(() => {
-      vi.stubGlobal("window", {
-        BitcoinProvider: {
-          isMagicEden: true,
-        },
-      });
     });
 
     test("should sign a psbt with finalize and extractTx set to true when options is not defined", async () => {
@@ -444,14 +462,6 @@ describe("Magic Eden Wallet", () => {
 
     afterEach(() => {
       vi.resetAllMocks();
-    });
-
-    beforeEach(() => {
-      vi.stubGlobal("window", {
-        BitcoinProvider: {
-          isMagicEden: true,
-        },
-      });
     });
 
     test("should sign a message", async () => {
