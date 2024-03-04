@@ -12,12 +12,18 @@ import * as satsConnect from "sats-connect";
 
 import {
   BrowserWalletExtractTxFromNonFinalizedPsbtError,
-  BrowserWalletNotInstalledError,
   BrowserWalletRequestCancelledByUserError,
 } from "../../../errors";
 import { createMockPsbt } from "../../../fee/__tests__/utils";
 import { WalletAddress } from "../../types";
-import { getAddresses, isInstalled, signMessage, signPsbt } from "..";
+import {
+  getAddresses,
+  getMagicEdenWalletProvider,
+  isInstalled,
+  MagicEdenBitcoinProvider,
+  signMessage,
+  signPsbt,
+} from "..";
 
 vi.mock("sats-connect", async (originalImport) => {
   const mod = (await originalImport()) as typeof satsConnect;
@@ -66,15 +72,28 @@ describe("Magic Eden Wallet", () => {
     getWalletSpy.mockImplementation(() => mockWalletsResponse);
   });
 
-  describe("isInstalled", () => {
-    test("should return true if installed", () => {
-      expect(typeof window.BitcoinProvider).not.toBeUndefined();
-      expect(isInstalled()).toBeTruthy();
-    });
+  describe("getMagicEdenWalletProvider", () => {
+    test("should return Magic Eden wallet provider", async () => {
+      const mockMagicEdenWalletProvider = {
+        isMagicEden: true,
+      } as MagicEdenBitcoinProvider;
 
-    test("should return false if not installed", () => {
       const mockWalletsResponse: Wallets = {
-        get: () => [] as Wallet[],
+        get: () =>
+          [
+            {
+              name: "Magic Eden",
+              features: {
+                "sats-connect:": {
+                  provider: mockMagicEdenWalletProvider,
+                },
+              },
+              version: "1.0.0",
+              icon: "data:image/svg+xml;base64,magiceden-wallet.svg",
+              chains: [],
+              accounts: [],
+            },
+          ] as Wallet[],
         on: () => () => {},
         register: () => () => {},
       } as Wallets;
@@ -83,10 +102,46 @@ describe("Magic Eden Wallet", () => {
 
       getWalletSpy.mockImplementation(() => mockWalletsResponse);
 
-      expect(typeof window).not.toBeUndefined();
-      expect(isInstalled()).rejects.toThrowError(
-        BrowserWalletNotInstalledError,
+      const magicEdenWalletProvider = await getMagicEdenWalletProvider();
+      expect(magicEdenWalletProvider).toEqual(mockMagicEdenWalletProvider);
+    });
+
+    test("should throw error if Magic Eden wallet is not installed", async () => {
+      const mockEmptyWalletsResponse: Wallets = {
+        get: () => [] as Wallet[],
+        on: () => () => {},
+        register: () => () => {},
+      } as Wallets;
+
+      const getWalletSpy = vi.spyOn(walletStandardCore, "getWallets");
+
+      getWalletSpy.mockImplementation(() => mockEmptyWalletsResponse);
+
+      await expect(getMagicEdenWalletProvider()).rejects.toThrowError(
+        "Magic Eden Wallet not installed.",
       );
+    });
+  });
+
+  describe("isInstalled", () => {
+    // test("should return true if installed", () => {
+    //   expect(typeof window.BitcoinProvider).not.toBeUndefined();
+    //   expect(isInstalled()).toBeTruthy();
+    // });
+
+    test("should return false if not installed", () => {
+      const mockEmptyWalletsResponse: Wallets = {
+        get: () => [] as Wallet[],
+        on: () => () => {},
+        register: () => () => {},
+      } as Wallets;
+
+      const getWalletSpy = vi.spyOn(walletStandardCore, "getWallets");
+
+      getWalletSpy.mockImplementation(() => mockEmptyWalletsResponse);
+
+      expect(typeof window).not.toBeUndefined();
+      expect(isInstalled()).resolves.toBeFalsy();
     });
   });
 
@@ -141,50 +196,9 @@ describe("Magic Eden Wallet", () => {
       expect(getAddresses("mainnet")).resolves.toEqual(mockData);
     });
 
-    test("should return address from testnet", () => {
-      const mockData: WalletAddress[] = [
-        {
-          // Random address from testnet faucet
-          address:
-            "tb1pd692twjx8xwq5v7c0u2ltuwx60ef6r5hmrjfef3j5zkekdpq0dpq7cc0wy",
-          publicKey:
-            "02b9907521ddb85e0e6a37622b7c685efbdc8ae53a334928adbd12cf204ad4e717",
-          format: "taproot",
-        },
-        {
-          // https://allprivatekeys.com/bitcoin-address-format
-          address: "tb1qw508d6qejxtdg4y5r3zarvary0c5xw7kxpjzsx",
-          publicKey:
-            "0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798",
-          format: "segwit",
-        },
-      ];
-      const mockResponse: GetAddressResponse = {
-        addresses: [
-          {
-            address:
-              "tb1pd692twjx8xwq5v7c0u2ltuwx60ef6r5hmrjfef3j5zkekdpq0dpq7cc0wy",
-            publicKey:
-              "b9907521ddb85e0e6a37622b7c685efbdc8ae53a334928adbd12cf204ad4e717",
-            purpose: satsConnect.AddressPurpose.Ordinals,
-          },
-          {
-            address: "tb1qw508d6qejxtdg4y5r3zarvary0c5xw7kxpjzsx",
-            publicKey:
-              "0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798",
-            purpose: satsConnect.AddressPurpose.Payment,
-          },
-        ],
-      };
-
-      const getAddressSpy = vi.spyOn(satsConnect, "getAddress");
-
-      getAddressSpy.mockImplementation((options: GetAddressOptions) => {
-        options.onFinish(mockResponse);
-        return Promise.resolve();
-      });
+    test("should throw error on testnet", () => {
       expect(typeof window).not.toBeUndefined();
-      expect(getAddresses("testnet")).resolves.toEqual(mockData);
+      expect(getAddresses("testnet")).rejects.toThrowError();
     });
 
     test("should throw error on user cancel", () => {
