@@ -68,12 +68,19 @@ async function isInstalled(): Promise<boolean> {
     throw new OrditSDKError("Cannot call this function outside a browser");
   }
 
-  const meProvider =
-    (await getMagicEdenWalletProvider()) as MagicEdenBitcoinProvider;
-
-  return (
-    meProvider.isMagicEden !== undefined && meProvider.isMagicEden === true
-  );
+  try {
+    const meProvider =
+      (await getMagicEdenWalletProvider()) as MagicEdenBitcoinProvider;
+    return (
+      meProvider.isMagicEden !== undefined && meProvider.isMagicEden === true
+    );
+  } catch (e) {
+    if (e instanceof BrowserWalletNotInstalledError) {
+      return false;
+    } else {
+      throw e;
+    }
+  }
 }
 
 async function getAddresses(
