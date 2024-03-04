@@ -77,9 +77,8 @@ async function isInstalled(): Promise<boolean> {
   } catch (e) {
     if (e instanceof BrowserWalletNotInstalledError) {
       return false;
-    } else {
-      throw e;
     }
+    throw e;
   }
 }
 
