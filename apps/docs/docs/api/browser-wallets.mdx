@@ -41,6 +41,18 @@ import {
 ```
 
   </TabItem>
+  <TabItem value="Magic Eden Wallet">
+
+```js
+import {
+  isInstalled,
+  getAddresses,
+  signPsbt,
+  signMessage,
+} from "@ordzaar/ordit-sdk/magiceden";
+```
+
+  </TabItem>
 </Tabs>
 
 :::tip
@@ -100,8 +112,10 @@ Gets a list of addresses for the browser wallet if authorized.
 
 **Parameters**:
 
-- `network` : `"mainnet" | "testnet"` (defaults to `mainnet`) - Network
+- `network` : `"mainnet" | "testnet"` (defaults to `mainnet`)^ - Network
 - `readOnly` : boolean (defaults to `false`) - Read only (when set to true, the wallet modal appears)
+
+^ Note: Magic Eden Wallet only supports `mainnet`.
 
 **Returns**: `Promise<WalletAddress[]>`
 
@@ -120,6 +134,7 @@ Gets a list of addresses for the browser wallet if authorized.
 
 **Throws**:
 
+- `BrowserWalletNetworkMismatchError` if Magic Eden Wallet is not used on `mainnet`
 - `BrowserWalletNotInstalledError` Wallet is not installed
 - `BrowserWalletRequestCancelledByUserError` if user cancels the request on wallet popup
 - `OrditSDKError` Internal error
@@ -136,8 +151,10 @@ Signs a Partially Signed Bitcoin Transaction (PSBT) and returns a signature.
 - `options` : `object` (optional for Unisat)
   - `extractTx` : Extract transaction (defaults to `true`)
   - `finalize` : Finalize signing (defaults to `true`)
-  - `network` (for Xverse only) : `"mainnet" | "testnet"` (defaults to `mainnet`)
-  - `inputsToSign` (for Xverse only) : List of inputs and signing indexes to sign
+  - `network` (for Xverse and Magic Eden Wallet only) : `"mainnet" | "testnet"` (defaults to `mainnet`)^ - Network
+  - `inputsToSign` (for Xverse and Magic Eden Wallet only) : List of inputs and signing indexes to sign
+
+^ Note: Magic Eden Wallet only supports `mainnet`.
 
 Note: Extracting a transaction is only possible when all transactions on the PSBT are finalized. Hence, when `extractTx` is `true`, `finalize` must also be `true` and all other inputs must have been finalized.
 
@@ -170,11 +187,14 @@ Sample input (for Xverse):
 
 **Throws**:
 
+- `BrowserWalletNetworkMismatchError` if Magic Eden Wallet is not used on `mainnet`
 - `BrowserWalletNotInstalledError` Wallet is not installed
 - `BrowserWalletSigningError` Signing failed
 - `BrowserWalletExtractTxFromNonFinalizedPsbtError` if `extractTx` is `true` but there are non-finalized transactions in the PSBT
 - `BrowserWalletRequestCancelledByUserError` if user cancels the request on wallet popup
 - `OrditSDKError` if invalid options are provided
+
+^ Note: Magic Eden Wallet only supports `mainnet`.
 
 ### signMessage
 
@@ -185,8 +205,8 @@ Signs a message and returns a signature.
 **Parameters**:
 
 - `message` : `string`
-- `address` (for Xverse only) : `string` - Wallet address to sign message
-- `network` (for Xverse only) : `"mainnet" | "testnet"` (defaults to `mainnet`) - Network
+- `address` (for Xverse and Magic Eden Wallet only) : `string` - Wallet address to sign message
+- `network` (for Xverse and Magic Eden Wallet only) : `"mainnet" | "testnet"` (defaults to `mainnet`)^ - Network
 - `type` (for Unisat only) : `"bip322-simple" | "ecdsa"` (defaults to `ecdsa`)
 
 **Returns**: `Promise<BrowserWalletSignResponse>`
@@ -202,6 +222,7 @@ Signs a message and returns a signature.
 
 **Throws**:
 
+- `BrowserWalletNetworkMismatchError` if Magic Eden Wallet is not used on `mainnet`
 - `BrowserWalletNotInstalledError` Wallet is not installed
 - `BrowserWalletSigningError` Signing failed
 - `BrowserWalletRequestCancelledByUserError` if user cancels the request on wallet popup
