@@ -47,8 +47,7 @@ async function getMagicEdenWalletProvider(): Promise<MagicEdenBitcoinProvider> {
     );
   }
 
-  const magicEdenWalletProvider = meWallet.features["sats-connect:"].provider;
-  return magicEdenWalletProvider;
+  return meWallet.features["sats-connect:"].provider;
 }
 
 /**
