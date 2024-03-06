@@ -67,8 +67,7 @@ async function isInstalled(): Promise<boolean> {
   }
 
   try {
-    const meProvider =
-      (await getMagicEdenWalletProvider()) as MagicEdenBitcoinProvider;
+    const meProvider = await getMagicEdenWalletProvider();
     return (
       meProvider.isMagicEden !== undefined && meProvider.isMagicEden === true
     );
