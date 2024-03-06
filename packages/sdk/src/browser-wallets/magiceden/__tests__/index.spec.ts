@@ -124,10 +124,10 @@ describe("Magic Eden Wallet", () => {
   });
 
   describe("isInstalled", () => {
-    // test("should return true if installed", () => {
-    //   expect(typeof window.BitcoinProvider).not.toBeUndefined();
-    //   expect(isInstalled()).toBeTruthy();
-    // });
+    test("should return true if installed", () => {
+      expect(typeof window.BitcoinProvider).not.toBeUndefined();
+      expect(isInstalled()).toBeTruthy();
+    });
 
     test("should return false if not installed", () => {
       const mockEmptyWalletsResponse: Wallets = {
