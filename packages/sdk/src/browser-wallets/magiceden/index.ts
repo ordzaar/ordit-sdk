@@ -3,7 +3,11 @@ import { Psbt } from "bitcoinjs-lib";
 import { BitcoinProvider } from "sats-connect";
 
 import { BrowserWalletNetwork } from "../../config/types";
-import { BrowserWalletNotInstalledError, OrditSDKError } from "../../errors";
+import {
+  BrowserWalletNetworkMismatchError,
+  BrowserWalletNotInstalledError,
+  OrditSDKError,
+} from "../../errors";
 import {
   satsConnectWalletGetAddresses,
   satsConnectWalletSignMessage,
@@ -16,10 +20,6 @@ export interface MagicEdenBitcoinProvider extends BitcoinProvider {
   isMagicEden: boolean | undefined;
 }
 
-export interface MagicEdenWindow extends Window {
-  BitcoinProvider?: MagicEdenBitcoinProvider;
-}
-
 export interface MagicEdenWallet extends Wallet {
   name: "Magic Eden";
   features: {
@@ -29,19 +29,25 @@ export interface MagicEdenWallet extends Wallet {
   };
 }
 
-async function getMagicEdenWalletProvider(): Promise<BitcoinProvider> {
-  const meWallet = getWallets()
-    .get()
-    .find((wallet) => wallet.name === "Magic Eden");
+async function getMagicEdenWalletProvider(): Promise<MagicEdenBitcoinProvider> {
+  const { get } = getWallets();
+
+  const wallets = get();
+
+  const meWallet = wallets.find(
+    (wallet) =>
+      wallet.name === "Magic Eden" &&
+      (wallet as MagicEdenWallet).features["sats-connect:"]?.provider
+        ?.isMagicEden === true,
+  ) as MagicEdenWallet | undefined;
 
   if (!meWallet) {
-    throw new BrowserWalletNotInstalledError("Magic Eden not installed.");
+    throw new BrowserWalletNotInstalledError(
+      "Magic Eden Wallet not installed.",
+    );
   }
 
-  const magicEdenWalletProvider = (meWallet as MagicEdenWallet).features[
-    "sats-connect:"
-  ]!.provider;
-  return magicEdenWalletProvider!;
+  return meWallet.features["sats-connect:"].provider;
 }
 
 /**
@@ -55,12 +61,17 @@ async function isInstalled(): Promise<boolean> {
     throw new OrditSDKError("Cannot call this function outside a browser");
   }
 
-  const meProvider =
-    (await getMagicEdenWalletProvider()) as MagicEdenBitcoinProvider;
-
-  return (
-    meProvider.isMagicEden !== undefined && meProvider.isMagicEden === true
-  );
+  try {
+    const meProvider = await getMagicEdenWalletProvider();
+    return (
+      meProvider.isMagicEden !== undefined && meProvider.isMagicEden === true
+    );
+  } catch (e) {
+    if (e instanceof BrowserWalletNotInstalledError) {
+      return false;
+    }
+    throw e;
+  }
 }
 
 async function getAddresses(
@@ -68,7 +79,13 @@ async function getAddresses(
 ): Promise<WalletAddress[]> {
   if (!isInstalled()) {
     throw new BrowserWalletNotInstalledError(
-      "Magic Eden not installed or set as prioritised wallet.",
+      "Magic Eden Wallet not installed.",
+    );
+  }
+
+  if (network !== "mainnet") {
+    throw new BrowserWalletNetworkMismatchError(
+      "Magic Eden Wallet only supports mainnet",
     );
   }
 
@@ -86,7 +103,13 @@ async function signPsbt(
 ): Promise<BrowserWalletSignResponse> {
   if (!isInstalled()) {
     throw new BrowserWalletNotInstalledError(
-      "Magic Eden not installed or set as prioritised wallet.",
+      "Magic Eden Wallet not installed.",
+    );
+  }
+
+  if (network !== "mainnet") {
+    throw new BrowserWalletNetworkMismatchError(
+      "Magic Eden Wallet only supports mainnet",
     );
   }
 
@@ -105,7 +128,13 @@ async function signMessage(
 ): Promise<BrowserWalletSignResponse> {
   if (!isInstalled()) {
     throw new BrowserWalletNotInstalledError(
-      "Magic Eden not installed or set as prioritised wallet.",
+      "Magic Eden Wallet not installed.",
+    );
+  }
+
+  if (network !== "mainnet") {
+    throw new BrowserWalletNetworkMismatchError(
+      "Magic Eden Wallet only supports mainnet",
     );
   }
 
