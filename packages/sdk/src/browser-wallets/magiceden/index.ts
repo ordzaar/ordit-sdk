@@ -20,10 +20,6 @@ export interface MagicEdenBitcoinProvider extends BitcoinProvider {
   isMagicEden: boolean | undefined;
 }
 
-export interface MagicEdenWindow extends Window {
-  BitcoinProvider?: MagicEdenBitcoinProvider;
-}
-
 export interface MagicEdenWallet extends Wallet {
   name: "Magic Eden";
   features: {
