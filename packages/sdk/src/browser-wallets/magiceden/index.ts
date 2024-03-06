@@ -33,7 +33,7 @@ export interface MagicEdenWallet extends Wallet {
   };
 }
 
-async function getMagicEdenWalletProvider(): Promise<BitcoinProvider> {
+async function getMagicEdenWalletProvider(): Promise<MagicEdenBitcoinProvider> {
   const { get } = getWallets();
 
   const wallets = get();
@@ -43,7 +43,7 @@ async function getMagicEdenWalletProvider(): Promise<BitcoinProvider> {
       wallet.name === "Magic Eden" &&
       (wallet as MagicEdenWallet).features["sats-connect:"]?.provider
         ?.isMagicEden === true,
-  );
+  ) as MagicEdenWallet | undefined;
 
   if (!meWallet) {
     throw new BrowserWalletNotInstalledError(
@@ -51,9 +51,7 @@ async function getMagicEdenWalletProvider(): Promise<BitcoinProvider> {
     );
   }
 
-  const magicEdenWalletProvider = (meWallet as MagicEdenWallet).features[
-    "sats-connect:"
-  ].provider;
+  const magicEdenWalletProvider = meWallet.features["sats-connect:"].provider;
   return magicEdenWalletProvider;
 }
 
