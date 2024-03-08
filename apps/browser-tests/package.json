@@ -20,8 +20,8 @@
   "devDependencies": {
     "@ordzaar/standard-web": "^1.4.4",
     "@ordzaar/standard-web-linter": "^1.4.4",
-    "@types/react": "^18.2.61",
-    "@types/react-dom": "^18.2.19",
+    "@types/react": "^18.2.64",
+    "@types/react-dom": "^18.2.21",
     "@vitejs/plugin-react": "^4.2.1",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.5",
