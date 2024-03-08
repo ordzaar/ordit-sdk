@@ -15,6 +15,7 @@ export default defineConfig({
         unisat: resolve(__dirname, "src/browser-wallets/unisat/index.ts"),
         xverse: resolve(__dirname, "src/browser-wallets/xverse/index.ts"),
         leather: resolve(__dirname, "src/browser-wallets/leather/index.ts"),
+        okx: resolve(__dirname, "src/browser-wallets/okx/index.ts"),
       },
       formats: ["es", "cjs"],
     },

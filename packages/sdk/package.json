@@ -25,6 +25,10 @@
     "./leather": {
       "import": "./dist/leather.js",
       "require": "./dist/leather.cjs"
+    },
+    "./okx": {
+      "import": "./dist/okx.js",
+      "require": "./dist/okx.cjs"
     }
   },
   "types": "./index.d.ts",
