@@ -5,10 +5,14 @@ import { BrowserWalletNetwork } from "../../config/types";
 import {
   BrowserWalletExtractTxFromNonFinalizedPsbtError,
   BrowserWalletNotInstalledError,
+  BrowserWalletRequestCancelledByUserError,
+  BrowserWalletSigningError,
   OrditSDKError,
 } from "../../errors";
 import { BrowserWalletSignResponse, WalletAddress } from "../types";
 import { OKXSignPSBTOptions } from "./types";
+
+type OKXError = { code?: number; message: string };
 
 function isInstalled(): boolean {
   if (typeof window === "undefined") {
@@ -17,9 +21,9 @@ function isInstalled(): boolean {
   return typeof window.okxwallet !== "undefined";
 }
 
-async function getOKXWalletProvider(
+function getOKXWalletProvider(
   network: BrowserWalletNetwork = "mainnet",
-): Promise<OKXWalletProvider> {
+): OKXWalletProvider {
   if (!isInstalled()) {
     throw new BrowserWalletNotInstalledError("OKX Wallet not installed.");
   }
@@ -43,22 +47,34 @@ async function getAddresses(
     throw new BrowserWalletNotInstalledError("OKX Wallet not installed.");
   }
 
-  const provider = await getOKXWalletProvider(network);
+  const provider = getOKXWalletProvider(network);
 
-  const { address, publicKey } = await provider.connect();
-  const format = getAddressFormat(address, network);
+  try {
+    const { address, publicKey } = await provider.connect();
+    const format = getAddressFormat(address, network);
 
-  if (!address || !publicKey || !format) {
-    throw new OrditSDKError("Failed to get addresses from OKX Wallet.");
+    if (!address || !publicKey || !format) {
+      throw new OrditSDKError("Failed to get addresses from OKX Wallet.");
+    }
+
+    return [
+      {
+        publicKey,
+        address,
+        format,
+      },
+    ];
+  } catch (err) {
+    if (err instanceof OrditSDKError) {
+      // internal error caused by getAddressFormat
+      throw err;
+    }
+    const okxError = err as OKXError;
+    if (okxError.code === 4001) {
+      throw new BrowserWalletRequestCancelledByUserError();
+    }
+    throw new OrditSDKError(okxError.message);
   }
-
-  return [
-    {
-      publicKey,
-      address,
-      format,
-    },
-  ];
 }
 
 async function signPsbt(
@@ -78,7 +94,7 @@ async function signPsbt(
     throw new BrowserWalletExtractTxFromNonFinalizedPsbtError();
   }
 
-  const provider = await getOKXWalletProvider(network);
+  const provider = getOKXWalletProvider(network);
 
   const psbtHex = psbt.toHex();
 
@@ -102,7 +118,11 @@ async function signPsbt(
       toSignInputs,
     });
   } catch (err) {
-    throw new OrditSDKError("Failed to sign PSBT using OKX Wallet");
+    const okxError = err as OKXError;
+    if (okxError.code === 4001) {
+      throw new BrowserWalletRequestCancelledByUserError();
+    }
+    throw new OrditSDKError(okxError.message);
   }
 
   const signedPsbt = Psbt.fromHex(signedPsbtHex);
@@ -139,9 +159,23 @@ async function signMessage(
     throw new BrowserWalletNotInstalledError("OKX Wallet not installed.");
   }
 
-  const provider = await getOKXWalletProvider(network);
+  const provider = getOKXWalletProvider(network);
 
-  const signature = await provider.signMessage(message, type);
+  let signature: string = "";
+
+  try {
+    signature = await provider.signMessage(message, type);
+  } catch (err) {
+    const okxError = err as OKXError;
+    if (okxError.code === 4001) {
+      throw new BrowserWalletRequestCancelledByUserError();
+    }
+    throw new OrditSDKError(okxError.message);
+  }
+
+  if (!signature) {
+    throw new BrowserWalletSigningError("Failed to sign message using Unisat");
+  }
 
   return {
     base64: signature,
@@ -150,3 +184,5 @@ async function signMessage(
 }
 
 export { getAddresses, isInstalled, signMessage, signPsbt };
+
+export * from "./types";
