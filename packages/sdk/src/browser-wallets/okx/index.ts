@@ -125,6 +125,12 @@ async function signPsbt(
     throw new OrditSDKError(okxError.message);
   }
 
+  if (!signedPsbtHex) {
+    throw new BrowserWalletSigningError(
+      "Failed to sign psbt hex using OKX Wallet",
+    );
+  }
+
   const signedPsbt = Psbt.fromHex(signedPsbtHex);
 
   if (extractTx) {
@@ -174,7 +180,9 @@ async function signMessage(
   }
 
   if (!signature) {
-    throw new BrowserWalletSigningError("Failed to sign message using Unisat");
+    throw new BrowserWalletSigningError(
+      "Failed to sign message using OKX Wallet",
+    );
   }
 
   return {
@@ -185,4 +193,5 @@ async function signMessage(
 
 export { getAddresses, isInstalled, signMessage, signPsbt };
 
+export * from "../types";
 export * from "./types";

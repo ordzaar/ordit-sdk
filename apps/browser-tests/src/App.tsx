@@ -168,7 +168,7 @@ function Transactions({
           paymentType: leather.LeatherAddressType.P2TR,
         });
       } else if (provider === "okx") {
-        signMessageResponse = await okx.signMessage(message, network);
+        signMessageResponse = await okx.signMessage(message, "ecdsa", network);
       } else {
         throw new Error("Unknown provider");
       }
