@@ -9,6 +9,7 @@ import {
   BrowserWalletSigningError,
   OrditSDKError,
 } from "../../errors";
+import { fromXOnlyToFullPubkey } from "../internal/sats-connect/utils";
 import { BrowserWalletSignResponse, WalletAddress } from "../types";
 import { OKXSignPSBTOptions } from "./types";
 
@@ -53,13 +54,15 @@ async function getAddresses(
     const { address, publicKey } = await provider.connect();
     const format = getAddressFormat(address, network);
 
-    if (!address || !publicKey || !format) {
+    const fullPubKey = fromXOnlyToFullPubkey(publicKey);
+
+    if (!address || !fullPubKey || !format) {
       throw new OrditSDKError("Failed to get addresses from OKX Wallet.");
     }
 
     return [
       {
-        publicKey,
+        publicKey: fullPubKey,
         address,
         format,
       },
