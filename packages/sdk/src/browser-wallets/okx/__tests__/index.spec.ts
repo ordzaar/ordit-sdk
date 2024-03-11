@@ -44,13 +44,15 @@ describe("OKX Wallet", () => {
         address: "bc1qw508d6qejxtdg4y5r3zarvary0c5xw7kv8f3t4",
         format: "segwit",
       };
+      const mockXOnlyPubKey =
+        "79be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798";
       const network = "mainnet";
 
       vi.stubGlobal("okxwallet", {
         bitcoin: {
           connect: vi.fn().mockResolvedValue({
             address: mockData.address,
-            publicKey: mockData.publicKey,
+            publicKey: mockXOnlyPubKey,
           }),
         },
       });
@@ -64,13 +66,15 @@ describe("OKX Wallet", () => {
         address: "tb1qw508d6qejxtdg4y5r3zarvary0c5xw7kxpjzsx",
         format: "segwit",
       };
+      const mockXOnlyPubKey =
+        "79be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798";
       const network = "testnet";
 
       vi.stubGlobal("okxwallet", {
         bitcoinTestnet: {
           connect: vi.fn().mockResolvedValue({
             address: mockData.address,
-            publicKey: mockData.publicKey,
+            publicKey: mockXOnlyPubKey,
           }),
         },
       });
