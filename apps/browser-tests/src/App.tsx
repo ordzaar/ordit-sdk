@@ -2,6 +2,7 @@ import { useCallback, useMemo, useState } from "react";
 import { Address, PSBTBuilder, PSBTBuilderOptions } from "@ordzaar/ordit-sdk";
 import * as leather from "@ordzaar/ordit-sdk/leather";
 import * as magiceden from "@ordzaar/ordit-sdk/magiceden";
+import * as okx from "@ordzaar/ordit-sdk/okx";
 import * as unisat from "@ordzaar/ordit-sdk/unisat";
 import * as xverse from "@ordzaar/ordit-sdk/xverse";
 
@@ -120,6 +121,16 @@ function Transactions({
           finalize: true,
           signAtIndexes: [0],
         });
+      } else if (provider === "okx") {
+        signPsbtResponse = await okx.signPsbt(psbt.toPSBT(), {
+          network,
+          inputsToSign: [
+            {
+              address: inputAddressInfo.address,
+              signingIndexes: [0],
+            },
+          ],
+        });
       } else {
         throw new Error("Unknown provider");
       }
@@ -156,6 +167,8 @@ function Transactions({
           network,
           paymentType: leather.LeatherAddressType.P2TR,
         });
+      } else if (provider === "okx") {
+        signMessageResponse = await okx.signMessage(message, "ecdsa", network);
       } else {
         throw new Error("Unknown provider");
       }
@@ -269,6 +282,10 @@ function App() {
       const addresses = await magiceden.getAddresses(network);
       setConnectedAddresses(addresses);
       console.log("MagicEden Connected: ", addresses);
+    } else if (provider === "okx") {
+      const addresses = await okx.getAddresses(network);
+      setConnectedAddresses(addresses);
+      console.log("OKX Wallet Connected: ", addresses);
     } else {
       console.log("Unknown provider", provider);
     }
@@ -294,6 +311,7 @@ function App() {
           { name: "Xverse", value: "xverse" },
           { name: "Leather", value: "leather" },
           { name: "Magic Eden", value: "magiceden" },
+          { name: "OKX", value: "okx" },
         ]}
         value={provider}
         disabled={!!connectedAddresses}
