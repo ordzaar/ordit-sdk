@@ -1,6 +1,6 @@
 /* eslint-disable no-bitwise */
 
-import { TagEnum } from "./types";
+import bigInt from "big-integer";
 
 // https://github.com/ordinals/ord/blob/0.16.0/src/runes/rune_id.rs#L20
 export function getEdictIdFromRuneId(id: string): number {
@@ -42,53 +42,50 @@ export function runeSpacer(rune: string) {
 
 // https://github.com/ordinals/ord/blob/0.16.0/src/runes/varint.rs#L8
 // Learn more about variable length integer: https://golb.hplar.ch/2019/06/variable-length-int-java.html
-// TODO: value should be support BigInt, need to modify varint function(tricky)
-export function encodeVarint(n: number) {
-  if (n > Number.MAX_SAFE_INTEGER) {
-    throw new Error("Value is more than safe number");
-  }
-
+export function encodeVarint(n: bigint) {
   const out = Buffer.alloc(19);
   let i = 18;
 
-  out[i] = n & 0b0111_1111;
+  let nBig = bigInt(n);
 
-  while (n > 0b0111_1111) {
-    // eslint-disable-next-line no-param-reassign
-    n = Math.floor(n / 128) - 1;
+  out[i] = nBig.and(0b0111_1111).toJSNumber();
+
+  while (nBig.gt(0b0111_1111)) {
+    nBig = nBig.divide(128).subtract(1);
     i -= 1;
-    out[i] = (n & 0xff) | 0b1000_0000;
+    out[i] = nBig.and(0xff).or(0b1000_0000).toJSNumber();
   }
 
   return out.subarray(i);
 }
 
 // https://github.com/ordinals/ord/blob/0.16.0/src/runes/rune.rs#L125
-// TODO: value should be support BigInt, need to modify varint function(tricky)
 export function runeStrToNumber(runeStr: string) {
-  let charIdx = 0;
+  let runeNumber = bigInt(0);
   for (let i = 0; i < runeStr.length; i += 1) {
     const c = runeStr.charAt(i);
     if (i > 0) {
-      charIdx += 1;
+      runeNumber = runeNumber.add(1);
     }
-    charIdx *= 26;
+    runeNumber = runeNumber.multiply(26);
     if (c >= "A" && c <= "Z") {
-      charIdx += c.charCodeAt(0) - "A".charCodeAt(0);
+      runeNumber = runeNumber.add(c.charCodeAt(0) - "A".charCodeAt(0));
     } else {
       throw new Error(`Invalid character in rune name: ${c}`);
     }
   }
-  return charIdx;
+  return BigInt(runeNumber.toString());
 }
 
-export function pushValue(stacks: number[], tagEnum: TagEnum, value: number) {
-  const encodedTagEnum = encodeVarint(tagEnum);
-  for (let i = 0; i < encodedTagEnum.length; i += 1) {
-    stacks.push(encodedTagEnum[i]);
+export function pushValue(stacks: number[], value: bigint) {
+  const encoded = encodeVarint(BigInt(value));
+  for (let i = 0; i < encoded.length; i += 1) {
+    stacks.push(encoded[i]);
   }
-  const encodedValue = encodeVarint(value);
-  for (let i = 0; i < encodedValue.length; i += 1) {
-    stacks.push(encodedValue[i]);
+}
+
+export function pushValues(stacks: number[], ...values: bigint[]) {
+  for (let i = 0; i < values.length; i += 1) {
+    pushValue(stacks, values[i]);
   }
 }

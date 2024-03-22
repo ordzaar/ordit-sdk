@@ -1,11 +1,13 @@
-import { script, opcodes } from "bitcoinjs-lib";
-import { Edict, Etching, FlagEnum, RUNE_NAME, Rune, TagEnum } from "./types";
-import { pushValue, runeSpacer, runeStrToNumber } from "./helper";
+import bigInt from "big-integer";
+import { opcodes, script } from "bitcoinjs-lib";
+
+import { pushValue, pushValues } from "./helper";
+import { Edict, Etching, FlagEnum, Rune, RUNE_NAME, TagEnum } from "./types";
 
 export class Flag {
-  public flag: number;
+  public flag: bigint;
 
-  constructor(flag: number) {
+  constructor(flag: bigint) {
     this.flag = flag;
   }
 
@@ -13,7 +15,7 @@ export class Flag {
     // eslint-disable-next-line no-bitwise
     const mask = 1 << flagValue;
     // eslint-disable-next-line no-bitwise
-    this.flag |= mask;
+    this.flag = BigInt(bigInt(this.flag).or(bigInt(mask)).toString());
   }
 
   get value() {
@@ -21,10 +23,13 @@ export class Flag {
   }
 }
 
+// This runestone format and calculation based on ord server 0.16.0
+// https://github.com/ordinals/ord/blob/0.16.0/src/runes/runestone.rs#L51
+// EXPERIMENTAL ONLY
 export class Runestone {
   public burn?: boolean;
 
-  public claim?: number;
+  public claim?: bigint;
 
   public default_output?: number;
 
@@ -44,23 +49,33 @@ export class Runestone {
     const ops: number[] = [];
 
     if (this.etching) {
-      const flag = new Flag(0);
+      const flag = new Flag(BigInt(0));
       flag.set(FlagEnum.Etch);
       if (this.etching.mint) {
         flag.set(FlagEnum.Mint);
       }
-      pushValue(ops, TagEnum.Flags, flag.value);
+      pushValues(ops, BigInt(TagEnum.Flags), flag.value);
 
       if (this.etching.rune) {
-        pushValue(ops, TagEnum.Rune, this.etching.rune);
+        pushValues(ops, BigInt(TagEnum.Rune), this.etching.rune);
       }
 
       if (this.etching.divisibility) {
-        pushValue(ops, TagEnum.Divisibility, this.etching.divisibility);
+        if (this.etching.divisibility > 38) {
+          throw new Error("Divisibility should be less than 38");
+        }
+        pushValues(
+          ops,
+          BigInt(TagEnum.Divisibility),
+          BigInt(this.etching.divisibility),
+        );
       }
 
       if (this.etching.spacers) {
-        pushValue(ops, TagEnum.Spacers, this.etching.spacers);
+        if (this.etching.spacers > 134217727) {
+          throw new Error("Divisibility should be less than 134217727");
+        }
+        pushValues(ops, BigInt(TagEnum.Spacers), BigInt(this.etching.spacers));
       }
 
       if (this.etching.symbol) {
@@ -68,34 +83,73 @@ export class Runestone {
         if (symbol.length !== 1) {
           throw new Error("Symbol should be just 1 character");
         }
-        pushValue(ops, TagEnum.Symbol, symbol[0]);
+        pushValues(ops, BigInt(TagEnum.Symbol), BigInt(symbol[0]));
       }
 
       if (this.etching.mint) {
         if (this.etching.mint.deadline) {
-          pushValue(ops, TagEnum.Deadline, this.etching.mint.deadline);
+          pushValues(
+            ops,
+            BigInt(TagEnum.Deadline),
+            BigInt(this.etching.mint.deadline),
+          );
         }
 
         if (this.etching.mint.limit) {
-          pushValue(ops, TagEnum.Limit, this.etching.mint.limit);
+          if (this.etching.mint.limit > BigInt("18446744073709551616")) {
+            throw new Error(
+              "Mint limit should be less than 18446744073709551616",
+            );
+          }
+          pushValues(ops, BigInt(TagEnum.Limit), this.etching.mint.limit);
         }
 
         if (this.etching.mint.term) {
-          pushValue(ops, TagEnum.Term, this.etching.mint.term);
+          pushValues(ops, BigInt(TagEnum.Term), BigInt(this.etching.mint.term));
         }
       }
     }
 
-    // if (this.claim) {
-    //   pushTag(ops, TagEnum.Claim, this.claim);
-    // }
+    if (this.claim) {
+      pushValues(ops, BigInt(TagEnum.Claim), this.claim);
+    }
 
     if (this.default_output) {
-      pushValue(ops, TagEnum.DefaultOutput, this.default_output);
+      pushValues(
+        ops,
+        BigInt(TagEnum.DefaultOutput),
+        BigInt(this.default_output),
+      );
     }
 
     if (this.burn) {
-      pushValue(ops, TagEnum.Burn, 0);
+      pushValues(ops, BigInt(TagEnum.Burn), BigInt(0));
+    }
+
+    if (this.edicts.length > 0) {
+      pushValue(ops, BigInt(TagEnum.Body));
+
+      // sort edicts data by id
+      this.edicts = this.edicts.sort((a, b) => {
+        if (a.id > b.id) {
+          return 1;
+        }
+        if (a.id < b.id) {
+          return -1;
+        }
+        return 0;
+      });
+
+      // this is used for compressing the id,
+      // since the id already sorted then try to reducing the next id value
+      let id = BigInt(0);
+      for (let i = 0; i < this.edicts.length; i += 1) {
+        pushValue(ops, this.edicts[i].id - id);
+        pushValue(ops, this.edicts[i].amount);
+        pushValue(ops, this.edicts[i].output);
+
+        id = this.edicts[i].id;
+      }
     }
 
     const final = [
@@ -107,30 +161,3 @@ export class Runestone {
     return script.compile(final).toString("hex");
   }
 }
-
-function main() {
-  const runeName = runeSpacer("OR.DZ.A.AR.MARK");
-
-  const rune = new Runestone({
-    burn: false,
-    // claim: 12,
-    default_output: 1,
-    edicts: [],
-    etching: {
-      divisibility: 1,
-      spacers: runeName.spacers,
-      mint: {
-        deadline: 1,
-        limit: 100,
-        term: 1,
-      },
-      rune: runeStrToNumber(runeName.rune),
-      symbol: "B",
-    },
-  });
-
-  const result = rune.encipher();
-  console.log(result);
-}
-
-main();

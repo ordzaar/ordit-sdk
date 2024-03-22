@@ -8,12 +8,13 @@ export enum TagEnum {
   Term = 8,
   Deadline = 10,
   DefaultOutput = 12,
-  Burn = 254,
+  Claim = 14,
+  Burn = 126,
 
   Divisibility = 1,
   Spacers = 3,
   Symbol = 5,
-  Nop = 255,
+  Nop = 127,
 }
 
 export enum FlagEnum {
@@ -22,29 +23,31 @@ export enum FlagEnum {
   Burn = 127,
 }
 
+export type RuneId = bigint;
+
 export type Edict = {
-  id: number;
-  amount: number;
-  output: number;
+  id: bigint;
+  amount: bigint;
+  output: bigint;
 };
 
 export type Mint = {
   deadline?: number;
-  limit?: number;
+  limit?: bigint;
   term?: number;
 };
 
 export type Etching = {
   divisibility: number;
   mint?: Mint;
-  rune?: number;
+  rune?: RuneId;
   spacers: number;
   symbol?: string;
 };
 
 export type Rune = {
   burn?: boolean;
-  claim?: number;
+  claim?: RuneId;
   default_output?: number;
   edicts: Edict[];
   etching?: Etching;
