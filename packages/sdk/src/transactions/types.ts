@@ -141,7 +141,7 @@ export interface UTXO {
 
 export type UTXOLimited = Pick<UTXO, "txid" | "n" | "sats" | "scriptPubKey">;
 
-export interface Output {
+type PsbtOutputAddress = {
   /**
    * Address
    */
@@ -151,7 +151,21 @@ export interface Output {
    * Value in satoshis
    */
   value: number;
-}
+};
+
+type PsbtOutputScript = {
+  /**
+   * Script
+   */
+  script: Buffer;
+
+  /**
+   * Value in satoshis
+   */
+  value: number;
+};
+
+export type Output = PsbtOutputAddress | PsbtOutputScript;
 
 export interface SkipStrictSatsCheckOptions {
   skipStrictSatsCheck?: boolean;

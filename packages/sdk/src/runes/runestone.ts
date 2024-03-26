@@ -1,6 +1,7 @@
 import bigInt from "big-integer";
 import { opcodes, script } from "bitcoinjs-lib";
 
+import { OrditSDKError } from "../errors";
 import { pushValue, pushValues } from "./helper";
 import { Edict, Etching, FlagEnum, Rune, RUNE_NAME, TagEnum } from "./types";
 
@@ -62,7 +63,7 @@ export class Runestone {
 
       if (this.etching.divisibility) {
         if (this.etching.divisibility > 38) {
-          throw new Error("Divisibility should be less than 38");
+          throw new OrditSDKError("Divisibility should be less than 38");
         }
         pushValues(
           ops,
@@ -73,7 +74,7 @@ export class Runestone {
 
       if (this.etching.spacers) {
         if (this.etching.spacers > 134217727) {
-          throw new Error("Divisibility should be less than 134217727");
+          throw new OrditSDKError("Divisibility should be less than 134217727");
         }
         pushValues(ops, BigInt(TagEnum.Spacers), BigInt(this.etching.spacers));
       }
@@ -81,7 +82,7 @@ export class Runestone {
       if (this.etching.symbol) {
         const symbol = Buffer.from(this.etching.symbol, "utf8");
         if (symbol.length !== 1) {
-          throw new Error("Symbol should be just 1 character");
+          throw new OrditSDKError("Symbol should be just 1 character");
         }
         pushValues(ops, BigInt(TagEnum.Symbol), BigInt(symbol[0]));
       }
@@ -97,7 +98,7 @@ export class Runestone {
 
         if (this.etching.mint.limit) {
           if (this.etching.mint.limit > BigInt("18446744073709551616")) {
-            throw new Error(
+            throw new OrditSDKError(
               "Mint limit should be less than 18446744073709551616",
             );
           }
@@ -158,6 +159,6 @@ export class Runestone {
       Buffer.from(ops),
     ];
 
-    return script.compile(final).toString("hex");
+    return script.compile(final);
   }
 }

@@ -5,10 +5,12 @@ import {
   initEccLib,
   Network as BitcoinNetwork,
   networks,
+  opcodes,
   Payment,
   PaymentCreator,
   payments,
   Psbt,
+  script as bitcoinScript,
   Signer,
   Transaction,
 } from "bitcoinjs-lib";
@@ -62,6 +64,10 @@ export function createPayment(
     });
   }
 
+  if (type === "op_return") {
+    throw new OrditSDKError("Unsupported address type");
+  }
+
   return payments[type]({ pubkey: key, network: networkObj });
 }
 
@@ -70,12 +76,15 @@ export function getDerivationPath(
   account = 0,
   addressIndex = 0,
 ) {
-  if (formatType === "p2wsh") {
+  if (formatType === "p2wsh" || formatType === "op_return") {
     // No supported derivation path
     return "";
   }
 
-  const pathFormat: Record<Exclude<AddressFormat, "p2wsh">, string> = {
+  const pathFormat: Record<
+    Exclude<AddressFormat, "p2wsh" | "op_return">,
+    string
+  > = {
     legacy: `m/44'/0'/${account}'/0/${addressIndex}`,
     "p2sh-p2wpkh": `m/49'/0'/${account}'/0/${addressIndex}`,
     segwit: `m/84'/0'/${account}'/0/${addressIndex}`,
@@ -319,6 +328,18 @@ export const isP2TR = (
   };
 };
 
+export const isOpReturn = (script: Buffer): IsBitcoinPaymentResponse => {
+  const decompiled = bitcoinScript.decompile(script);
+  let payload: boolean | (number | Buffer)[] = false;
+  if (decompiled?.length && decompiled[0] === opcodes.OP_RETURN) {
+    payload = decompiled;
+  }
+  return {
+    type: "op_return",
+    payload,
+  };
+};
+
 export function getScriptType(
   script: Buffer,
   network: Network,
@@ -352,6 +373,14 @@ export function getScriptType(
     return {
       format: ADDRESS_TYPE_TO_FORMAT.p2tr,
       ...p2tr,
+    };
+  }
+
+  const opReturn = isOpReturn(script);
+  if (opReturn.payload) {
+    return {
+      format: ADDRESS_TYPE_TO_FORMAT.op_return,
+      ...opReturn,
     };
   }
 

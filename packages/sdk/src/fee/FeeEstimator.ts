@@ -25,6 +25,8 @@ class FeeEstimator {
 
   protected witness?: Buffer[] = [];
 
+  protected opReturnScripts: Buffer[] = [];
+
   protected virtualSize: number = 0;
 
   protected weight: number = 0;
@@ -105,6 +107,18 @@ class FeeEstimator {
     return 0;
   }
 
+  private calculateOpReturnScriptSize() {
+    const { outputTypes } = this.getInputAndOutputScriptTypes();
+    if (outputTypes.includes("op_return") && this.opReturnScripts.length) {
+      return this.opReturnScripts.reduce(
+        (acc, buffer) => acc + Buffer.byteLength(buffer),
+        0,
+      );
+    }
+
+    return 0;
+  }
+
   private getBaseSize() {
     const { inputTypes, outputTypes } = this.getInputAndOutputScriptTypes();
     const witnessHeaderSize = 2;
@@ -136,8 +150,17 @@ class FeeEstimator {
       totalWitnessSize = witnessHeaderSize + witnessSize;
     }
 
+    let totalOpReturnScriptsSize = 0;
+    if (this.opReturnScripts.length) {
+      totalOpReturnScriptsSize = this.calculateOpReturnScriptSize();
+    }
+
     return {
-      baseSize: inputVBytes.input + TRANSACTION_HEADER_SIZE + outputVBytes,
+      baseSize:
+        inputVBytes.input +
+        TRANSACTION_HEADER_SIZE +
+        outputVBytes +
+        totalOpReturnScriptsSize,
       witnessSize: totalWitnessSize,
     };
   }

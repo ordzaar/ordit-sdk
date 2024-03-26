@@ -1,10 +1,10 @@
-import { runeSpacer, runeStrToNumber } from "../helper";
+import { getRuneSpacer, runeStrToNumber } from "../helper";
 import { Runestone } from "../runestone";
 
 // the expected values are generated from rust code (original ord server)
 describe("Runestone", () => {
   test("should encode rune script", () => {
-    const runeName = runeSpacer("ORDZAAR.MARKETPLACE");
+    const runeName = getRuneSpacer("ORDZAAR.MARKETPLACE");
 
     const rune = new Runestone({
       burn: true,
@@ -40,14 +40,14 @@ describe("Runestone", () => {
       },
     });
 
-    const encodedScript = rune.encipher();
+    const encodedScript = rune.encipher().toString("hex");
     expect(encodedScript).toEqual(
       "6a0952554e455f544553544c66020304f4e4e8ea98c6baa8f6f48d160101034005420a010680fefefefefefefeff0008640ec6ea97b6570c017e000085e3079ec5efcfb18d9682b88bf79af48d1601009ec5efcfb18d9682b88bf79af48d160185e3079ec5efcfb18d9682b88bf79af48d1601",
     );
   });
 
   test("encode etching data only", () => {
-    const runeName = runeSpacer("ORDZAAR.MARKETPLACE");
+    const runeName = getRuneSpacer("ORDZAAR.MARKETPLACE");
     const rune = new Runestone({
       burn: false,
       edicts: [],
@@ -64,7 +64,7 @@ describe("Runestone", () => {
       },
     });
 
-    const encodedScript = rune.encipher();
+    const encodedScript = rune.encipher().toString("hex");
     expect(encodedScript).toEqual(
       "6a0952554e455f544553541b020304f4e4e8ea98c6baa8f6f48d160101034005420a0106010801",
     );
@@ -92,7 +92,7 @@ describe("Runestone", () => {
       ],
     });
 
-    const encodedScript = rune.encipher();
+    const encodedScript = rune.encipher().toString("hex");
     expect(encodedScript).toEqual(
       "6a0952554e455f544553540a00010b0b000b0b043737",
     );
@@ -110,7 +110,7 @@ describe("Runestone", () => {
       ],
     });
 
-    const encodedScript = rune.encipher();
+    const encodedScript = rune.encipher().toString("hex");
     expect(encodedScript).toEqual("6a0952554e455f544553540400010b0b");
   });
 });

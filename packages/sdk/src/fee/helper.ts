@@ -6,6 +6,9 @@ import { OrditSDKError } from "../errors";
  */
 export const TRANSACTION_HEADER_SIZE = 10.5;
 
+const OP_RETURN_VALUE = 8; // even if op_return has value 0, it still has 8 size
+const OP_RETURN_SCRIPT_PUBKEY_SIZE = 1; // compact size
+
 /**
  * Gets the base size of a script type.
  *
@@ -27,6 +30,14 @@ export function getBaseSizeByType(type: AddressFormat) {
 
     case "legacy":
       return { input: 148, output: 34, witness: 0 };
+
+    // still needs to calculate the op_return script manually based on the script length
+    case "op_return":
+      return {
+        input: 0,
+        output: OP_RETURN_VALUE + OP_RETURN_SCRIPT_PUBKEY_SIZE,
+        witness: 0,
+      };
 
     default:
       throw new OrditSDKError("Invalid type");

@@ -79,7 +79,7 @@ function getAddressFromBip32PublicKey(
 export function getAddressesFromPublicKey(
   publicKey: string | Buffer,
   network: Network = "mainnet",
-  type: Exclude<AddressType, "p2wsh"> | "all" = "all",
+  type: Exclude<AddressType, "p2wsh" | "op_return"> | "all" = "all",
 ): Address[] {
   const publicKeyBuffer = Buffer.isBuffer(publicKey)
     ? publicKey
@@ -91,10 +91,13 @@ export function getAddressesFromPublicKey(
   );
 
   if (type === "all") {
-    // p2wsh is not supported by browser wallets
     const addressTypes = (
       Object.keys(ADDRESS_TYPE_TO_FORMAT) as AddressType[]
-    ).filter((addressType) => addressType !== "p2wsh");
+    ).filter(
+      // p2wsh is not supported by browser wallets
+      // op_return doesn't have public key
+      (addressType) => addressType !== "p2wsh" && addressType !== "op_return",
+    );
     return addressTypes.map((addressType) =>
       getAddressFromBip32PublicKey(bip32PublicKey, network, addressType),
     );

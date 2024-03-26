@@ -1,6 +1,13 @@
-export type AddressType = "p2pkh" | "p2sh" | "p2wsh" | "p2wpkh" | "p2tr";
+export type AddressType =
+  | "op_return"
+  | "p2pkh"
+  | "p2sh"
+  | "p2wsh"
+  | "p2wpkh"
+  | "p2tr";
 
 export type AddressFormat =
+  | "op_return"
   | "legacy"
   | "p2sh-p2wpkh"
   | "p2wsh"

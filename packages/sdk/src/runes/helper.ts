@@ -2,6 +2,8 @@
 
 import bigInt from "big-integer";
 
+import { OrditSDKError } from "../errors";
+
 // https://github.com/ordinals/ord/blob/0.16.0/src/runes/rune_id.rs#L20
 export function getEdictIdFromRuneId(id: string): number {
   const [height, index] = id.split(":");
@@ -12,7 +14,7 @@ export function getEdictIdFromRuneId(id: string): number {
 }
 
 // https://github.com/ordinals/ord/blob/0.16.0/src/runes/spaced_rune.rs#L12
-export function runeSpacer(rune: string) {
+export function getRuneSpacer(rune: string) {
   let pureRune = "";
   let spacers = 0;
 
@@ -24,17 +26,17 @@ export function runeSpacer(rune: string) {
       const flag = 1 << (pureRune.length - 1);
 
       if ((spacers & flag) !== 0) {
-        throw new Error("Double spacer");
+        throw new OrditSDKError("Double spacer");
       }
 
       spacers |= flag;
     } else {
-      throw new Error("Invalid spacer character");
+      throw new OrditSDKError("Invalid spacer character");
     }
   }
 
   if (32 - Math.clz32(spacers) >= pureRune.length) {
-    throw new Error("Trailing spacer");
+    throw new OrditSDKError("Trailing spacer");
   }
 
   return { rune: pureRune, spacers };
@@ -71,7 +73,7 @@ export function runeStrToNumber(runeStr: string) {
     if (c >= "A" && c <= "Z") {
       runeNumber = runeNumber.add(c.charCodeAt(0) - "A".charCodeAt(0));
     } else {
-      throw new Error(`Invalid character in rune name: ${c}`);
+      throw new OrditSDKError(`Invalid character in rune name: ${c}`);
     }
   }
   return BigInt(runeNumber.toString());

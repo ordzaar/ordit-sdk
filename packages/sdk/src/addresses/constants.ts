@@ -2,6 +2,7 @@ import { invert } from "./helper";
 import type { AddressFormat, AddressType } from "./types";
 
 export const ADDRESS_TYPE_TO_FORMAT: Record<AddressType, AddressFormat> = {
+  op_return: "op_return",
   p2pkh: "legacy",
   p2sh: "p2sh-p2wpkh",
   p2wsh: "p2wsh",
