@@ -79,7 +79,7 @@ export class RuneTxBuilder extends PSBTBuilder {
     await this.prepare();
   }
 
-  public async createRune({
+  public createRune({
     rune,
     symbol,
     divisibility,
