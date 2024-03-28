@@ -3,6 +3,8 @@ import type {
   GetInscriptionOptions,
   GetInscriptionsOptions,
   GetInscriptionUTXOOptions,
+  GetRuneBalancesOptions,
+  GetRuneOptions,
   GetSpendablesOptions,
   GetTransactionOptions,
   GetTransactionResponse,
@@ -12,6 +14,7 @@ import type {
 } from "../api/types";
 import type { Network } from "../config/types";
 import type { Inscription } from "../inscription/types";
+import { RuneBalance, RuneDetail } from "../runes/types";
 import type { UTXO, UTXOLimited } from "../transactions/types";
 
 export interface BaseDatasourceOptions {
@@ -117,4 +120,21 @@ export abstract class BaseDatasource {
    * @param options List of options to modify the result provided.
    */
   abstract relay({ hex, maxFeeRate, validate }: RelayOptions): Promise<string>;
+
+  /**
+   * Gets a rune detail.
+   *
+   * @param options List of options to modify the result provided.
+   */
+  abstract getRune({ runeQuery }: GetRuneOptions): Promise<RuneDetail>;
+
+  /**
+   * Gets rune balances, this balances are sum of multiple address' outputs.
+   *
+   * @param options List of options to modify the result provided.
+   */
+  abstract getRuneBalances({
+    address,
+    showOutpoints,
+  }: GetRuneBalancesOptions): Promise<RuneBalance[]>;
 }

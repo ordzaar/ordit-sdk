@@ -5,7 +5,7 @@ import bigInt from "big-integer";
 import { OrditSDKError } from "../errors";
 
 // https://github.com/ordinals/ord/blob/0.16.0/src/runes/rune_id.rs#L20
-export function getEdictIdFromRuneId(id: string): number {
+export function parseRuneIdToEdictId(id: string): number {
   const [height, index] = id.split(":");
   // eslint-disable-next-line
   const CLAIM_BIT = 1 << 48;
@@ -14,16 +14,16 @@ export function getEdictIdFromRuneId(id: string): number {
 }
 
 // https://github.com/ordinals/ord/blob/0.16.0/src/runes/spaced_rune.rs#L12
-export function getRuneSpacer(rune: string) {
-  let pureRune = "";
+export function parseToRuneSpacer(rune: string) {
+  let runeStr = "";
   let spacers = 0;
 
   // eslint-disable-next-line
   for (const c of rune) {
     if (/[A-Z]/.test(c)) {
-      pureRune += c;
+      runeStr += c;
     } else if (c === "." || c === "•") {
-      const flag = 1 << (pureRune.length - 1);
+      const flag = 1 << (runeStr.length - 1);
 
       if ((spacers & flag) !== 0) {
         throw new OrditSDKError("Double spacer");
@@ -35,11 +35,11 @@ export function getRuneSpacer(rune: string) {
     }
   }
 
-  if (32 - Math.clz32(spacers) >= pureRune.length) {
+  if (32 - Math.clz32(spacers) >= runeStr.length) {
     throw new OrditSDKError("Trailing spacer");
   }
 
-  return { rune: pureRune, spacers };
+  return { runeStr, spacers };
 }
 
 // https://github.com/ordinals/ord/blob/0.16.0/src/runes/varint.rs#L8
@@ -62,7 +62,7 @@ export function encodeVarint(n: bigint) {
 }
 
 // https://github.com/ordinals/ord/blob/0.16.0/src/runes/rune.rs#L125
-export function runeStrToNumber(runeStr: string) {
+export function parseRuneStrToNumber(runeStr: string) {
   let runeNumber = bigInt(0);
   for (let i = 0; i < runeStr.length; i += 1) {
     const c = runeStr.charAt(i);

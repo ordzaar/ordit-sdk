@@ -1,10 +1,10 @@
-import { getRuneSpacer, runeStrToNumber } from "../helper";
+import { parseRuneStrToNumber, parseToRuneSpacer } from "../helper";
 import { Runestone } from "../runestone";
 
 // the expected values are generated from rust code (original ord server)
 describe("Runestone", () => {
   test("should encode rune script", () => {
-    const runeName = getRuneSpacer("ORDZAAR.MARKETPLACE");
+    const runeName = parseToRuneSpacer("ORDZAAR.MARKETPLACE");
 
     const rune = new Runestone({
       burn: true,
@@ -35,7 +35,7 @@ describe("Runestone", () => {
           limit: BigInt("18446744073709551616"),
           term: 100,
         },
-        rune: runeStrToNumber(runeName.rune),
+        rune: parseRuneStrToNumber(runeName.runeStr),
         symbol: "B",
       },
     });
@@ -47,7 +47,7 @@ describe("Runestone", () => {
   });
 
   test("encode etching data only", () => {
-    const runeName = getRuneSpacer("ORDZAAR.MARKETPLACE");
+    const runeName = parseToRuneSpacer("ORDZAAR.MARKETPLACE");
     const rune = new Runestone({
       burn: false,
       edicts: [],
@@ -59,7 +59,7 @@ describe("Runestone", () => {
           limit: BigInt(1),
           term: 1,
         },
-        rune: runeStrToNumber(runeName.rune),
+        rune: parseRuneStrToNumber(runeName.runeStr),
         symbol: "B",
       },
     });

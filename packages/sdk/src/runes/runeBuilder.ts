@@ -1,6 +1,6 @@
 import { OrditSDKError } from "../errors";
 import { PSBTBuilder, PSBTBuilderOptions } from "../transactions";
-import { getRuneSpacer, runeStrToNumber } from "./helper";
+import { parseRuneStrToNumber, parseToRuneSpacer } from "./helper";
 import { Runestone } from "./runestone";
 import {
   CreateRune,
@@ -70,7 +70,11 @@ export class RuneTxBuilder extends PSBTBuilder {
     };
   }
 
-  private async build() {
+  public async build() {
+    if (this.outputs.length === 0) {
+      throw new OrditSDKError(`Outputs are empty`);
+    }
+
     this.setOutputs();
     await this.prepare();
   }
@@ -84,10 +88,10 @@ export class RuneTxBuilder extends PSBTBuilder {
     limit,
     supply,
   }: CreateRune) {
-    const runeSpacer = getRuneSpacer(rune);
+    const runeSpacer = parseToRuneSpacer(rune);
 
-    const runeId = runeStrToNumber(runeSpacer.rune);
-    const runeSpacerValue = runeSpacer.spacers;
+    const runeId = parseRuneStrToNumber(runeSpacer.runeStr);
+    const runeSpacers = runeSpacer.spacers;
     // TODO: validate rune on chain
 
     const edicts: Edict[] = [];
@@ -109,7 +113,7 @@ export class RuneTxBuilder extends PSBTBuilder {
           term,
         },
         rune: runeId,
-        spacers: runeSpacerValue,
+        spacers: runeSpacers,
         symbol,
       },
     };
@@ -138,7 +142,7 @@ export class RuneTxBuilder extends PSBTBuilder {
       ],
     };
 
-    return this.build();
+    return this;
   }
 
   // TODO transfer rune

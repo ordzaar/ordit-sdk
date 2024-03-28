@@ -28,46 +28,94 @@ export enum FlagEnum {
 
 export type RuneId = bigint;
 
-export type Edict = {
+export interface Edict {
   id: bigint;
   amount: bigint;
   output: bigint;
-};
+}
 
-export type Mint = {
+export interface Mint {
   deadline?: number;
   limit?: bigint;
   term?: number;
-};
+}
 
-export type Etching = {
+export interface Etching {
   divisibility: number;
   mint?: Mint;
   rune?: RuneId;
   spacers: number;
   symbol?: string;
-};
+}
 
-export type Rune = {
+export interface Rune {
   burn?: boolean;
   claim?: RuneId;
   default_output?: number;
   edicts: Edict[];
   etching?: Etching;
-};
+}
 
-export type CreateRune = {
+export interface CreateRune {
   rune: string;
   symbol: string;
-  divisibility: number; // token divisibility -> 10, 0.0000000001
-  deadline?: number; // mint deadline in timestamp
-  term?: number; // remaining mint deadline in block -> 10, current block + 10
-  limit?: bigint; // limit per mint
-  supply?: bigint; // max total supply
-};
+  /**
+   * Token divisibility, example: -> 10, 0.0000000001
+   */
+  divisibility: number;
+  /**
+   * Mint deadline in timestamp
+   */
+  deadline?: number;
+  /**
+   * Remaining mint deadline in block -> 10, current block + 10
+   */
+  term?: number;
+  /**
+   * Limit per mint
+   */
+  limit?: bigint;
+  /**
+   * Supply premin
+   */
+  supply?: bigint;
+}
 
-export type MintRune = {
+export interface MintRune {
   rune?: string;
-  runeEdictId?: bigint; // edict id can be obtained from rune id, use this helper function getEdictIdFromRuneId
+  /**
+   * Edict id can be obtained from rune id, use this helper function getEdictIdFromRuneId
+   */
+  runeEdictId?: bigint;
   amount: bigint;
-};
+}
+
+export interface RuneDetailMint {
+  deadline?: number;
+  end?: number;
+  limit?: bigint;
+}
+
+export interface RuneDetail {
+  rune_id: string;
+  burned?: bigint;
+  divisibility: number;
+  etching: string;
+  mint?: RuneDetailMint;
+  mints: bigint;
+  number: bigint;
+  rune: string;
+  rune_spaced: string;
+  spacers: number;
+  supply: bigint;
+  symbol?: string;
+  timestamp: number;
+}
+
+export interface RuneBalance {
+  rune_spaced: string;
+  amount: bigint;
+  divisibility: number;
+  symbol?: string;
+  outpoints?: [string, bigint][];
+}

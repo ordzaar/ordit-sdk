@@ -6,6 +6,10 @@ import type {
   GetInscriptionOptions,
   GetInscriptionsOptions,
   GetInscriptionUTXOOptions,
+  GetRuneBalanceResponse,
+  GetRuneBalancesOptions,
+  GetRuneOptions,
+  GetRuneResponse,
   GetSpendablesOptions,
   GetTransactionOptions,
   GetUnspentsOptions,
@@ -15,6 +19,7 @@ import type {
 import type { Network } from "../config/types";
 import { OrditSDKError } from "../errors";
 import type { Inscription } from "../inscription/types";
+import { RuneBalance, RuneDetail } from "../runes/types";
 import type { Transaction, UTXO, UTXOLimited } from "../transactions/types";
 import { outpointToIdFormat } from "../utils";
 import { BaseDatasource } from "./BaseDatasource";
@@ -229,5 +234,58 @@ export class JsonRpcDatasource extends BaseDatasource {
       { hex, maxFeeRate, validate },
       rpc.id,
     );
+  }
+
+  async getRune({ runeQuery }: GetRuneOptions): Promise<RuneDetail> {
+    if (!runeQuery) {
+      throw new OrditSDKError("Invalid request");
+    }
+
+    const response = await rpc[this.network].call<GetRuneResponse>(
+      "Runes.GetRune",
+      { runeQuery },
+      rpc.id,
+    );
+
+    return {
+      ...response,
+      mint: response.mint
+        ? {
+            ...response.mint,
+
+            limit: response.mint.limit
+              ? BigInt(response.mint.limit)
+              : undefined,
+          }
+        : undefined,
+      burned: response.burned ? BigInt(response.burned!) : undefined,
+      mints: BigInt(response.mints),
+      number: BigInt(response.number),
+      supply: BigInt(response.supply),
+      timestamp: response.timestamp * 1000,
+    };
+  }
+
+  async getRuneBalances({
+    address,
+    showOutpoints = false,
+  }: GetRuneBalancesOptions): Promise<RuneBalance[]> {
+    if (!address) {
+      throw new OrditSDKError("Invalid request");
+    }
+
+    const response = await rpc[this.network].call<GetRuneBalanceResponse[]>(
+      "Runes.GetBalances",
+      { address, showOutpoints },
+      rpc.id,
+    );
+
+    return response.map((v) => ({
+      ...v,
+      amount: BigInt(v.amount),
+      outpoints: v.outpoints
+        ? v.outpoints.map((x) => [x[0], BigInt(x[1])])
+        : undefined,
+    }));
   }
 }
