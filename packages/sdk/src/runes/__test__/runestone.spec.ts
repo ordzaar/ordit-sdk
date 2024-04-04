@@ -3,114 +3,95 @@ import { Runestone } from "../runestone";
 
 // the expected values are generated from rust code (original ord server)
 describe("Runestone", () => {
-  test("should encode rune script", () => {
-    const runeName = parseToRuneSpacer("ORDZAAR.MARKETPLACE");
-
-    const rune = new Runestone({
-      burn: true,
-      claim: BigInt(19283712983),
-      default_output: 1,
-      edicts: [
-        {
-          id: BigInt(111111),
-          amount: BigInt("9999782300756044170890651191062"),
-          output: BigInt(1),
-        },
-        {
-          id: BigInt(222222),
-          amount: BigInt("9999782300756044170890651191062"),
-          output: BigInt(1),
-        },
-        {
-          id: BigInt(111111),
-          amount: BigInt("9999782300756044170890651191062"),
-          output: BigInt(1),
-        },
-      ],
-      etching: {
-        divisibility: 1,
-        spacers: runeName.spacers,
-        mint: {
-          deadline: 1,
-          limit: BigInt("18446744073709551616"),
-          term: 100,
-        },
-        rune: parseRuneStrToNumber(runeName.runeStr),
-        symbol: "B",
-      },
-    });
-
-    const encodedScript = rune.encipher().toString("hex");
-    expect(encodedScript).toEqual(
-      "6a0952554e455f544553544c66020304f4e4e8ea98c6baa8f6f48d160101034005420a010680fefefefefefefeff0008640ec6ea97b6570c017e000085e3079ec5efcfb18d9682b88bf79af48d1601009ec5efcfb18d9682b88bf79af48d160185e3079ec5efcfb18d9682b88bf79af48d1601",
-    );
-  });
-
   test("encode etching data only", () => {
     const runeName = parseToRuneSpacer("ORDZAAR.MARKETPLACE");
     const rune = new Runestone({
-      burn: false,
+      pointer: 1,
+      mint: {
+        block: 1n,
+        tx: 1,
+      },
       edicts: [],
       etching: {
         divisibility: 1,
-        spacers: runeName.spacers,
-        mint: {
-          deadline: 1,
-          limit: BigInt(1),
-          term: 1,
-        },
+        premine: 10000000000000n,
         rune: parseRuneStrToNumber(runeName.runeStr),
+        spacers: 10,
         symbol: "B",
+        terms: {
+          cap: 1000n,
+          amount: 100n,
+          height: {
+            start: 100n,
+            end: 200n,
+          },
+          offset: {
+            start: 50n,
+            end: 100n,
+          },
+        },
       },
     });
 
     const encodedScript = rune.encipher().toString("hex");
     expect(encodedScript).toEqual(
-      "6a0952554e455f544553541b020304f4e4e8ea98c6baa8f6f48d160101034005420a0106010801",
+      "6a5d31020304968ef5f7a9bbc799ebe9e5750101030a0680c0caf384a30205420a6408e8070c640ec80110321264160114011401",
     );
   });
 
   test("encode edicts data only", () => {
     const rune = new Runestone({
-      burn: false,
       edicts: [
         {
-          id: BigInt(1),
-          amount: BigInt(11),
-          output: BigInt(11),
+          id: {
+            block: 1n,
+            tx: 1,
+          },
+          amount: 9999782300756044170890651191062n,
+          output: 0n,
         },
         {
-          id: BigInt(1),
-          amount: BigInt(11),
-          output: BigInt(11),
+          id: {
+            block: 1n,
+            tx: 1,
+          },
+          amount: 9999782300756044170890651191062n,
+          output: 1n,
         },
         {
-          id: BigInt(5),
-          amount: BigInt(55),
-          output: BigInt(55),
+          id: {
+            block: 1n,
+            tx: 1,
+          },
+          amount: 9999782300756044170890651191062n,
+          output: 2n,
         },
       ],
     });
 
     const encodedScript = rune.encipher().toString("hex");
     expect(encodedScript).toEqual(
-      "6a0952554e455f544553540a00010b0b000b0b043737",
+      "6a5d37000101968ef59bf88cb983978eb2d0f0c61f000000968ef59bf88cb983978eb2d0f0c61f010000968ef59bf88cb983978eb2d0f0c61f02",
     );
   });
 
   test("encode edicts data only, single data", () => {
     const rune = new Runestone({
-      burn: false,
       edicts: [
         {
-          id: BigInt(1),
-          amount: BigInt(11),
-          output: BigInt(11),
+          id: {
+            block: 1n,
+            tx: 1,
+          },
+          amount: 9999782300756044170890651191062n,
+          output: 0n,
         },
       ],
     });
 
     const encodedScript = rune.encipher().toString("hex");
-    expect(encodedScript).toEqual("6a0952554e455f544553540400010b0b");
+    expect(encodedScript).toEqual(
+      "6a5d13000101968ef59bf88cb983978eb2d0f0c61f00",
+    );
   });
 });

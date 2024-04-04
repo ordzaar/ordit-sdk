@@ -1,19 +1,64 @@
 /* eslint-disable no-bitwise */
 
-import bigInt from "big-integer";
-
 import { OrditSDKError } from "../errors";
+import { Network } from "../transactions";
+import {
+  HALVING_INTERVAL,
+  INTERVAL,
+  MAX_STEP,
+  RUNE_NUMBER_STEPS,
+  RuneId,
+} from "./types";
 
-// https://github.com/ordinals/ord/blob/0.16.0/src/runes/rune_id.rs#L20
-export function parseRuneIdToEdictId(id: string): number {
-  const [height, index] = id.split(":");
-  // eslint-disable-next-line
-  const CLAIM_BIT = 1 << 48;
-
-  return (parseInt(height, 10) << 16) | parseInt(index, 10) | CLAIM_BIT;
+function firstRuneHeight(network: Network) {
+  switch (network) {
+    case "mainnet": {
+      return 4n * HALVING_INTERVAL;
+    }
+    case "testnet": {
+      return 12n * HALVING_INTERVAL;
+    }
+    case "regtest": {
+      return 0n * HALVING_INTERVAL;
+    }
+    default:
+      throw new OrditSDKError("Invalid network");
+  }
 }
 
-// https://github.com/ordinals/ord/blob/0.16.0/src/runes/spaced_rune.rs#L12
+// https://github.com/ordinals/ord/blob/0.17.0/crates/ordinals/src/rune.rs#L57
+export function runeNumberMinimumHeight(
+  network: Network,
+  currentHeight: bigint,
+) {
+  // next block height
+  const offset = currentHeight + 1n;
+
+  const startHeight = firstRuneHeight(network);
+  const endHeight = startHeight + HALVING_INTERVAL;
+
+  if (offset < startHeight) {
+    return RUNE_NUMBER_STEPS[Number(MAX_STEP)];
+  }
+
+  if (offset >= endHeight) {
+    return 0n;
+  }
+
+  // how many blocks from the halving
+  const progress = offset - startHeight;
+  const length = 12n - progress / INTERVAL;
+
+  // select the end & start from the steps
+  const end = RUNE_NUMBER_STEPS[Number(length - 1n)];
+  const start = RUNE_NUMBER_STEPS[Number(length)];
+
+  const remainder = progress % INTERVAL;
+
+  return start - ((start - end) * remainder) / INTERVAL;
+}
+
+// https://github.com/ordinals/ord/blob/0.17.0/crates/ordinals/src/spaced_rune.rs#L20
 export function parseToRuneSpacer(rune: string) {
   let runeStr = "";
   let spacers = 0;
@@ -42,41 +87,64 @@ export function parseToRuneSpacer(rune: string) {
   return { runeStr, spacers };
 }
 
-// https://github.com/ordinals/ord/blob/0.16.0/src/runes/varint.rs#L8
+// https://github.com/ordinals/ord/blob/0.17.0/crates/ordinals/src/varint.rs
 // Learn more about variable length integer: https://golb.hplar.ch/2019/06/variable-length-int-java.html
-export function encodeVarint(n: bigint) {
-  const out = Buffer.alloc(19);
-  let i = 18;
-
-  let nBig = bigInt(n);
-
-  out[i] = nBig.and(0b0111_1111).toJSNumber();
-
-  while (nBig.gt(0b0111_1111)) {
-    nBig = nBig.divide(128).subtract(1);
-    i -= 1;
-    out[i] = nBig.and(0xff).or(0b1000_0000).toJSNumber();
+function encodeVarint(num: bigint) {
+  if (num < 0) {
+    throw new OrditSDKError("Number must not be negative");
+  }
+  if (num >= 1n << 128n) {
+    throw new OrditSDKError(`Number must be less than ${1n << 128n}`);
   }
 
-  return out.subarray(i);
+  const arr = [];
+  while (num >> 7n > 0) {
+    arr.push(Number((num & 0b11111111n) | 0b10000000n));
+    // eslint-disable-next-line no-param-reassign
+    num >>= 7n;
+  }
+  arr.push(Number(num));
+
+  return Buffer.from(arr);
 }
 
-// https://github.com/ordinals/ord/blob/0.16.0/src/runes/rune.rs#L125
+// https://github.com/ordinals/ord/blob/0.17.0/crates/ordinals/src/rune.rs#L142
 export function parseRuneStrToNumber(runeStr: string) {
-  let runeNumber = bigInt(0);
+  let runeNumber = 0n;
   for (let i = 0; i < runeStr.length; i += 1) {
     const c = runeStr.charAt(i);
     if (i > 0) {
-      runeNumber = runeNumber.add(1);
+      runeNumber += 1n;
     }
-    runeNumber = runeNumber.multiply(26);
+    runeNumber *= 26n;
     if (c >= "A" && c <= "Z") {
-      runeNumber = runeNumber.add(c.charCodeAt(0) - "A".charCodeAt(0));
+      runeNumber += BigInt(c.charCodeAt(0) - "A".charCodeAt(0));
     } else {
       throw new OrditSDKError(`Invalid character in rune name: ${c}`);
     }
   }
   return BigInt(runeNumber.toString());
+}
+
+// create buffer from bigint
+export function bigintToBuffer(runeNumber: bigint) {
+  const arr = [];
+  while (runeNumber >> 8n > 0) {
+    arr.push(Number(runeNumber & 0b11111111n));
+    // eslint-disable-next-line no-param-reassign
+    runeNumber >>= 8n;
+  }
+  arr.push(Number(runeNumber));
+  return Buffer.from(arr);
+}
+
+export function runeIdFromStr(runeIdStr: string): RuneId {
+  const [block, tx] = runeIdStr.split(":");
+
+  return {
+    block: BigInt(block),
+    tx: parseInt(tx, 10),
+  };
 }
 
 export function pushValue(stacks: number[], value: bigint) {

@@ -1,7 +1,7 @@
 import type { Transaction as BTCTransaction } from "bitcoinjs-lib";
 
 import type { Rarity } from "../inscription/types";
-import type { Transaction, UTXO } from "../transactions/types";
+import type { Transaction, UTXO, UTXOLimited } from "../transactions/types";
 import type { RequireAtLeastOne } from "../utils/types";
 
 export interface GetUnspentsOptions {
@@ -154,117 +154,78 @@ export interface GetSpendablesOptions {
   limit?: number;
 }
 
+export interface GetInfo {
+  id: string;
+  chain: string;
+  status: string;
+  synced: boolean;
+  indexes: {
+    blockchain: number;
+    ordit: number;
+    ord: number;
+  };
+}
+
 export interface GetBalanceOptions {
   address: string;
 }
 
 export interface GetRuneOptions {
-  /**
-   * Rune id or rune name
-   */
   runeQuery: string;
 }
 
-export interface GetRuneMintResponse {
-  /**
-   * Deadline is block deadline
-   */
-  deadline?: number;
-  /**
-   * End
-   */
-  end?: number;
-  /**
-   * Limit per mint
-   */
-  limit?: string;
+export interface GetRuneTerms {
+  amount?: string;
+  cap?: string;
+  height?: [string | null, string | null];
+  offset?: [string | null, string | null];
 }
 
 export interface GetRuneResponse {
-  /**
-   * Rune id
-   */
   rune_id: string;
-  /**
-   * Total burned value
-   */
-  burned?: string;
-  /**
-   * To divided into atomic unit
-   */
-  divisibility: number;
-  /**
-   * The etching tx location
-   */
-  etching: string;
-  /**
-   * Mint information
-   */
-  mint?: GetRuneMintResponse;
-  /**
-   * Total of mints value
-   */
-  mints: string;
-  /**
-   * Rune number
-   */
-  number: string;
-  /**
-   * Rune name
-   */
   rune: string;
-  /**
-   * Rune spacer (rune name bullets map)
-   */
-  rune_spaced: string;
-  /**
-   * Rune spacer (rune name bullets map)
-   */
-  spacers: number;
-  /**
-   * Total current supply
-   */
-  supply: string;
-  /**
-   * Rune coin symbol
-   */
+  spaced_rune: string;
+  mintable: boolean;
+  block: string;
+  divisibility: number;
+  etching: string;
+  mints: string;
+  number: string;
+  premine: string;
+  terms?: GetRuneTerms;
   symbol?: string;
-  /**
-   * Transaction timestamp
-   */
-  timestamp: number;
+  burned?: string;
+  timestamp: string;
 }
 
 export interface GetRuneBalancesOptions {
-  /**
-   * Address to list rune balances
-   */
   address: string;
-  /**
-   * Include outpoints in response
-   */
   showOutpoints?: boolean;
+  utxo?: boolean;
 }
 
 export interface GetRuneBalanceResponse {
-  /**
-   * Rune name
-   */
-  rune_spaced: string;
-  /**
-   * Total balance is the sum of all outputs with the same name.
-   */
+  spaced_rune: string;
   amount: string;
-  /**
-   * To divided into atomic unit
-   */
   divisibility: number;
-  /**
-   * Rune coin symbol
-   */
   symbol?: string;
-  /**
-   * Rune outpoints
-   */
-  outpoints?: [string, string][];
+  outpoints?: {
+    outpoint: string;
+    amount: string;
+    utxo?: UTXOLimited;
+  }[];
+}
+
+export interface GetRuneSpendablesOptions {
+  address: string;
+  spacedRune: string;
+  amount: bigint;
+}
+
+export interface GetRuneSpendablesResponse {
+  utxos: {
+    utxo: UTXOLimited;
+    amount: string;
+  }[];
+  changeAmount: string;
 }

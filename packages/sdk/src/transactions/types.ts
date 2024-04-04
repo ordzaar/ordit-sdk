@@ -25,7 +25,7 @@ export type Vout = {
   /**
    * Inscriptions (Ordit RPC)
    */
-  inscriptions: Inscription[];
+  inscriptions?: Inscription[];
 
   /**
    * Is spent (Ordit RPC), can be Outpoint `{txid}:{vout}`, or `false` if not spent
