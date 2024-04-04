@@ -1,0 +1,13 @@
+{
+  "name": "@ordzaar/ordit-sdk-cli-tests",
+  "private": true,
+  "version": "0.0.0",
+  "description": "CLI SDK tests",
+  "type": "module",
+  "scripts": {},
+  "dependencies": {
+    "@bitcoinerlab/secp256k1": "1.1.1",
+    "bitcoinjs-lib": "6.1.5",
+    "ecpair": "^2.1.0"
+  }
+}
