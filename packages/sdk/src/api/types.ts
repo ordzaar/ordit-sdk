@@ -1,7 +1,7 @@
 import type { Transaction as BTCTransaction } from "bitcoinjs-lib";
 
 import type { Rarity } from "../inscription/types";
-import type { Transaction, UTXO } from "../transactions/types";
+import type { Transaction, UTXO, UTXOLimited } from "../transactions/types";
 import type { RequireAtLeastOne } from "../utils/types";
 
 export interface GetUnspentsOptions {
@@ -154,6 +154,78 @@ export interface GetSpendablesOptions {
   limit?: number;
 }
 
+export interface GetInfo {
+  id: string;
+  chain: string;
+  status: string;
+  synced: boolean;
+  indexes: {
+    blockchain: number;
+    ordit: number;
+    ord: number;
+  };
+}
+
 export interface GetBalanceOptions {
   address: string;
+}
+
+export interface GetRuneOptions {
+  runeQuery: string;
+}
+
+export interface GetRuneTerms {
+  amount?: string;
+  cap?: string;
+  height?: [string | null, string | null];
+  offset?: [string | null, string | null];
+}
+
+export interface GetRuneResponse {
+  rune_id: string;
+  rune: string;
+  spaced_rune: string;
+  mintable: boolean;
+  block: string;
+  divisibility: number;
+  etching: string;
+  mints: string;
+  number: string;
+  premine: string;
+  terms?: GetRuneTerms;
+  symbol?: string;
+  burned?: string;
+  timestamp: string;
+}
+
+export interface GetRuneBalancesOptions {
+  address: string;
+  showOutpoints?: boolean;
+  utxo?: boolean;
+}
+
+export interface GetRuneBalanceResponse {
+  spaced_rune: string;
+  amount: string;
+  divisibility: number;
+  symbol?: string;
+  outpoints?: {
+    outpoint: string;
+    amount: string;
+    utxo?: UTXOLimited;
+  }[];
+}
+
+export interface GetRuneSpendablesOptions {
+  address: string;
+  spacedRune: string;
+  amount: bigint;
+}
+
+export interface GetRuneSpendablesResponse {
+  utxos: {
+    utxo: UTXOLimited;
+    amount: string;
+  }[];
+  changeAmount: string;
 }

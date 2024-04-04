@@ -304,10 +304,19 @@ export class PSBTBuilder extends FeeEstimator {
         injectedIndexes.push(injectable.injectionIndex);
       }
 
-      this.psbt.addOutput({
-        address: output.address,
-        value: output.value,
-      });
+      if ("address" in output) {
+        this.psbt.addOutput({
+          address: output.address,
+          value: output.value,
+        });
+      }
+
+      if ("script" in output) {
+        this.psbt.addOutput({
+          script: output.script,
+          value: output.value,
+        });
+      }
     });
 
     this.injectableOutputs.forEach((injectable) => {

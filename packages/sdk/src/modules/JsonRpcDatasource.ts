@@ -3,9 +3,16 @@ import { Transaction as BTCTransaction } from "bitcoinjs-lib";
 import { rpc } from "../api/jsonrpc";
 import type {
   GetBalanceOptions,
+  GetInfo,
   GetInscriptionOptions,
   GetInscriptionsOptions,
   GetInscriptionUTXOOptions,
+  GetRuneBalanceResponse,
+  GetRuneBalancesOptions,
+  GetRuneOptions,
+  GetRuneResponse,
+  GetRuneSpendablesOptions,
+  GetRuneSpendablesResponse,
   GetSpendablesOptions,
   GetTransactionOptions,
   GetUnspentsOptions,
@@ -15,6 +22,7 @@ import type {
 import type { Network } from "../config/types";
 import { OrditSDKError } from "../errors";
 import type { Inscription } from "../inscription/types";
+import { RuneBalance, RuneDetail, RuneSpendables } from "../runes/types";
 import type { Transaction, UTXO, UTXOLimited } from "../transactions/types";
 import { outpointToIdFormat } from "../utils";
 import { BaseDatasource } from "./BaseDatasource";
@@ -163,9 +171,12 @@ export class JsonRpcDatasource extends BaseDatasource {
 
     tx.vout = tx.vout.map((vout) => ({
       ...vout,
-      inscriptions: DatasourceUtility.parseInscriptions(vout.inscriptions, {
-        decodeMetadata,
-      }),
+      inscriptions: DatasourceUtility.parseInscriptions(
+        vout.inscriptions ? vout.inscriptions : [],
+        {
+          decodeMetadata,
+        },
+      ),
     }));
 
     return {
@@ -229,5 +240,117 @@ export class JsonRpcDatasource extends BaseDatasource {
       { hex, maxFeeRate, validate },
       rpc.id,
     );
+  }
+
+  async getInfo() {
+    return rpc[this.network].call<GetInfo>("GetInfo", rpc.id);
+  }
+
+  async getRune({ runeQuery }: GetRuneOptions): Promise<RuneDetail | null> {
+    if (!runeQuery) {
+      throw new OrditSDKError("Invalid request");
+    }
+
+    // TODO: handle error properly
+    let response: GetRuneResponse;
+    try {
+      response = await rpc[this.network].call<GetRuneResponse>(
+        "Runes.GetRune",
+        { runeQuery },
+        rpc.id,
+      );
+    } catch (error) {
+      return null;
+    }
+    response = response!;
+
+    return {
+      ...response,
+      terms: response.terms
+        ? {
+            amount: response.terms.amount
+              ? BigInt(response.terms.amount)
+              : undefined,
+            cap: response.terms.cap ? BigInt(response.terms.cap) : undefined,
+            height: response.terms.height
+              ? [
+                  response.terms.height[0]
+                    ? BigInt(response.terms.height[0])
+                    : undefined,
+                  response.terms.height[1]
+                    ? BigInt(response.terms.height[1])
+                    : undefined,
+                ]
+              : undefined,
+            offset: response.terms.offset
+              ? [
+                  response.terms.offset[0]
+                    ? BigInt(response.terms.offset[0])
+                    : undefined,
+                  response.terms.offset[1]
+                    ? BigInt(response.terms.offset[1])
+                    : undefined,
+                ]
+              : undefined,
+          }
+        : undefined,
+      block: BigInt(response.block),
+      mints: BigInt(response.mints),
+      number: BigInt(response.number),
+      premine: BigInt(response.premine),
+      burned: response.burned ? BigInt(response.burned) : undefined,
+      timestamp: parseInt(response.timestamp, 10) * 1000,
+    };
+  }
+
+  async getRuneBalances({
+    address,
+    showOutpoints = false,
+  }: GetRuneBalancesOptions): Promise<RuneBalance[]> {
+    if (!address) {
+      throw new OrditSDKError("Invalid request");
+    }
+
+    const response = await rpc[this.network].call<GetRuneBalanceResponse[]>(
+      "Runes.GetBalances",
+      { address, showOutpoints },
+      rpc.id,
+    );
+
+    return response.map((v) => ({
+      ...v,
+      amount: BigInt(v.amount),
+      outpoints: v.outpoints
+        ? v.outpoints.map((x) => ({
+            outpoint: x.outpoint,
+            amount: BigInt(x.amount),
+            utxo: x.utxo,
+          }))
+        : undefined,
+    }));
+  }
+
+  async getRuneSpendables({
+    address,
+    spacedRune,
+    amount,
+  }: GetRuneSpendablesOptions): Promise<RuneSpendables> {
+    if (!(address && spacedRune && amount)) {
+      throw new OrditSDKError("Invalid request");
+    }
+
+    const response = await rpc[this.network].call<GetRuneSpendablesResponse>(
+      "Runes.GetSpendables",
+      { address, spacedRune, amount: amount.toString() },
+      rpc.id,
+    );
+
+    return {
+      utxos: response.utxos.map((v) => ({
+        utxo: v.utxo,
+        amount: BigInt(v.amount),
+      })),
+      changeAmount: BigInt(response.changeAmount),
+    };
   }
 }

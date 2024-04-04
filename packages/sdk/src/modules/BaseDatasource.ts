@@ -1,8 +1,12 @@
 import type {
   GetBalanceOptions,
+  GetInfo,
   GetInscriptionOptions,
   GetInscriptionsOptions,
   GetInscriptionUTXOOptions,
+  GetRuneBalancesOptions,
+  GetRuneOptions,
+  GetRuneSpendablesOptions,
   GetSpendablesOptions,
   GetTransactionOptions,
   GetTransactionResponse,
@@ -12,6 +16,7 @@ import type {
 } from "../api/types";
 import type { Network } from "../config/types";
 import type { Inscription } from "../inscription/types";
+import { RuneBalance, RuneDetail, RuneSpendables } from "../runes/types";
 import type { UTXO, UTXOLimited } from "../transactions/types";
 
 export interface BaseDatasourceOptions {
@@ -117,4 +122,37 @@ export abstract class BaseDatasource {
    * @param options List of options to modify the result provided.
    */
   abstract relay({ hex, maxFeeRate, validate }: RelayOptions): Promise<string>;
+
+  /**
+   * Gets ordit server info.
+   */
+  abstract getInfo(): Promise<GetInfo>;
+
+  /**
+   * Gets a rune detail.
+   *
+   * @param options List of options to modify the result provided.
+   */
+  abstract getRune({ runeQuery }: GetRuneOptions): Promise<RuneDetail | null>;
+
+  /**
+   * Gets rune balances, this balances are sum of multiple address' outputs.
+   *
+   * @param options List of options to modify the result provided.
+   */
+  abstract getRuneBalances({
+    address,
+    showOutpoints,
+  }: GetRuneBalancesOptions): Promise<RuneBalance[]>;
+
+  /**
+   * Gets a list of all rune spendable utxos under the given address.
+   *
+   * @param options List of options to modify the result provided.
+   */
+  abstract getRuneSpendables({
+    address,
+    spacedRune,
+    amount,
+  }: GetRuneSpendablesOptions): Promise<RuneSpendables>;
 }

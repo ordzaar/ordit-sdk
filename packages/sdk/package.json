@@ -57,6 +57,7 @@
   "dependencies": {
     "@bitcoinerlab/secp256k1": "1.1.1",
     "@wallet-standard/core": "^1.0.3",
+    "big-integer": "^1.6.52",
     "bignumber.js": "9.1.2",
     "bip32": "4.0.0",
     "bip39": "3.1.0",

@@ -30,7 +30,7 @@ export type BufferOrHex = RequireAtLeastOne<
 
 export interface IsBitcoinPaymentResponse {
   type: AddressType;
-  payload: false | Payment;
+  payload: false | Payment | (number | Buffer)[];
 }
 
 export interface GetScriptTypeResponse extends IsBitcoinPaymentResponse {

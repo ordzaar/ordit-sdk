@@ -11,6 +11,12 @@ describe("addresses", () => {
 
     const INVALID_ADDRESS_ERROR = new OrditSDKError("Invalid address");
 
+    // op_return rune value
+    // {
+    //   rune: "BAKSO.SEMARANG",
+    //   symbol: "B",
+    //   divisibility: 0,
+    // };
     const ADDRESSES: Record<Network, Record<AddressFormat, string>> = {
       [MAINNET]: {
         legacy: "17VZNX1SN5NtKa8UQFxwQbFeFc3iqRYhem",
@@ -19,6 +25,7 @@ describe("addresses", () => {
         taproot:
           "bc1p5d7rjq7g6rdk2yhzks9smlaqtedr4dekq08ge8ztwac72sfr9rusxg3297",
         p2wsh: "bc1qrp33g0q5c5txsp9arysrx4k6zdkfs4nce4xj0gdcccefvpysxf3qccfmv3",
+        op_return: "6a0952554e455f544553541002030481dbbeeffe91fbfe5603100542",
       },
       [TESTNET]: {
         legacy: "mipcBbFg9gMiCh81Kj8tqqdgoZub1ZJRfn",
@@ -27,6 +34,7 @@ describe("addresses", () => {
         taproot:
           "tb1p3gqcaq2xs0qzm5wvkht64xppcz9h5k0q2q97kf6n80gu7v037dksatsuhz",
         p2wsh: "tb1qrp33g0q5c5txsp9arysrx4k6zdkfs4nce4xj0gdcccefvpysxf3q0sl5k7",
+        op_return: "6a0952554e455f544553541002030481dbbeeffe91fbfe5603100542",
       },
       [REGTEST]: {
         legacy: "mipcBbFg9gMiCh81Kj8tqqdgoZub1ZJRfn",
@@ -36,6 +44,7 @@ describe("addresses", () => {
           "bcrt1p0xlxvlhemja6c4dqv22uapctqupfhlxm9h8z3k2e72q4k9hcz7vqc8gma6",
         p2wsh:
           "bcrt1qpj7ehqa8q585n3srsl7a5njfjemd2nagdak5qflswkxd9c7fakxqgg545v",
+        op_return: "6a0952554e455f544553541002030481dbbeeffe91fbfe5603100542",
       },
     };
 
