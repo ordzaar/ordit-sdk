@@ -165,8 +165,8 @@ importers:
         specifier: ^20.11.23
         version: 20.11.23
       happy-dom:
-        specifier: ^13.7.8
-        version: 13.7.8
+        specifier: ^13.10.1
+        version: 13.10.1
       vite-plugin-dts:
         specifier: 3.7.3
         version: 3.7.3(@types/node@20.11.23)(typescript@5.4.5)(vite@5.1.7)
@@ -7810,8 +7810,8 @@ packages:
     resolution: {integrity: sha512-9Qn4yBxelxoh2Ow62nP+Ka/kMnOXRi8BXnRaUwezLNhqelnN49xKz4F/dPP8OYLxLxq6JDtZb2i9XznUQbNPTg==}
     dev: false
 
-  /happy-dom@13.7.8:
-    resolution: {integrity: sha512-dnvgCiPPfXXts+AW1DVAoDa9nPmI48YPHUv34L6pmjv2lwNZte8OwsK9SajEXENfibS8uo1zG7xJwlW/NXlDxQ==}
+  /happy-dom@13.10.1:
+    resolution: {integrity: sha512-9GZLEFvQL5EgfJX2zcBgu1nsPUn98JF/EiJnSfQbdxI6YEQGqpd09lXXxOmYonRBIEFz9JlGCOiPflDzgS1p8w==}
     engines: {node: '>=16.0.0'}
     dependencies:
       entities: 4.5.0
