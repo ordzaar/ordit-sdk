@@ -24,9 +24,9 @@
     "rimraf": "^5.0.5",
     "semver": "^7.6.0",
     "turbo": "^1.13.2",
-    "typescript": "^5.4.2",
-    "vite": "^5.2.8",
-    "vitest": "^1.4.0"
+    "typescript": "^5.4.5",
+    "vite": "5.1.7",
+    "vitest": "1.4.0"
   },
   "lint-staged": {
     "*": "prettier --write --ignore-unknown"
