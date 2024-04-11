@@ -113,8 +113,8 @@ importers:
         specifier: ^1.4.15
         version: 1.4.15(typescript@5.4.5)
       '@tsconfig/docusaurus':
-        specifier: ^2.0.2
-        version: 2.0.2
+        specifier: ^2.0.3
+        version: 2.0.3
 
   packages/sdk:
     dependencies:
@@ -3641,8 +3641,8 @@ packages:
     engines: {node: '>=10.13.0'}
     dev: false
 
-  /@tsconfig/docusaurus@2.0.2:
-    resolution: {integrity: sha512-12HWfYmgUl4M2o76/TFufGtI68wl2k/b8qPrIrG7ci9YJLrpAtadpy897Bz5v29Mlkr7a1Hq4KHdQTKtU+2rhQ==}
+  /@tsconfig/docusaurus@2.0.3:
+    resolution: {integrity: sha512-3l1L5PzWVa7l0691TjnsZ0yOIEwG9DziSqu5IPZPlI5Dowi7z42cEym8Y35GHbgHvPcBfNxfrbxm7Cncn4nByQ==}
     dev: true
 
   /@types/acorn@4.0.6:
