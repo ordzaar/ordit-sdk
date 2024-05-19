@@ -3,6 +3,7 @@ declare interface Window {
   LeatherProvider: LeatherProvider;
   ethereum: MetaMask;
   okxwallet: OKXWallet;
+  wizz: Wizz;
 }
 
 type UnisatNetwork = "livenet" | "testnet";
@@ -23,6 +24,57 @@ type Unisat = {
     message: string,
     type: MessageSignatureTypes,
   ) => Promise<string>;
+};
+
+type Wizz = {
+  getAccounts: () => Promise<string[]>;
+  requestAccounts(): Promise<string[]>;
+  getNetwork(): Promise<NetworkType>;
+  getPublicKey(): Promise<string>;
+  getInscriptions(
+    cursor?: number,
+    size?: number,
+  ): Promise<InscriptionsResponse>;
+  getInscriptionsByAddress(
+    address: string,
+    cursor?: number,
+    size?: number,
+  ): Promise<InscriptionsResponse>;
+  signMessage(
+    message: string,
+    type?: string | SignMessageType,
+  ): Promise<string>;
+  signPsbt(psbtHex: string, options?: SignOptions): Promise<string>;
+  signPsbts(psbtHexs: string[], options?: SignOptions): Promise<string[]>;
+  getVersion(): Promise<string>;
+  getBalance(): Promise<BalanceSummary>;
+  getAssets(): Promise<WalletAssetBalance>;
+  switchNetwork(network: NetworkType): Promise<NetworkType>;
+  sendBitcoin(
+    toAddress: string,
+    satoshis: number,
+    options?: {
+      feeRate?: number;
+    },
+  ): Promise<string>;
+  sendARC20(
+    toAddress: string,
+    arc20: string,
+    satoshis: number,
+    options?: {
+      feeRate: number;
+    },
+  ): Promise<string>;
+  sendAtomicals(
+    toAddress: string,
+    atomicalIds: string[],
+    options?: {
+      feeRate: number;
+    },
+  ): Promise<string>;
+  requestMint(params: RequestMintParams): Promise<void>;
+  pushTx({ rawtx }: { rawtx: string }): Promise<string>;
+  pushPsbt(psbt: string): Promise<string>;
 };
 
 interface BtcKitRequestFn {
