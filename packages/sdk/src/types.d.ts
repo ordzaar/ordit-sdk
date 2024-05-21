@@ -7,6 +7,7 @@ declare interface Window {
 }
 
 type UnisatNetwork = "livenet" | "testnet";
+type WizzNetwork = "livenet" | "testnet";
 
 type MessageSignatureTypes = "bip322-simple" | "ecdsa";
 
