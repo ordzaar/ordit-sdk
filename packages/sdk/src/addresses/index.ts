@@ -37,7 +37,12 @@ export function getAddressFormat(
     return getAddressFormatForRegTest(address);
   }
 
-  if (!validate(address, network as NetworkEnum)) {
+  if (
+    !validate(
+      address,
+      (network === "signet" ? "testnet" : network) as NetworkEnum,
+    )
+  ) {
     throw new OrditSDKError("Invalid address");
   }
 

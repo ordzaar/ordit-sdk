@@ -33,6 +33,9 @@ export function getNetwork(value: Network) {
   if (value === "mainnet") {
     return networks.bitcoin;
   }
+  if (value === "signet") {
+    return networks.testnet;
+  }
 
   return networks[value];
 }
