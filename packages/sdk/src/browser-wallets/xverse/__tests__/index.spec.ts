@@ -155,7 +155,7 @@ describe("Xverse Wallet", () => {
       expect(getAddresses("testnet")).resolves.toEqual(mockData);
     });
 
-    test("should return address from signet", () => {
+    test("should throw error on signet", () => {
       vi.stubGlobal("window", {
         XverseProviders: {
           BitcoinProvider: {},
