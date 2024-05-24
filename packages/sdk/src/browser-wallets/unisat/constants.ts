@@ -1,7 +1,7 @@
 import type { BrowserWalletNetwork } from "../../config/types";
 
 export const NETWORK_TO_UNISAT_NETWORK: Record<
-  BrowserWalletNetwork,
+  Extract<BrowserWalletNetwork, "mainnet" | "testnet">,
   UnisatNetwork
 > = {
   mainnet: "livenet",

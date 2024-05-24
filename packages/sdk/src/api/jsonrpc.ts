@@ -115,5 +115,6 @@ export const rpc = {
   },
   mainnet: new JsonRpc(getRpcUrl(API_CONFIG.apis.mainnet.batter)),
   testnet: new JsonRpc(getRpcUrl(API_CONFIG.apis.testnet.batter)),
+  signet: new JsonRpc(getRpcUrl(API_CONFIG.apis.signet.batter)),
   regtest: new JsonRpc(getRpcUrl(API_CONFIG.apis.regtest.batter)),
 } as const;

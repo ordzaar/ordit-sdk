@@ -67,6 +67,7 @@ type OKXWalletProvider = {
 type OKXWallet = {
   bitcoin: OKXWalletProvider;
   bitcoinTestnet: OKXWalletProvider;
+  bitcoinSignet: OKXWalletProvider;
 };
 
 declare module "buffer-reverse" {

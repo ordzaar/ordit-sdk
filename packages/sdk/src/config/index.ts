@@ -10,5 +10,8 @@ export const API_CONFIG = {
     testnet: {
       batter: "https://testnet.ordit.io/",
     },
+    signet: {
+      batter: "https://signet.ordit.io/",
+    },
   },
 };

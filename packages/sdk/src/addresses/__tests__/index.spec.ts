@@ -8,6 +8,7 @@ describe("addresses", () => {
     const MAINNET = "mainnet";
     const TESTNET = "testnet";
     const REGTEST = "regtest";
+    const SIGNET = "signet";
 
     const INVALID_ADDRESS_ERROR = new OrditSDKError("Invalid address");
 
@@ -21,6 +22,14 @@ describe("addresses", () => {
         p2wsh: "bc1qrp33g0q5c5txsp9arysrx4k6zdkfs4nce4xj0gdcccefvpysxf3qccfmv3",
       },
       [TESTNET]: {
+        legacy: "mipcBbFg9gMiCh81Kj8tqqdgoZub1ZJRfn",
+        "p2sh-p2wpkh": "2MzQwSSnBHWHqSAqtTVQ6v47XtaisrJa1Vc",
+        segwit: "tb1qw508d6qejxtdg4y5r3zarvary0c5xw7kxpjzsx",
+        taproot:
+          "tb1p3gqcaq2xs0qzm5wvkht64xppcz9h5k0q2q97kf6n80gu7v037dksatsuhz",
+        p2wsh: "tb1qrp33g0q5c5txsp9arysrx4k6zdkfs4nce4xj0gdcccefvpysxf3q0sl5k7",
+      },
+      [SIGNET]: {
         legacy: "mipcBbFg9gMiCh81Kj8tqqdgoZub1ZJRfn",
         "p2sh-p2wpkh": "2MzQwSSnBHWHqSAqtTVQ6v47XtaisrJa1Vc",
         segwit: "tb1qw508d6qejxtdg4y5r3zarvary0c5xw7kxpjzsx",
@@ -103,6 +112,31 @@ describe("addresses", () => {
       ).not.toThrowError(INVALID_ADDRESS_ERROR);
       expect(() =>
         getAddressFormat(ADDRESSES[TESTNET]["p2sh-p2wpkh"], network),
+      ).not.toThrowError(INVALID_ADDRESS_ERROR);
+    });
+
+    test("should return correct address format for signet", () => {
+      const network = SIGNET;
+      expect(getAddressFormat(ADDRESSES[network].legacy, network)).toBe(
+        "legacy",
+      );
+      expect(getAddressFormat(ADDRESSES[network]["p2sh-p2wpkh"], network)).toBe(
+        "p2sh-p2wpkh",
+      );
+      expect(getAddressFormat(ADDRESSES[network].segwit, network)).toBe(
+        "segwit",
+      );
+      expect(getAddressFormat(ADDRESSES[network].taproot, network)).toBe(
+        "taproot",
+      );
+      expect(getAddressFormat(ADDRESSES[network].p2wsh, network)).toBe("p2wsh");
+
+      // non-bech32 addresses from regtest will work on testnet/signet
+      expect(() =>
+        getAddressFormat(ADDRESSES[REGTEST].legacy, network),
+      ).not.toThrowError(INVALID_ADDRESS_ERROR);
+      expect(() =>
+        getAddressFormat(ADDRESSES[REGTEST]["p2sh-p2wpkh"], network),
       ).not.toThrowError(INVALID_ADDRESS_ERROR);
     });
 

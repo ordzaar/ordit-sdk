@@ -146,6 +146,62 @@ describe("Leather Wallet", () => {
       expect(getAddresses(network)).resolves.toEqual(resolvedValue);
     });
 
+    test("should return address from signet", () => {
+      const mockData = {
+        jsonrpc: "2.0",
+        id: "20b0fcf3-ad9a-4f32-8d7f-b6db6fb96207",
+        result: {
+          addresses: [
+            {
+              symbol: "BTC",
+              type: "p2wpkh",
+              address: "tb1qy89jvaya2dzfuagxl7h59pytjs74kxudslux25",
+              publicKey:
+                "0238427342c868536e9c181caf674d242ab8a3e381ee36692ba375e0b315234180",
+              derivationPath: "m/84'/1'/0'/0/0",
+            },
+            {
+              symbol: "BTC",
+              type: "p2tr",
+              address:
+                "tb1pgftv8z8re72kttnyt85k2ae6andngar4c59hasv2kp04kgmmgnnqmxg8uy",
+              publicKey:
+                "023ded01d3e800b07278c5bbc5deee1f3493ebd599ae843936d81a42625a5cfb84",
+              tweakedPublicKey:
+                "3ded01d3e800b07278c5bbc5deee1f3493ebd599ae843936d81a42625a5cfb84",
+              derivationPath: "m/86'/1'/0'/0/0",
+            },
+            {
+              symbol: "STX",
+              address: "ST3TJ35J2T3NCAD471DCN2MB0502Z2TVNPZHN1NEG",
+            },
+          ],
+        },
+      };
+      const network = "signet";
+
+      const resolvedValue = [
+        {
+          publicKey:
+            "0238427342c868536e9c181caf674d242ab8a3e381ee36692ba375e0b315234180",
+          address: "tb1qy89jvaya2dzfuagxl7h59pytjs74kxudslux25",
+          format: "segwit",
+        },
+        {
+          publicKey:
+            "023ded01d3e800b07278c5bbc5deee1f3493ebd599ae843936d81a42625a5cfb84",
+          address:
+            "tb1pgftv8z8re72kttnyt85k2ae6andngar4c59hasv2kp04kgmmgnnqmxg8uy",
+          format: "taproot",
+        },
+      ];
+
+      vi.stubGlobal("LeatherProvider", {
+        request: vi.fn().mockResolvedValue(mockData),
+      });
+      expect(getAddresses(network)).resolves.toEqual(resolvedValue);
+    });
+
     test("should return error when the network mismatch", () => {
       const mockData = {
         jsonrpc: "2.0",

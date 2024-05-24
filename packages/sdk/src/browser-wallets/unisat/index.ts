@@ -42,6 +42,9 @@ async function getAddresses(
   network: BrowserWalletNetwork = "mainnet",
   readOnly?: boolean,
 ): Promise<WalletAddress[]> {
+  if (network === "signet") {
+    throw new OrditSDKError("signet network is not supported");
+  }
   if (!isInstalled()) {
     throw new BrowserWalletNotInstalledError("Unisat not installed");
   }
