@@ -29,16 +29,16 @@ function getOKXWalletProvider(
     throw new BrowserWalletNotInstalledError("OKX Wallet not installed.");
   }
 
-  const provider =
-    network === "mainnet"
-      ? window.okxwallet.bitcoin
-      : window.okxwallet.bitcoinTestnet;
-
-  if (!provider) {
-    throw new OrditSDKError("Failed to get OKX Wallet provider.");
+  switch (network) {
+    case "mainnet":
+      return window.okxwallet.bitcoin;
+    case "testnet":
+      return window.okxwallet.bitcoinTestnet;
+    case "signet":
+      return window.okxwallet.bitcoinSignet;
+    default:
+      throw new OrditSDKError("Failed to get OKX Wallet provider.");
   }
-
-  return provider;
 }
 
 async function getAddresses(

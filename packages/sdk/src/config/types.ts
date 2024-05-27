@@ -1,3 +1,6 @@
-export type Network = "mainnet" | "testnet" | "regtest";
+export type Network = "mainnet" | "testnet" | "regtest" | "signet";
 
-export type BrowserWalletNetwork = Extract<Network, "mainnet" | "testnet">;
+export type BrowserWalletNetwork = Extract<
+  Network,
+  "mainnet" | "testnet" | "signet"
+>;

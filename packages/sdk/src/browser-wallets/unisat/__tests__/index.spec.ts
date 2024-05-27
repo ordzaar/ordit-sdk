@@ -76,6 +76,12 @@ describe("Unisat Wallet", () => {
       expect(getAddresses("testnet")).resolves.toEqual([mockData]);
     });
 
+    test("should return error from signet", () => {
+      expect(getAddresses("signet")).rejects.toThrowError(
+        "signet network is not supported",
+      );
+    });
+
     test("should throw error when user rejects or cancels request", () => {
       const mockData: WalletAddress = {
         publicKey:

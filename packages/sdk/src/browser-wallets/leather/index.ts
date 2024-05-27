@@ -47,7 +47,12 @@ async function getAddresses(
 
   // Hacky validation: there's no parameter to specify the network value when getting the address.
   // TODO: Remove this if the wallet already supports that parameter.
-  if (getNetworkByAddress(addresses[0].address) !== network) {
+  const derivedNetwork = getNetworkByAddress(addresses[0].address);
+
+  if (
+    (network !== "signet" && derivedNetwork !== network) ||
+    (network === "signet" && derivedNetwork !== "testnet") // error if network is signet but derived network is not testnet (signet has same address format as testnet)
+  ) {
     throw new BrowserWalletNetworkMismatchError(
       "Leather network mismatch, please switch it manually",
     );

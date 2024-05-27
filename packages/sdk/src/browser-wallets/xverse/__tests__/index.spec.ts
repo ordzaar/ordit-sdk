@@ -155,6 +155,17 @@ describe("Xverse Wallet", () => {
       expect(getAddresses("testnet")).resolves.toEqual(mockData);
     });
 
+    test("should throw error on signet", () => {
+      vi.stubGlobal("window", {
+        XverseProviders: {
+          BitcoinProvider: {},
+        },
+      });
+      expect(getAddresses("signet")).rejects.toThrowError(
+        "signet network is not supported",
+      );
+    });
+
     test("should throw error on user cancel", () => {
       vi.stubGlobal("window", {
         XverseProviders: {

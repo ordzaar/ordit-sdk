@@ -81,6 +81,28 @@ describe("OKX Wallet", () => {
       expect(getAddresses(network)).resolves.toEqual([mockData]);
     });
 
+    test("should return address from signet", () => {
+      const mockData: WalletAddress = {
+        publicKey:
+          "0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798",
+        address: "tb1qw508d6qejxtdg4y5r3zarvary0c5xw7kxpjzsx",
+        format: "segwit",
+      };
+      const mockXOnlyPubKey =
+        "79be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798";
+      const network = "signet";
+
+      vi.stubGlobal("okxwallet", {
+        bitcoinSignet: {
+          connect: vi.fn().mockResolvedValue({
+            address: mockData.address,
+            publicKey: mockXOnlyPubKey,
+          }),
+        },
+      });
+      expect(getAddresses(network)).resolves.toEqual([mockData]);
+    });
+
     test("should throw error when user rejects or cancels request", () => {
       const mockData: WalletAddress = {
         publicKey:

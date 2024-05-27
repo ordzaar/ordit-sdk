@@ -86,6 +86,7 @@ describe("PSBTBuilder", () => {
       mainnet: mockJsonRpc,
       testnet: mockJsonRpc,
       regtest: mockJsonRpc,
+      signet: mockJsonRpc,
     };
     afterAll(() => {
       vi.resetAllMocks();
