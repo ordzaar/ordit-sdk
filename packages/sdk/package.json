@@ -61,17 +61,17 @@
     "bip32": "4.0.0",
     "bip39": "3.1.0",
     "bitcoin-address-validation": "2.2.3",
-    "bitcoinjs-lib": "6.1.5",
+    "bitcoinjs-lib": "6.1.6",
     "bitcoinjs-message": "2.2.0",
     "buffer-reverse": "1.0.1",
     "cross-fetch": "4.0.0",
     "ecpair": "2.1.0",
-    "ethers": "6.11.1",
-    "sats-connect": "1.4.1"
+    "ethers": "6.13.1",
+    "sats-connect": "2.5.0"
   },
   "devDependencies": {
     "@ordzaar/standard-typescript": "^1.8.0",
-    "@types/node": "^20.11.23",
+    "@types/node": "^20.14.10",
     "happy-dom": "^13.10.1",
     "vite-plugin-dts": "3.7.3",
     "vite-plugin-eslint": "^1.8.1",
