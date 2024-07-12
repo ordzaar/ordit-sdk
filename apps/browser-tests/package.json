@@ -18,8 +18,8 @@
     "react-dom": "^18.2.0"
   },
   "devDependencies": {
-    "@ordzaar/standard-web": "^1.4.15",
-    "@ordzaar/standard-web-linter": "^1.4.15",
+    "@ordzaar/standard-web": "^1.8.0",
+    "@ordzaar/standard-web-linter": "^1.8.0",
     "@types/react": "^18.2.75",
     "@types/react-dom": "^18.2.24",
     "@vitejs/plugin-react": "^4.2.1",
