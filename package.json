@@ -19,20 +19,21 @@
   "devDependencies": {
     "@ordzaar/standard-linter": "^1.8.0",
     "@ordzaar/standard-typescript": "^1.8.0",
-    "@vitest/coverage-v8": "^1.4.0",
+    "@vitest/coverage-v8": "^2.0.2",
     "husky": "^9.0.11",
-    "rimraf": "^5.0.5",
-    "semver": "^7.6.0",
-    "turbo": "^1.13.2",
-    "typescript": "^5.4.5",
+    "rimraf": "^6.0.1",
+    "semver": "^7.6.2",
+    "turbo": "^2.0.6",
+    "typescript": "^5.5.3",
     "vite": "5.1.7",
-    "vitest": "1.4.0"
+    "vitest": "2.0.2"
   },
   "lint-staged": {
     "*": "prettier --write --ignore-unknown"
   },
   "engines": {
     "node": ">=18.0.0",
-    "pnpm": ">=8.15.8"
-  }
+    "pnpm": ">=9.5.0"
+  },
+  "packageManager": "pnpm@9.5.0"
 }

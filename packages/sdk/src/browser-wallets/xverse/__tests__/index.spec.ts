@@ -77,12 +77,14 @@ describe("Xverse Wallet", () => {
             publicKey:
               "b9907521ddb85e0e6a37622b7c685efbdc8ae53a334928adbd12cf204ad4e717",
             purpose: satsConnect.AddressPurpose.Ordinals,
+            addressType: satsConnect.AddressType.p2tr,
           },
           {
             address: "bc1qar0srrr7xfkvy5l643lydnw9re59gtzzwf5mdq",
             publicKey:
               "0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798",
             purpose: satsConnect.AddressPurpose.Payment,
+            addressType: satsConnect.AddressType.p2wpkh,
           },
         ],
       };
@@ -129,12 +131,14 @@ describe("Xverse Wallet", () => {
             publicKey:
               "b9907521ddb85e0e6a37622b7c685efbdc8ae53a334928adbd12cf204ad4e717",
             purpose: satsConnect.AddressPurpose.Ordinals,
+            addressType: satsConnect.AddressType.p2tr,
           },
           {
             address: "tb1qw508d6qejxtdg4y5r3zarvary0c5xw7kxpjzsx",
             publicKey:
               "0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798",
             purpose: satsConnect.AddressPurpose.Payment,
+            addressType: satsConnect.AddressType.p2wpkh,
           },
         ],
       };
