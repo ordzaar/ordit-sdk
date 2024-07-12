@@ -137,8 +137,8 @@ importers:
         specifier: 2.2.3
         version: 2.2.3
       bitcoinjs-lib:
-        specifier: 6.1.5
-        version: 6.1.5
+        specifier: 6.1.6
+        version: 6.1.6
       bitcoinjs-message:
         specifier: 2.2.0
         version: 2.2.0
@@ -2426,8 +2426,8 @@ packages:
   bitcoin-address-validation@2.2.3:
     resolution: {integrity: sha512-1uGCGl26Ye8JG5qcExtFLQfuib6qEZWNDo1ZlLlwp/z7ygUFby3IxolgEfgMGaC+LG9csbVASLcH8fRLv7DIOg==}
 
-  bitcoinjs-lib@6.1.5:
-    resolution: {integrity: sha512-yuf6xs9QX/E8LWE2aMJPNd0IxGofwfuVOiYdNUESkc+2bHHVKjhJd8qewqapeoolh9fihzHGoDCB5Vkr57RZCQ==}
+  bitcoinjs-lib@6.1.6:
+    resolution: {integrity: sha512-Fk8+Vc+e2rMoDU5gXkW9tD+313rhkm5h6N9HfZxXvYU9LedttVvmXKTgd9k5rsQJjkSfsv6XRM8uhJv94SrvcA==}
     engines: {node: '>=8.0.0'}
 
   bitcoinjs-message@2.2.0:
@@ -10171,7 +10171,7 @@ snapshots:
       bech32: 2.0.0
       sha256-uint8array: 0.10.7
 
-  bitcoinjs-lib@6.1.5:
+  bitcoinjs-lib@6.1.6:
     dependencies:
       '@noble/hashes': 1.3.3
       bech32: 2.0.0

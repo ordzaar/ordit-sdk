@@ -61,7 +61,7 @@
     "bip32": "4.0.0",
     "bip39": "3.1.0",
     "bitcoin-address-validation": "2.2.3",
-    "bitcoinjs-lib": "6.1.5",
+    "bitcoinjs-lib": "6.1.6",
     "bitcoinjs-message": "2.2.0",
     "buffer-reverse": "1.0.1",
     "cross-fetch": "4.0.0",
