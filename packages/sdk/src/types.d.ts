@@ -47,6 +47,7 @@ type OKXSignInput = {
   index: number;
   address?: string;
   publicKey?: string;
+  sighashTypes?: number[];
 };
 
 type OKXWalletProvider = {

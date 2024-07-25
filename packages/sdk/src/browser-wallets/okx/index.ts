@@ -106,11 +106,12 @@ async function signPsbt(
   const toSignInputs: OKXSignInput[] = [];
 
   inputsToSign.forEach((input) => {
-    const { address, signingIndexes } = input;
+    const { address, signingIndexes, sigHash } = input;
     signingIndexes.forEach((index) => {
       toSignInputs.push({
         index,
         address,
+        sighashTypes: sigHash ? [sigHash] : undefined,
       });
     });
   });
