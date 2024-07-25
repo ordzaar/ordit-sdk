@@ -155,8 +155,8 @@ importers:
         specifier: 6.13.1
         version: 6.13.1
       sats-connect:
-        specifier: 2.5.0
-        version: 2.5.0(typescript@5.5.3)(valibot@0.33.2)
+        specifier: 2.6.0
+        version: 2.6.0(typescript@5.5.3)(valibot@0.33.2)
     devDependencies:
       '@ordzaar/standard-typescript':
         specifier: ^1.8.3
@@ -1622,8 +1622,8 @@ packages:
   '@rushstack/ts-command-line@4.17.1':
     resolution: {integrity: sha512-2jweO1O57BYP5qdBGl6apJLB+aRIn5ccIRTPDyULh0KMwVzFqWtw6IZWt1qtUoZD/pD2RNkIOosH6Cq45rIYeg==}
 
-  '@sats-connect/core@0.0.15':
-    resolution: {integrity: sha512-f+s+uM4BnjLs+I8AHp4Tf4GG8kMLGn44RalNZqlo/OkTeZj+llQEsMEwfKkIM8f45gA3jSWqmn4q/LsjMpWlVw==}
+  '@sats-connect/core@0.1.2':
+    resolution: {integrity: sha512-SM8U7Bcp5PdtAXw0CNFP3QloU0/xMSupH0FOw65YzWGSklFRoQBq+YCrCZ/shB7fIg1wPFgEFvY5MLQjANl+gw==}
     peerDependencies:
       valibot: 0.33.2
 
@@ -6032,8 +6032,8 @@ packages:
   safer-buffer@2.1.2:
     resolution: {integrity: sha512-YZo3K82SD7Riyi0E1EQPojLz7kpepnSQI9IyPbHHg1XXXevb5dJI7tpyN2ADxGcQbHG7vcyRHk0cbwqcQriUtg==}
 
-  sats-connect@2.5.0:
-    resolution: {integrity: sha512-oyKQMH07dvXv/UCUlbHWoLsfycnDgsyipyaUovnFBsG85t1jF6wlXcGDPwiD8fIUmplDD6UmHlyAfCL8ai5b3w==}
+  sats-connect@2.6.0:
+    resolution: {integrity: sha512-/GPlLMQqdx5/vmsVQ8kkAKnyOLoAvOHO6i53nSmeD94CrsktgMa3xHFkE5ShDgb+1U2CmTajBm0TFJSwFLLIdg==}
 
   sax@1.3.0:
     resolution: {integrity: sha512-0s+oAmw9zLl1V1cS9BtZN7JAd0cW5e0QH4W3LWEK6a4LaLEA2OTpGYWDY+6XasBLtz6wkm3u1xRw95mRuJ59WA==}
@@ -9187,7 +9187,7 @@ snapshots:
       colors: 1.2.5
       string-argv: 0.3.2
 
-  '@sats-connect/core@0.0.15(valibot@0.33.2)':
+  '@sats-connect/core@0.1.2(valibot@0.33.2)':
     dependencies:
       axios: 1.6.8
       bitcoin-address-validation: 2.2.3
@@ -9198,9 +9198,9 @@ snapshots:
     transitivePeerDependencies:
       - debug
 
-  '@sats-connect/make-default-provider-config@0.0.5(@sats-connect/core@0.0.15(valibot@0.33.2))(typescript@5.5.3)':
+  '@sats-connect/make-default-provider-config@0.0.5(@sats-connect/core@0.1.2(valibot@0.33.2))(typescript@5.5.3)':
     dependencies:
-      '@sats-connect/core': 0.0.15(valibot@0.33.2)
+      '@sats-connect/core': 0.1.2(valibot@0.33.2)
       '@sats-connect/ui': 0.0.6
       bowser: 2.11.0
       typescript: 5.5.3
@@ -14670,10 +14670,10 @@ snapshots:
 
   safer-buffer@2.1.2: {}
 
-  sats-connect@2.5.0(typescript@5.5.3)(valibot@0.33.2):
+  sats-connect@2.6.0(typescript@5.5.3)(valibot@0.33.2):
     dependencies:
-      '@sats-connect/core': 0.0.15(valibot@0.33.2)
-      '@sats-connect/make-default-provider-config': 0.0.5(@sats-connect/core@0.0.15(valibot@0.33.2))(typescript@5.5.3)
+      '@sats-connect/core': 0.1.2(valibot@0.33.2)
+      '@sats-connect/make-default-provider-config': 0.0.5(@sats-connect/core@0.1.2(valibot@0.33.2))(typescript@5.5.3)
       '@sats-connect/ui': 0.0.6
     transitivePeerDependencies:
       - debug
