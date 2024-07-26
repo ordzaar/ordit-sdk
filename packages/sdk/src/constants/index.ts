@@ -1,6 +1,5 @@
 import * as ecc from "@bitcoinerlab/secp256k1";
 import { BIP32Factory } from "bip32";
-import { Buffer } from "buffer";
 
 /**
  * Amount lower than this is considered as dust value
