@@ -1,5 +1,4 @@
 import { Psbt } from "bitcoinjs-lib";
-import { Buffer } from "buffer";
 
 import type { Network } from "../config/types";
 import { MAXIMUM_FEE } from "../constants";

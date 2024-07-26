@@ -1,5 +1,3 @@
-import { Buffer } from "buffer";
-
 import type { AddressFormat } from "../addresses/types";
 import type { Network } from "../config/types";
 import { BIP32, CHAIN_CODE } from "../constants";

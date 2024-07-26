@@ -12,7 +12,6 @@ import {
   Signer,
   Transaction,
 } from "bitcoinjs-lib";
-import { Buffer } from "buffer";
 import ECPairFactory, { ECPairInterface } from "ecpair";
 
 import { ADDRESS_TYPE_TO_FORMAT } from "../addresses/constants";
