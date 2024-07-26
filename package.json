@@ -20,7 +20,7 @@
     "@ordzaar/standard-linter": "^1.8.3",
     "@ordzaar/standard-typescript": "^1.8.3",
     "@vitest/coverage-v8": "^2.0.4",
-    "husky": "^9.0.11",
+    "husky": "^9.1.2",
     "rimraf": "^6.0.1",
     "semver": "^7.6.2",
     "turbo": "^2.0.9",
