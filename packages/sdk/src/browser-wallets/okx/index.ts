@@ -26,26 +26,36 @@ function getOKXWalletProvider(
   network: BrowserWalletNetwork = "mainnet",
 ): OKXWalletProvider {
   if (!isInstalled()) {
-    throw new BrowserWalletNotInstalledError("OKX Wallet not installed.");
+    throw new BrowserWalletNotInstalledError("OKX Wallet not installed");
   }
 
+  let provider: OKXWalletProvider;
   switch (network) {
     case "mainnet":
-      return window.okxwallet.bitcoin;
+      provider = window.okxwallet.bitcoin;
+      break;
     case "testnet":
-      return window.okxwallet.bitcoinTestnet;
+      provider = window.okxwallet.bitcoinTestnet;
+      break;
     case "signet":
-      return window.okxwallet.bitcoinSignet;
+      provider = window.okxwallet.bitcoinSignet;
+      break;
     default:
-      throw new OrditSDKError("Failed to get OKX Wallet provider.");
+      throw new OrditSDKError("Invalid network");
   }
+
+  if (!provider) {
+    throw new OrditSDKError("Failed to get OKX Wallet provider");
+  }
+
+  return provider;
 }
 
 async function getAddresses(
   network: BrowserWalletNetwork = "mainnet",
 ): Promise<WalletAddress[]> {
   if (!isInstalled()) {
-    throw new BrowserWalletNotInstalledError("OKX Wallet not installed.");
+    throw new BrowserWalletNotInstalledError("OKX Wallet not installed");
   }
 
   const provider = getOKXWalletProvider(network);
@@ -57,7 +67,7 @@ async function getAddresses(
     const fullPubKey = fromXOnlyToFullPubkey(publicKey);
 
     if (!address || !fullPubKey || !format) {
-      throw new OrditSDKError("Failed to get addresses from OKX Wallet.");
+      throw new OrditSDKError("Failed to get addresses from OKX Wallet");
     }
 
     return [
@@ -90,7 +100,7 @@ async function signPsbt(
   }: OKXSignPSBTOptions = { network: "mainnet", inputsToSign: [] },
 ): Promise<BrowserWalletSignResponse> {
   if (!isInstalled()) {
-    throw new BrowserWalletNotInstalledError("OKX Wallet not installed.");
+    throw new BrowserWalletNotInstalledError("OKX Wallet not installed");
   }
 
   if (extractTx && !finalize) {
@@ -166,7 +176,7 @@ async function signMessage(
   network: BrowserWalletNetwork = "mainnet",
 ): Promise<BrowserWalletSignResponse> {
   if (!isInstalled()) {
-    throw new BrowserWalletNotInstalledError("OKX Wallet not installed.");
+    throw new BrowserWalletNotInstalledError("OKX Wallet not installed");
   }
 
   const provider = getOKXWalletProvider(network);
