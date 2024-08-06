@@ -22,6 +22,9 @@ describe("OKX Wallet", () => {
   };
   const CANCELLED_BY_USER_ERROR =
     new BrowserWalletRequestCancelledByUserError();
+  const OKX_BITCOIN_PROVIDER_ERROR = new OrditSDKError(
+    "Failed to get OKX Wallet provider",
+  );
 
   describe("isInstalled", () => {
     test("should return true if installed", () => {
@@ -103,13 +106,16 @@ describe("OKX Wallet", () => {
       expect(getAddresses(network)).resolves.toEqual([mockData]);
     });
 
+    test("should throw error if okxwallet exists but bitcoin provider does not exist", () => {
+      const network = "testnet";
+
+      vi.stubGlobal("okxwallet", {});
+      expect(getAddresses(network)).rejects.toThrowError(
+        OKX_BITCOIN_PROVIDER_ERROR,
+      );
+    });
+
     test("should throw error when user rejects or cancels request", () => {
-      const mockData: WalletAddress = {
-        publicKey:
-          "0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798",
-        address: "tb1qw508d6qejxtdg4y5r3zarvary0c5xw7kxpjzsx",
-        format: "segwit",
-      };
       const network = "testnet";
 
       vi.stubGlobal("okxwallet", {
@@ -281,6 +287,14 @@ describe("OKX Wallet", () => {
       await expect(() => signPsbt(psbt)).rejects.toThrowError(SIGN_PSBT_ERROR);
     });
 
+    test("should throw error if okxwallet exists but bitcoin provider does not exist", async () => {
+      vi.stubGlobal("okxwallet", {});
+      const psbt = new Psbt({ network: networks.bitcoin });
+      await expect(() => signPsbt(psbt)).rejects.toThrowError(
+        OKX_BITCOIN_PROVIDER_ERROR,
+      );
+    });
+
     test("should throw an error when user rejects or cancels request", async () => {
       vi.stubGlobal("okxwallet", {
         bitcoin: {
@@ -328,6 +342,13 @@ describe("OKX Wallet", () => {
       await expect(() =>
         signMessage("abcdefghijk123456789"),
       ).rejects.toThrowError(SIGN_MESSAGE_ERROR);
+    });
+
+    test("should throw error if okxwallet exists but bitcoin provider does not exist", async () => {
+      vi.stubGlobal("okxwallet", {});
+      await expect(() =>
+        signMessage("abcdefghijk123456789"),
+      ).rejects.toThrowError(OKX_BITCOIN_PROVIDER_ERROR);
     });
 
     test("should throw an error when user rejects or cancels request", async () => {
