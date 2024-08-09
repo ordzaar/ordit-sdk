@@ -51,9 +51,9 @@ async function getMagicEdenWalletProvider(): Promise<MagicEdenBitcoinProvider> {
 }
 
 /**
- * Checks if the MagicEden Wallet extension is installed.
+ * Checks if the Magic Eden Wallet extension is installed.
  *
- * @returns `true` if installed, `false` otherwise.
+ * @returns `true` if installed, `false` otherwise
  * @throws {OrditSDKError} Function is called outside a browser without `window` object
  */
 async function isInstalled(): Promise<boolean> {
@@ -74,6 +74,16 @@ async function isInstalled(): Promise<boolean> {
   }
 }
 
+/**
+ * Gets addresses from Magic Eden Wallet.
+ *
+ * @param network Network: Magic Eden Wallet only supports mainnet
+ * @returns An array of WalletAddress objects
+ * @throws {BrowserWalletNotInstalledError} Magic Eden Wallet is not installed
+ * @throws {BrowserWalletNetworkMismatchError} Magic Eden Wallet is used outside of mainnet
+ * @throws {BrowserWalletSigningError} Failed to sign with Magic Eden Wallet
+ * @throws {BrowserWalletRequestCancelledByUserError} Request was cancelled by user
+ */
 async function getAddresses(
   network: BrowserWalletNetwork = "mainnet",
 ): Promise<WalletAddress[]> {
@@ -92,6 +102,20 @@ async function getAddresses(
   return satsConnectWalletGetAddresses(getMagicEdenWalletProvider, network);
 }
 
+/**
+ * Signs a Partially Signed Bitcoin Transaction (PSBT).
+ * To learn more, visit https://github.com/bitcoin/bitcoin/blob/master/doc/psbt.md
+ *
+ * @param psbt Partially Signed Bitcoin Transaction
+ * @param options Options for signing
+ * @returns An object containing `base64` and `hex` if the transaction is not extracted, or `hex` if the transaction is extracted
+ * @throws {BrowserWalletNotInstalledError} Magic Eden Wallet is not installed
+ * @throws {BrowserWalletNetworkMismatchError} Magic Eden Wallet is used outside of mainnet
+ * @throws {BrowserWalletExtractTxFromNonFinalizedPsbtError} Failed to extract transaction as not all inputs are finalized
+ * @throws {BrowserWalletSigningError} Failed to sign with Magic Eden Wallet
+ * @throws {OrditSDKError} Invalid options provided
+ * @throws {BrowserWalletRequestCancelledByUserError} Request was cancelled by user
+ */
 async function signPsbt(
   psbt: Psbt,
   {
@@ -121,6 +145,19 @@ async function signPsbt(
   });
 }
 
+/**
+ * Signs a message.
+ *
+ * @param message Message to be signed
+ * @param address Address to sign with
+ * @param network Network: Magic Eden Wallet only supports mainnet
+ * @returns An object containing `base64` and `hex`
+ * @throws {BrowserWalletNotInstalledError} Magic Eden Wallet is not installed
+ * @throws {BrowserWalletNetworkMismatchError} Magic Eden Wallet is used outside of mainnet
+ * @throws {BrowserWalletSigningError} Failed to sign with Magic Eden Wallet
+ * @throws {OrditSDKError} Invalid options provided
+ * @throws {BrowserWalletRequestCancelledByUserError} Request was cancelled by user
+ */
 async function signMessage(
   message: string,
   address: string,
@@ -146,4 +183,10 @@ async function signMessage(
   );
 }
 
-export { getAddresses, isInstalled, signMessage, signPsbt };
+export {
+  getAddresses,
+  getMagicEdenWalletProvider,
+  isInstalled,
+  signMessage,
+  signPsbt,
+};

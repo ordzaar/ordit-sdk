@@ -1,4 +1,6 @@
 // @vitest-environment happy-dom
+import * as walletStandardCore from "@wallet-standard/core";
+import { Wallet, Wallets } from "@wallet-standard/core";
 import type {
   GetAddressOptions,
   GetAddressResponse,
@@ -14,7 +16,14 @@ import {
 } from "../../../errors";
 import { createMockPsbt } from "../../../fee/__tests__/utils";
 import { WalletAddress } from "../../types";
-import { getAddresses, isInstalled, signMessage, signPsbt } from "..";
+import {
+  getAddresses,
+  getMagicEdenWalletProvider,
+  isInstalled,
+  MagicEdenBitcoinProvider,
+  signMessage,
+  signPsbt,
+} from "..";
 
 vi.mock("sats-connect", async (originalImport) => {
   const mod = (await originalImport()) as typeof satsConnect;
@@ -24,25 +33,115 @@ vi.mock("sats-connect", async (originalImport) => {
   };
 });
 
-describe("Xverse Wallet", () => {
+vi.mock("@wallet-standard/core", async (originalImport) => {
+  const mod = (await originalImport()) as typeof walletStandardCore;
+  return {
+    __esModule: true,
+    ...mod,
+  };
+});
+
+describe("Magic Eden Wallet", () => {
   afterEach(() => {
     vi.unstubAllGlobals();
   });
 
+  beforeEach(() => {
+    const mockWalletsResponse: Wallets = {
+      get: () =>
+        [
+          {
+            name: "Magic Eden",
+            features: {
+              "sats-connect:": {
+                provider: {},
+              },
+            },
+            version: "1.0.0",
+            icon: "data:image/svg+xml;base64,magiceden-wallet.svg",
+            chains: [],
+            accounts: [],
+          },
+        ] as Wallet[],
+      on: () => () => {},
+      register: () => () => {},
+    } as Wallets;
+
+    const getWalletSpy = vi.spyOn(walletStandardCore, "getWallets");
+
+    getWalletSpy.mockImplementation(() => mockWalletsResponse);
+  });
+
+  describe("getMagicEdenWalletProvider", () => {
+    test("should return Magic Eden wallet provider", async () => {
+      const mockMagicEdenWalletProvider = {
+        isMagicEden: true,
+      } as MagicEdenBitcoinProvider;
+
+      const mockWalletsResponse: Wallets = {
+        get: () =>
+          [
+            {
+              name: "Magic Eden",
+              features: {
+                "sats-connect:": {
+                  provider: mockMagicEdenWalletProvider,
+                },
+              },
+              version: "1.0.0",
+              icon: "data:image/svg+xml;base64,magiceden-wallet.svg",
+              chains: [],
+              accounts: [],
+            },
+          ] as Wallet[],
+        on: () => () => {},
+        register: () => () => {},
+      } as Wallets;
+
+      const getWalletSpy = vi.spyOn(walletStandardCore, "getWallets");
+
+      getWalletSpy.mockImplementation(() => mockWalletsResponse);
+
+      const magicEdenWalletProvider = await getMagicEdenWalletProvider();
+      expect(magicEdenWalletProvider).toEqual(mockMagicEdenWalletProvider);
+    });
+
+    test("should throw error if Magic Eden wallet is not installed", async () => {
+      const mockEmptyWalletsResponse: Wallets = {
+        get: () => [] as Wallet[],
+        on: () => () => {},
+        register: () => () => {},
+      } as Wallets;
+
+      const getWalletSpy = vi.spyOn(walletStandardCore, "getWallets");
+
+      getWalletSpy.mockImplementation(() => mockEmptyWalletsResponse);
+
+      await expect(getMagicEdenWalletProvider()).rejects.toThrowError(
+        "Magic Eden Wallet not installed.",
+      );
+    });
+  });
+
   describe("isInstalled", () => {
     test("should return true if installed", () => {
-      vi.stubGlobal("window", {
-        XverseProviders: {
-          BitcoinProvider: {},
-        },
-      });
-      expect(typeof window.XverseProviders).not.toBeUndefined();
+      expect(typeof window.BitcoinProvider).not.toBeUndefined();
       expect(isInstalled()).toBeTruthy();
     });
 
     test("should return false if not installed", () => {
+      const mockEmptyWalletsResponse: Wallets = {
+        get: () => [] as Wallet[],
+        on: () => () => {},
+        register: () => () => {},
+      } as Wallets;
+
+      const getWalletSpy = vi.spyOn(walletStandardCore, "getWallets");
+
+      getWalletSpy.mockImplementation(() => mockEmptyWalletsResponse);
+
       expect(typeof window).not.toBeUndefined();
-      expect(isInstalled()).toBeFalsy();
+      expect(isInstalled()).resolves.toBeFalsy();
     });
   });
 
@@ -63,10 +162,10 @@ describe("Xverse Wallet", () => {
         },
         {
           // https://bitcoin.design/guide/glossary/address/
-          address: "3J98t1WpEZ73CNmQviecrnyiWrnqRhWNLy",
+          address: "bc1qar0srrr7xfkvy5l643lydnw9re59gtzzwf5mdq",
           publicKey:
             "0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798",
-          format: "p2sh-p2wpkh",
+          format: "segwit",
         },
       ];
       const mockResponse: GetAddressResponse = {
@@ -77,23 +176,15 @@ describe("Xverse Wallet", () => {
             publicKey:
               "b9907521ddb85e0e6a37622b7c685efbdc8ae53a334928adbd12cf204ad4e717",
             purpose: satsConnect.AddressPurpose.Ordinals,
-            addressType: satsConnect.AddressType.p2tr,
           },
           {
-            address: "3J98t1WpEZ73CNmQviecrnyiWrnqRhWNLy",
+            address: "bc1qar0srrr7xfkvy5l643lydnw9re59gtzzwf5mdq",
             publicKey:
               "0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798",
             purpose: satsConnect.AddressPurpose.Payment,
-            addressType: satsConnect.AddressType.p2wpkh,
           },
         ],
       };
-
-      vi.stubGlobal("window", {
-        XverseProviders: {
-          BitcoinProvider: {},
-        },
-      });
 
       const getAddressSpy = vi.spyOn(satsConnect, "getAddress");
 
@@ -105,78 +196,12 @@ describe("Xverse Wallet", () => {
       expect(getAddresses("mainnet")).resolves.toEqual(mockData);
     });
 
-    test("should return address from testnet", () => {
-      const mockData: WalletAddress[] = [
-        {
-          // Random address from testnet faucet
-          address:
-            "tb1pd692twjx8xwq5v7c0u2ltuwx60ef6r5hmrjfef3j5zkekdpq0dpq7cc0wy",
-          publicKey:
-            "02b9907521ddb85e0e6a37622b7c685efbdc8ae53a334928adbd12cf204ad4e717",
-          format: "taproot",
-        },
-        {
-          // https://allprivatekeys.com/bitcoin-address-format
-          address: "tb1qw508d6qejxtdg4y5r3zarvary0c5xw7kxpjzsx",
-          publicKey:
-            "0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798",
-          format: "segwit",
-        },
-      ];
-      const mockResponse: GetAddressResponse = {
-        addresses: [
-          {
-            address:
-              "tb1pd692twjx8xwq5v7c0u2ltuwx60ef6r5hmrjfef3j5zkekdpq0dpq7cc0wy",
-            publicKey:
-              "b9907521ddb85e0e6a37622b7c685efbdc8ae53a334928adbd12cf204ad4e717",
-            purpose: satsConnect.AddressPurpose.Ordinals,
-            addressType: satsConnect.AddressType.p2tr,
-          },
-          {
-            address: "tb1qw508d6qejxtdg4y5r3zarvary0c5xw7kxpjzsx",
-            publicKey:
-              "0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798",
-            purpose: satsConnect.AddressPurpose.Payment,
-            addressType: satsConnect.AddressType.p2wpkh,
-          },
-        ],
-      };
-
-      vi.stubGlobal("window", {
-        XverseProviders: {
-          BitcoinProvider: {},
-        },
-      });
-
-      const getAddressSpy = vi.spyOn(satsConnect, "getAddress");
-
-      getAddressSpy.mockImplementation((options: GetAddressOptions) => {
-        options.onFinish(mockResponse);
-        return Promise.resolve();
-      });
+    test("should throw error on testnet", () => {
       expect(typeof window).not.toBeUndefined();
-      expect(getAddresses("testnet")).resolves.toEqual(mockData);
-    });
-
-    test("should throw error on signet", () => {
-      vi.stubGlobal("window", {
-        XverseProviders: {
-          BitcoinProvider: {},
-        },
-      });
-      expect(getAddresses("signet")).rejects.toThrowError(
-        "signet network is not supported",
-      );
+      expect(getAddresses("testnet")).rejects.toThrowError();
     });
 
     test("should throw error on user cancel", () => {
-      vi.stubGlobal("window", {
-        XverseProviders: {
-          BitcoinProvider: {},
-        },
-      });
-
       const getAddressSpy = vi.spyOn(satsConnect, "getAddress");
 
       getAddressSpy.mockImplementation((options: GetAddressOptions) => {
@@ -198,14 +223,6 @@ describe("Xverse Wallet", () => {
 
     afterEach(() => {
       vi.resetAllMocks();
-    });
-
-    beforeEach(() => {
-      vi.stubGlobal("window", {
-        XverseProviders: {
-          BitcoinProvider: {},
-        },
-      });
     });
 
     test("should sign a psbt with finalize and extractTx set to true when options is not defined", async () => {
@@ -459,14 +476,6 @@ describe("Xverse Wallet", () => {
 
     afterEach(() => {
       vi.resetAllMocks();
-    });
-
-    beforeEach(() => {
-      vi.stubGlobal("window", {
-        XverseProviders: {
-          BitcoinProvider: {},
-        },
-      });
     });
 
     test("should sign a message", async () => {
