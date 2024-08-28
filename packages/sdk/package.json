@@ -59,6 +59,7 @@
     "@wallet-standard/core": "^1.0.3",
     "bignumber.js": "9.1.2",
     "bip32": "4.0.0",
+    "bip322-js": "^2.0.0",
     "bip39": "3.1.0",
     "bitcoin-address-validation": "2.2.3",
     "bitcoinjs-lib": "6.1.5",

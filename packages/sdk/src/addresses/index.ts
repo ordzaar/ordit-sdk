@@ -7,9 +7,21 @@ import {
 import type { Network } from "../config/types";
 import { BIP32, CHAIN_CODE } from "../constants";
 import { OrditSDKError } from "../errors";
-import { createPayment, getNetwork } from "../utils";
-import { ADDRESS_TYPE_TO_FORMAT } from "./constants";
-import type { Address, AddressFormat, AddressType } from "./types";
+import {
+  createPayment,
+  getDerivationPath,
+  getNetwork,
+  toXOnly,
+} from "../utils";
+import { ADDRESS_FORMAT_TO_TYPE, ADDRESS_TYPE_TO_FORMAT } from "./constants";
+import type {
+  Account,
+  Address,
+  AddressFormat,
+  AddressType,
+  GetAccountDataFromHdNodeOptions,
+  GetAllAccountsFromHDNodeOptions,
+} from "./types";
 
 function getAddressFormatForRegTest(address: string): AddressFormat {
   try {
@@ -115,6 +127,75 @@ export function getNetworkByAddress(address: string): Network {
   } catch {
     throw new OrditSDKError("Invalid address");
   }
+}
+
+export function getAccountDataFromHdNode({
+  hdNode,
+  format = "legacy",
+  network = "testnet",
+  account = 0,
+  addressIndex = 0,
+}: GetAccountDataFromHdNodeOptions) {
+  if (!hdNode) {
+    throw new Error("Invalid options provided.");
+  }
+
+  const addressType = ADDRESS_FORMAT_TO_TYPE[format];
+
+  const fullDerivationPath = getDerivationPath(format, account, addressIndex);
+  const child = hdNode.derivePath(fullDerivationPath);
+
+  const pubKey =
+    format === "taproot" ? toXOnly(child.publicKey) : child.publicKey;
+  const paymentObj = createPayment(pubKey, addressType, network);
+
+  const address = paymentObj.address!;
+
+  const accountData: Account = {
+    address,
+    publicKey: child.publicKey.toString("hex"),
+    priv: child.privateKey!.toString("hex"),
+    format,
+    type: addressType,
+    derivationPath: {
+      account,
+      addressIndex,
+      path: fullDerivationPath,
+    },
+    child,
+  };
+
+  if (format === "taproot") {
+    accountData.xKey = toXOnly(child.publicKey).toString("hex");
+  }
+
+  return accountData;
+}
+
+export function getAllAccountsFromHdNode({
+  hdNode,
+  network = "testnet",
+  account = 0,
+  addressIndex = 0,
+}: GetAllAccountsFromHDNodeOptions) {
+  const accounts: Account[] = [];
+  const addressTypesList = Object.values(
+    ADDRESS_TYPE_TO_FORMAT,
+  ) as AddressFormat[];
+
+  addressTypesList.forEach((addrType) => {
+    const walletAccount = getAccountDataFromHdNode({
+      hdNode,
+      format: addrType,
+      network,
+      account,
+      addressIndex,
+    });
+
+    accounts.push(walletAccount);
+  });
+
+  return accounts;
 }
 
 export * from "./constants";
