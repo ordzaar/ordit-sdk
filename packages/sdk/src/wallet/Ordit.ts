@@ -163,7 +163,7 @@ export class Ordit {
     },
   ) {
     if (this.selectedAddressType === type) return;
-    let addressToSelect: Account;
+    let addressToSelect: Account | null;
 
     const account = this.getAddressByType(type, {
       accountIndex,
@@ -171,8 +171,7 @@ export class Ordit {
     }) as Account;
     if (!account) {
       addressToSelect = this.generateAddress(type, accountIndex, addressIndex);
-      // Push to current list of addresses
-      this.allAddresses.push(addressToSelect);
+      if (addressToSelect) this.allAddresses.push(addressToSelect);
     } else {
       addressToSelect = account;
     }
@@ -300,7 +299,6 @@ export class Ordit {
       }
     }
 
-    // TODO: check if psbt has been signed
     if (finalize) {
       psbt.finalizeAllInputs();
     }

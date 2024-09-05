@@ -68,6 +68,29 @@ export function createPayment(
   return payments[type]({ pubkey: key, network: networkObj });
 }
 
+export function deriveAddress(
+  pubkey: Buffer,
+  format: string,
+  network: Network,
+) {
+  const net = getNetwork(network);
+  switch (format) {
+    case "legacy":
+      return payments.p2pkh({ pubkey, network: net }).address;
+    case "p2sh-p2wpkh":
+      return payments.p2sh({
+        redeem: payments.p2wpkh({ pubkey, network: net }),
+        network: net,
+      }).address;
+    case "segwit":
+      return payments.p2wpkh({ pubkey, network: net }).address;
+    case "taproot":
+      return payments.p2tr({ pubkey, network: net }).address;
+    default:
+      throw new Error(`Unsupported format: ${format}`);
+  }
+}
+
 export function getDerivationPath(
   formatType: AddressFormat,
   account = 0,

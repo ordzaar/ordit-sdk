@@ -139,10 +139,15 @@ export function getAccountDataFromHdNode({
   if (!hdNode) {
     throw new Error("Invalid options provided.");
   }
+  if (format === "p2wsh") {
+    // p2wsh not supported
+    return null;
+  }
 
   const addressType = ADDRESS_FORMAT_TO_TYPE[format];
 
   const fullDerivationPath = getDerivationPath(format, account, addressIndex);
+
   const child = hdNode.derivePath(fullDerivationPath);
 
   const pubKey =
@@ -192,7 +197,9 @@ export function getAllAccountsFromHdNode({
       addressIndex,
     });
 
-    accounts.push(walletAccount);
+    if (walletAccount) {
+      accounts.push(walletAccount);
+    }
   });
 
   return accounts;
