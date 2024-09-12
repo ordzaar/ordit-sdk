@@ -8,7 +8,7 @@ import {
 } from "../../../errors";
 import { WalletAddress } from "../../types";
 import { getAddresses, isInstalled, signMessage, signPsbt } from "..";
-import { NETWORK_TO_UNISAT_NETWORK } from "../constants";
+import { CHAIN_TO_UNISAT_CHAIN, NETWORK_TO_UNISAT_NETWORK } from "../constants";
 
 describe("Unisat Wallet", () => {
   afterEach(() => {
@@ -79,6 +79,72 @@ describe("Unisat Wallet", () => {
     test("should return error from signet", () => {
       expect(getAddresses("signet")).rejects.toThrowError(
         "signet network is not supported",
+      );
+    });
+
+    test("should return address from fractal bitcoin mainnet", () => {
+      const mockData: WalletAddress = {
+        publicKey:
+          "0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798",
+        address: "bc1qw508d6qejxtdg4y5r3zarvary0c5xw7kv8f3t4",
+        format: "segwit",
+      };
+      const chain = "fractal-bitcoin";
+      const network = "mainnet";
+
+      vi.stubGlobal("unisat", {
+        getChain: vi
+          .fn()
+          .mockResolvedValue(CHAIN_TO_UNISAT_CHAIN[chain][network]),
+        requestAccounts: vi.fn().mockResolvedValue([mockData.address]),
+        getPublicKey: vi.fn().mockResolvedValue(mockData.publicKey),
+      });
+      expect(getAddresses(network, chain)).resolves.toEqual([mockData]);
+    });
+
+    test("should return address from fractal bitcoin testnet", () => {
+      const mockData: WalletAddress = {
+        publicKey:
+          "0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798",
+        address: "tb1qw508d6qejxtdg4y5r3zarvary0c5xw7kxpjzsx",
+        format: "segwit",
+      };
+      const chain = "fractal-bitcoin";
+      const network = "testnet";
+
+      vi.stubGlobal("unisat", {
+        getChain: vi
+          .fn()
+          .mockResolvedValue(CHAIN_TO_UNISAT_CHAIN[chain][network]),
+        requestAccounts: vi.fn().mockResolvedValue([mockData.address]),
+        getPublicKey: vi.fn().mockResolvedValue(mockData.publicKey),
+      });
+      expect(getAddresses(network, chain)).resolves.toEqual([mockData]);
+    });
+
+    test("should throw error if fractal bitcoin is not supported", () => {
+      const mockData: WalletAddress = {
+        publicKey:
+          "0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798",
+        address: "tb1qw508d6qejxtdg4y5r3zarvary0c5xw7kxpjzsx",
+        format: "segwit",
+      };
+      const network = "testnet";
+      const chain = "fractal-bitcoin";
+      const FRACTAL_BITCOIN_UNSUPPORTED_ERROR = new OrditSDKError(
+        "Fractal bitcoin is only supported on Unisat extension >= 1.4.0",
+      );
+
+      vi.stubGlobal("unisat", {
+        getNetwork: vi
+          .fn()
+          .mockResolvedValue(NETWORK_TO_UNISAT_NETWORK[network]),
+        requestAccounts: vi.fn().mockResolvedValue([mockData.address]),
+        getPublicKey: vi.fn().mockResolvedValue(mockData.publicKey),
+      });
+
+      expect(getAddresses(network, chain)).rejects.toThrowError(
+        FRACTAL_BITCOIN_UNSUPPORTED_ERROR,
       );
     });
 
@@ -168,8 +234,6 @@ describe("Unisat Wallet", () => {
       vi.stubGlobal("unisat", {
         signPsbt: MOCK_SIGN_PSBT,
       });
-      const EXTRACTION_TRANSACTION_NON_FINALIZED_PSBT_ERROR =
-        new BrowserWalletExtractTxFromNonFinalizedPsbtError();
       const psbt = new Psbt({ network: networks.bitcoin });
       const signedPsbtResponse = await signPsbt(psbt, {
         finalize: false,

@@ -1,7 +1,7 @@
 import { Psbt } from "bitcoinjs-lib";
 
 import { getAddressFormat } from "../../addresses";
-import type { BrowserWalletNetwork } from "../../config/types";
+import type { BrowserWalletNetwork, Chain } from "../../config/types";
 import {
   BrowserWalletExtractTxFromNonFinalizedPsbtError,
   BrowserWalletNotInstalledError,
@@ -10,8 +10,8 @@ import {
   OrditSDKError,
 } from "../../errors";
 import type { BrowserWalletSignResponse, WalletAddress } from "../types";
-import { NETWORK_TO_UNISAT_NETWORK } from "./constants";
-import type { UnisatSignPSBTOptions } from "./types";
+import { CHAIN_TO_UNISAT_CHAIN, NETWORK_TO_UNISAT_NETWORK } from "./constants";
+import type { UnisatGetAddressesOptions, UnisatSignPSBTOptions } from "./types";
 
 type UnisatError = { code?: number; message: string };
 
@@ -32,7 +32,8 @@ function isInstalled() {
  * Gets addresses from the browser wallet.
  *
  * @param network Network
- * @param readOnly Read only (when set to true, the wallet modal appears)
+ * @param chain Chain
+ * @param options.readOnly Read only (when set to true, the wallet modal appears)
  * @returns An array of WalletAddress objects.
  * @throws {BrowserWalletNotInstalledError} Wallet is not installed
  * @throws {BrowserWalletRequestCancelledByUserError} Request was cancelled by user
@@ -40,8 +41,11 @@ function isInstalled() {
  */
 async function getAddresses(
   network: BrowserWalletNetwork = "mainnet",
-  readOnly?: boolean,
+  chain: Chain = "bitcoin",
+  options: UnisatGetAddressesOptions = {},
 ): Promise<WalletAddress[]> {
+  const { readOnly = false } = options;
+
   if (network === "signet") {
     throw new OrditSDKError("signet network is not supported");
   }
@@ -49,10 +53,24 @@ async function getAddresses(
     throw new BrowserWalletNotInstalledError("Unisat not installed");
   }
   try {
-    const connectedNetwork = await window.unisat.getNetwork();
-    const targetNetwork = NETWORK_TO_UNISAT_NETWORK[network];
-    if (connectedNetwork !== targetNetwork) {
-      await window.unisat.switchNetwork(targetNetwork);
+    if (typeof window.unisat.getChain === "undefined") {
+      if (chain === "fractal-bitcoin") {
+        throw new OrditSDKError(
+          "Fractal bitcoin is only supported on Unisat extension >= 1.4.0",
+        );
+      }
+      const connectedNetwork = await window.unisat.getNetwork();
+      const targetNetwork = NETWORK_TO_UNISAT_NETWORK[network];
+      if (connectedNetwork !== targetNetwork) {
+        await window.unisat.switchNetwork(targetNetwork);
+      }
+    } else {
+      const connectedChain = await window.unisat.getChain();
+
+      const targetChain = CHAIN_TO_UNISAT_CHAIN[chain][network];
+      if (connectedChain !== targetChain) {
+        await window.unisat.switchChain(targetChain);
+      }
     }
 
     const accounts = readOnly
@@ -80,7 +98,7 @@ async function getAddresses(
 
     // Unisat does not use Error object prototype
     const unisatError = err as UnisatError;
-    if (unisatError?.code === 4001) {
+    if (unisatError.code === 4001) {
       throw new BrowserWalletRequestCancelledByUserError();
     }
     throw new OrditSDKError(unisatError.message);
@@ -119,7 +137,7 @@ async function signPsbt(
   } catch (err) {
     // Unisat does not use Error object prototype
     const unisatError = err as UnisatError;
-    if (unisatError?.code === 4001) {
+    if (unisatError.code === 4001) {
       throw new BrowserWalletRequestCancelledByUserError();
     }
   }
@@ -176,7 +194,7 @@ async function signMessage(
   } catch (err) {
     // Unisat does not use Error object prototype
     const unisatError = err as UnisatError;
-    if (unisatError?.code === 4001) {
+    if (unisatError.code === 4001) {
       throw new BrowserWalletRequestCancelledByUserError();
     }
   }
