@@ -11,6 +11,9 @@ Browser Wallets supports the following wallets:
 
 - [Unisat](https://unisat.io/)
 - [Xverse](https://www.xverse.app/)
+- [Magic Eden](https://wallet.magiceden.io/)
+- [Leather](https://leather.io/install-extension)
+- [OKX](https://www.okx.com/web3/)
 
 ## Connecting to Browser Wallets
 
@@ -38,6 +41,42 @@ import {
   signPsbt,
   signMessage,
 } from "@ordzaar/ordit-sdk/xverse";
+```
+
+  </TabItem>
+  <TabItem value="Magic Eden">
+
+```js
+import {
+  isInstalled,
+  getAddresses,
+  signPsbt,
+  signMessage,
+} from "@ordzaar/ordit-sdk/magiceden";
+```
+
+  </TabItem>
+  <TabItem value="Leather">
+
+```js
+import {
+  isInstalled,
+  getAddresses,
+  signPsbt,
+  signMessage,
+} from "@ordzaar/ordit-sdk/leather";
+```
+
+  </TabItem>
+  <TabItem value="OKX">
+
+```js
+import {
+  isInstalled,
+  getAddresses,
+  signPsbt,
+  signMessage,
+} from "@ordzaar/ordit-sdk/okx";
 ```
 
   </TabItem>
@@ -94,14 +133,16 @@ Indicates whether the browser wallet extension is installed.
 
 ### getAddresses
 
-`getAddresses([network, readOnly])`
+`getAddresses([network[, chain, options]])`
 
 Gets a list of addresses for the browser wallet if authorized.
 
 **Parameters**:
 
 - `network` : `"mainnet" | "testnet"` (defaults to `mainnet`) - Network
-- `readOnly` : boolean (defaults to `false`) - Read only (when set to true, the wallet modal appears)
+- `chain` : `"bitcoin" | "fractal-bitcoin"` (defaults to `bitcoin`) - Chain
+- `options` : `object` (optional)
+  - `readOnly` : `boolean` (defaults to `false`) - Read only. When set to `true`, the wallet modal appears for Unisat.
 
 **Returns**: `Promise<WalletAddress[]>`
 
@@ -133,7 +174,7 @@ Signs a Partially Signed Bitcoin Transaction (PSBT) and returns a signature.
 **Parameters**:
 
 - `psbt` : `string` - hex or base64 format
-- `options` : `object` (optional for Unisat)
+- `options` : `object` (optional)
   - `extractTx` : Extract transaction (defaults to `true`)
   - `finalize` : Finalize signing (defaults to `true`)
   - `network` (for Xverse only) : `"mainnet" | "testnet"` (defaults to `mainnet`)
@@ -178,7 +219,7 @@ Sample input (for Xverse):
 
 ### signMessage
 
-`signMessage(message[, type])`
+`signMessage(message[, address, network, type])`
 
 Signs a message and returns a signature.
 
