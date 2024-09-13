@@ -82,7 +82,7 @@ async function getAddresses(
     if (!address) {
       return [];
     }
-    const format = getAddressFormat(address, network);
+    const format = getAddressFormat(address, network, chain);
     return [
       {
         publicKey,

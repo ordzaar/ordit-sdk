@@ -10,6 +10,7 @@ import { RadioInput } from "./components/RadioInput";
 import { Select } from "./components/Select";
 
 type WalletProvider = "unisat" | "xverse" | "magiceden" | "leather";
+type Chain = "bitcoin" | "fractal-bitcoin";
 
 const TESTNET = "testnet" as const;
 // const MAINNET = "mainnet" as const;
@@ -261,13 +262,14 @@ function Transactions({
 
 function App() {
   const [provider, setProvider] = useState<WalletProvider>("unisat");
+  const [chain, setChain] = useState<Chain>("bitcoin");
   const [connectedAddresses, setConnectedAddresses] = useState<
     Address[] | undefined
   >();
 
   const handleConnect = useCallback(async () => {
     if (provider === "unisat") {
-      const addresses = await unisat.getAddresses(network);
+      const addresses = await unisat.getAddresses(network, chain);
       console.log("Unisat Connected: ", addresses);
       setConnectedAddresses(addresses);
     } else if (provider === "xverse") {
@@ -289,7 +291,7 @@ function App() {
     } else {
       console.log("Unknown provider", provider);
     }
-  }, [provider]);
+  }, [chain, provider]);
 
   const handleDisconnect = useCallback(async () => {
     setConnectedAddresses(undefined);
@@ -297,8 +299,8 @@ function App() {
 
   return (
     <div>
-      <p>Connect wallet to run tests.</p>
-      <h1>Select Provider</h1>
+      <h1>Connect wallet to run tests</h1>
+      <p>Provider</p>
       <RadioInput
         name="provider"
         onChange={(option) =>
@@ -314,7 +316,20 @@ function App() {
           { name: "OKX", value: "okx" },
         ]}
         value={provider}
-        disabled={!!connectedAddresses}
+        disabled={!!connectedAddresses || chain === "fractal-bitcoin"}
+      />
+      <p>Chain</p>
+      <RadioInput
+        name="chain"
+        onChange={(option) =>
+          chain !== option.value ? setChain(option.value as Chain) : undefined
+        }
+        options={[
+          { name: "Bitcoin", value: "bitcoin" },
+          { name: "Fractal Bitcoin", value: "fractal-bitcoin" },
+        ]}
+        value={chain}
+        disabled={!!connectedAddresses || provider !== "unisat"}
       />
       <p>Network: {network} </p>
       <button
