@@ -4,7 +4,7 @@ import {
   validate,
 } from "bitcoin-address-validation";
 
-import type { Network } from "../config/types";
+import type { Chain, Network } from "../config/types";
 import { BIP32, CHAIN_CODE } from "../constants";
 import { OrditSDKError } from "../errors";
 import { createPayment, getNetwork } from "../utils";
@@ -30,7 +30,21 @@ function getAddressFormatForRegTest(address: string): AddressFormat {
 export function getAddressFormat(
   address: string,
   network: Network,
+  chain: Chain = "bitcoin",
 ): AddressFormat {
+  if (chain === "fractal-bitcoin") {
+    if (network === "regtest") {
+      throw new OrditSDKError("Unsupported operation");
+    }
+
+    if (!validate(address, NetworkEnum.mainnet)) {
+      throw new OrditSDKError("Invalid address");
+    }
+
+    const { type } = getAddressInfo(address);
+    return ADDRESS_TYPE_TO_FORMAT[type];
+  }
+
   // Separate regtest handling because bitcoin-address-validation treats non-bech32 addresses as testnet addresses,
   // which fail in the validate function.
   if (network === "regtest") {

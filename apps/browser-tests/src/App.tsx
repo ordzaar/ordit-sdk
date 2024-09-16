@@ -10,13 +10,9 @@ import { RadioInput } from "./components/RadioInput";
 import { Select } from "./components/Select";
 
 type WalletProvider = "unisat" | "xverse" | "magiceden" | "leather";
+type Chain = "bitcoin" | "fractal-bitcoin";
 
-const TESTNET = "testnet" as const;
-// const MAINNET = "mainnet" as const;
-
-// Change here to use the network you want to use
-// MagicEden only supports mainnet
-const network = TESTNET;
+const NETWORK = "testnet" as const;
 
 async function createAndPreparePsbt(psbtParams: PSBTBuilderOptions) {
   const psbt = new PSBTBuilder(psbtParams);
@@ -47,7 +43,7 @@ function Transactions({
   );
 
   const [outputAddress, setOutputAddress] = useState(
-    "tb1qatkgzm0hsk83ysqja5nq8ecdmtwl73zwurawww",
+    connectedAddresses[0].address,
   );
   const [feeRate, setFeeRate] = useState(1);
   const [amount, setAmount] = useState(600);
@@ -64,7 +60,7 @@ function Transactions({
           value: amount,
         },
       ],
-      network,
+      NETWORK,
     }),
     [
       amount,
@@ -97,7 +93,7 @@ function Transactions({
         signPsbtResponse = await unisat.signPsbt(psbt.toPSBT());
       } else if (provider === "xverse") {
         signPsbtResponse = await xverse.signPsbt(psbt.toPSBT(), {
-          network,
+          network: NETWORK,
           inputsToSign: [
             {
               address: inputAddressInfo.address,
@@ -107,7 +103,7 @@ function Transactions({
         });
       } else if (provider === "magiceden") {
         signPsbtResponse = await magiceden.signPsbt(psbt.toPSBT(), {
-          network,
+          network: NETWORK,
           inputsToSign: [
             {
               address: inputAddressInfo.address,
@@ -117,13 +113,13 @@ function Transactions({
         });
       } else if (provider === "leather") {
         signPsbtResponse = await leather.signPsbt(psbt.toPSBT(), {
-          network,
+          network: NETWORK,
           finalize: true,
           signAtIndexes: [0],
         });
       } else if (provider === "okx") {
         signPsbtResponse = await okx.signPsbt(psbt.toPSBT(), {
-          network,
+          network: NETWORK,
           inputsToSign: [
             {
               address: inputAddressInfo.address,
@@ -154,21 +150,21 @@ function Transactions({
         signMessageResponse = await xverse.signMessage(
           message,
           inputAddressInfo.address,
-          network,
+          NETWORK,
         );
       } else if (provider === "magiceden") {
         signMessageResponse = await magiceden.signMessage(
           message,
           inputAddressInfo.address,
-          network,
+          NETWORK,
         );
       } else if (provider === "leather") {
         signMessageResponse = await leather.signMessage(message, {
-          network,
+          network: NETWORK,
           paymentType: leather.LeatherAddressType.P2TR,
         });
       } else if (provider === "okx") {
-        signMessageResponse = await okx.signMessage(message, "ecdsa", network);
+        signMessageResponse = await okx.signMessage(message, "ecdsa", NETWORK);
       } else {
         throw new Error("Unknown provider");
       }
@@ -261,35 +257,36 @@ function Transactions({
 
 function App() {
   const [provider, setProvider] = useState<WalletProvider>("unisat");
+  const [chain, setChain] = useState<Chain>("bitcoin");
   const [connectedAddresses, setConnectedAddresses] = useState<
     Address[] | undefined
   >();
 
   const handleConnect = useCallback(async () => {
     if (provider === "unisat") {
-      const addresses = await unisat.getAddresses(network);
+      const addresses = await unisat.getAddresses(NETWORK, chain);
       console.log("Unisat Connected: ", addresses);
       setConnectedAddresses(addresses);
     } else if (provider === "xverse") {
-      const addresses = await xverse.getAddresses(network);
+      const addresses = await xverse.getAddresses(NETWORK);
       setConnectedAddresses(addresses);
       console.log("Xverse Connected: ", addresses);
     } else if (provider === "leather") {
-      const addresses = await leather.getAddresses("testnet");
+      const addresses = await leather.getAddresses(NETWORK);
       setConnectedAddresses(addresses);
       console.log("Leather Connected: ", addresses);
     } else if (provider === "magiceden") {
-      const addresses = await magiceden.getAddresses(network);
+      const addresses = await magiceden.getAddresses(NETWORK);
       setConnectedAddresses(addresses);
       console.log("MagicEden Connected: ", addresses);
     } else if (provider === "okx") {
-      const addresses = await okx.getAddresses(network);
+      const addresses = await okx.getAddresses(NETWORK);
       setConnectedAddresses(addresses);
       console.log("OKX Wallet Connected: ", addresses);
     } else {
       console.log("Unknown provider", provider);
     }
-  }, [provider]);
+  }, [chain, provider]);
 
   const handleDisconnect = useCallback(async () => {
     setConnectedAddresses(undefined);
@@ -297,8 +294,8 @@ function App() {
 
   return (
     <div>
-      <p>Connect wallet to run tests.</p>
-      <h1>Select Provider</h1>
+      <h1>Connect wallet to run tests</h1>
+      <p>Provider</p>
       <RadioInput
         name="provider"
         onChange={(option) =>
@@ -314,9 +311,22 @@ function App() {
           { name: "OKX", value: "okx" },
         ]}
         value={provider}
-        disabled={!!connectedAddresses}
+        disabled={!!connectedAddresses || chain === "fractal-bitcoin"}
       />
-      <p>Network: {network} </p>
+      <p>Chain</p>
+      <RadioInput
+        name="chain"
+        onChange={(option) =>
+          chain !== option.value ? setChain(option.value as Chain) : undefined
+        }
+        options={[
+          { name: "Bitcoin", value: "bitcoin" },
+          { name: "Fractal Bitcoin", value: "fractal-bitcoin" },
+        ]}
+        value={chain}
+        disabled={!!connectedAddresses || provider !== "unisat"}
+      />
+      <p>Network: {NETWORK} </p>
       <button
         type="button"
         style={{ marginTop: "12px" }}
