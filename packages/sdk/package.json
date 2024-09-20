@@ -73,7 +73,7 @@
     "@ordzaar/standard-typescript": "^1.8.10",
     "@types/node": "^20.14.10",
     "happy-dom": "^13.10.1",
-    "vite-plugin-dts": "3.7.3",
+    "vite-plugin-dts": "3.9.1",
     "vite-plugin-eslint": "^1.8.1",
     "vite-plugin-node-polyfills": "^0.22.0"
   }
