@@ -28,3 +28,5 @@ export type Address = {
    */
   xKey?: string;
 };
+
+export type { Chain } from "../config/types";

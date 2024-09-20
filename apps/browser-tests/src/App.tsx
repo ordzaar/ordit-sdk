@@ -1,5 +1,10 @@
 import { useCallback, useMemo, useState } from "react";
-import { Address, PSBTBuilder, PSBTBuilderOptions } from "@ordzaar/ordit-sdk";
+import {
+  Address,
+  Chain,
+  PSBTBuilder,
+  PSBTBuilderOptions,
+} from "@ordzaar/ordit-sdk";
 import * as leather from "@ordzaar/ordit-sdk/leather";
 import * as magiceden from "@ordzaar/ordit-sdk/magiceden";
 import * as okx from "@ordzaar/ordit-sdk/okx";
@@ -10,7 +15,6 @@ import { RadioInput } from "./components/RadioInput";
 import { Select } from "./components/Select";
 
 type WalletProvider = "unisat" | "xverse" | "magiceden" | "leather";
-type Chain = "bitcoin" | "fractal-bitcoin";
 
 const NETWORK = "testnet" as const;
 
