@@ -73,6 +73,18 @@ export function getAddressFormat(
   return ADDRESS_TYPE_TO_FORMAT[type];
 }
 
+export function validateAddress(
+  address: string,
+  network: Network,
+  chain: Chain = "bitcoin",
+): boolean {
+  try {
+    return !!getAddressType(address, network, chain);
+  } catch {
+    return false;
+  }
+}
+
 function getTaprootAddressFromBip32PublicKey(
   bip32PublicKey: Buffer,
   network: Network,
