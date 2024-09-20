@@ -11,7 +11,7 @@ import { createPayment, getNetwork } from "../utils";
 import { ADDRESS_TYPE_TO_FORMAT } from "./constants";
 import type { Address, AddressFormat, AddressType } from "./types";
 
-function getAddressFormatForRegTest(address: string): AddressFormat {
+function getAddressTypeForRegTest(address: string): AddressType {
   try {
     const { type, network: validatedNetwork, bech32 } = getAddressInfo(address);
     if (
@@ -21,19 +21,19 @@ function getAddressFormatForRegTest(address: string): AddressFormat {
       // This type Error is intentional, we'll forward the top-level one anyway
       throw new Error("Invalid address");
     }
-    return ADDRESS_TYPE_TO_FORMAT[type];
+    return type;
   } catch (_) {
     throw new OrditSDKError("Invalid address");
   }
 }
 
-export function getAddressFormat(
+export function getAddressType(
   address: string,
   network: Network,
   chain: Chain = "bitcoin",
-): AddressFormat {
+): AddressType {
   if (chain === "fractal-bitcoin") {
-    if (network === "regtest") {
+    if (network === "regtest" || network === "signet") {
       throw new OrditSDKError("Unsupported operation");
     }
 
@@ -42,13 +42,13 @@ export function getAddressFormat(
     }
 
     const { type } = getAddressInfo(address);
-    return ADDRESS_TYPE_TO_FORMAT[type];
+    return type;
   }
 
   // Separate regtest handling because bitcoin-address-validation treats non-bech32 addresses as testnet addresses,
   // which fail in the validate function.
   if (network === "regtest") {
-    return getAddressFormatForRegTest(address);
+    return getAddressTypeForRegTest(address);
   }
 
   if (
@@ -61,6 +61,15 @@ export function getAddressFormat(
   }
 
   const { type } = getAddressInfo(address);
+  return type;
+}
+
+export function getAddressFormat(
+  address: string,
+  network: Network,
+  chain: Chain = "bitcoin",
+): AddressFormat {
+  const type = getAddressType(address, network, chain);
   return ADDRESS_TYPE_TO_FORMAT[type];
 }
 
