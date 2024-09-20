@@ -48,6 +48,28 @@ describe("addresses", () => {
       },
     };
 
+    const FRACTAL_ADDRESSES: Record<
+      "mainnet" | "testnet",
+      Record<AddressFormat, string>
+    > = {
+      [MAINNET]: {
+        legacy: "17VZNX1SN5NtKa8UQFxwQbFeFc3iqRYhem",
+        "p2sh-p2wpkh": "3EktnHQD7RiAE6uzMj2ZifT9YgRrkSgzQX",
+        segwit: "bc1qw508d6qejxtdg4y5r3zarvary0c5xw7kv8f3t4",
+        taproot:
+          "bc1p5d7rjq7g6rdk2yhzks9smlaqtedr4dekq08ge8ztwac72sfr9rusxg3297",
+        p2wsh: "bc1qrp33g0q5c5txsp9arysrx4k6zdkfs4nce4xj0gdcccefvpysxf3qccfmv3",
+      },
+      [TESTNET]: {
+        legacy: "17VZNX1SN5NtKa8UQFxwQbFeFc3iqRYhem",
+        "p2sh-p2wpkh": "3EktnHQD7RiAE6uzMj2ZifT9YgRrkSgzQX",
+        segwit: "bc1qw508d6qejxtdg4y5r3zarvary0c5xw7kv8f3t4",
+        taproot:
+          "bc1p5d7rjq7g6rdk2yhzks9smlaqtedr4dekq08ge8ztwac72sfr9rusxg3297",
+        p2wsh: "bc1qrp33g0q5c5txsp9arysrx4k6zdkfs4nce4xj0gdcccefvpysxf3qccfmv3",
+      },
+    };
+
     test("should return correct address format for mainnet", () => {
       const network = MAINNET;
       expect(getAddressFormat(ADDRESSES[network].legacy, network)).toBe(
@@ -138,6 +160,84 @@ describe("addresses", () => {
       expect(() =>
         getAddressFormat(ADDRESSES[REGTEST]["p2sh-p2wpkh"], network),
       ).not.toThrowError(INVALID_ADDRESS_ERROR);
+    });
+
+    test("should return correct address format for fractal bitcoin mainnet", () => {
+      const network = MAINNET;
+      expect(
+        getAddressFormat(
+          FRACTAL_ADDRESSES[network].legacy,
+          network,
+          "fractal-bitcoin",
+        ),
+      ).toBe("legacy");
+      expect(
+        getAddressFormat(
+          FRACTAL_ADDRESSES[network]["p2sh-p2wpkh"],
+          network,
+          "fractal-bitcoin",
+        ),
+      ).toBe("p2sh-p2wpkh");
+      expect(
+        getAddressFormat(
+          FRACTAL_ADDRESSES[network].segwit,
+          network,
+          "fractal-bitcoin",
+        ),
+      ).toBe("segwit");
+      expect(
+        getAddressFormat(
+          FRACTAL_ADDRESSES[network].taproot,
+          network,
+          "fractal-bitcoin",
+        ),
+      ).toBe("taproot");
+      expect(
+        getAddressFormat(
+          FRACTAL_ADDRESSES[network].p2wsh,
+          network,
+          "fractal-bitcoin",
+        ),
+      ).toBe("p2wsh");
+    });
+
+    test("should return correct address format for fractal bitcoin testnet", () => {
+      const network = TESTNET;
+      expect(
+        getAddressFormat(
+          FRACTAL_ADDRESSES[network].legacy,
+          network,
+          "fractal-bitcoin",
+        ),
+      ).toBe("legacy");
+      expect(
+        getAddressFormat(
+          FRACTAL_ADDRESSES[network]["p2sh-p2wpkh"],
+          network,
+          "fractal-bitcoin",
+        ),
+      ).toBe("p2sh-p2wpkh");
+      expect(
+        getAddressFormat(
+          FRACTAL_ADDRESSES[network].segwit,
+          network,
+          "fractal-bitcoin",
+        ),
+      ).toBe("segwit");
+      expect(
+        getAddressFormat(
+          FRACTAL_ADDRESSES[network].taproot,
+          network,
+          "fractal-bitcoin",
+        ),
+      ).toBe("taproot");
+      expect(
+        getAddressFormat(
+          FRACTAL_ADDRESSES[network].p2wsh,
+          network,
+          "fractal-bitcoin",
+        ),
+      ).toBe("p2wsh");
     });
 
     test("should throw an error if address format is not recognised for mainnet", () => {
