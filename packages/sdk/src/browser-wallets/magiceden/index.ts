@@ -42,9 +42,7 @@ async function getMagicEdenWalletProvider(): Promise<MagicEdenBitcoinProvider> {
   ) as MagicEdenWallet | undefined;
 
   if (!meWallet) {
-    throw new BrowserWalletNotInstalledError(
-      "Magic Eden Wallet not installed.",
-    );
+    throw new BrowserWalletNotInstalledError("Magic Eden Wallet not installed");
   }
 
   return meWallet.features["sats-connect:"].provider;
@@ -78,9 +76,7 @@ async function getAddresses(
   network: BrowserWalletNetwork = "mainnet",
 ): Promise<WalletAddress[]> {
   if (!isInstalled()) {
-    throw new BrowserWalletNotInstalledError(
-      "Magic Eden Wallet not installed.",
-    );
+    throw new BrowserWalletNotInstalledError("Magic Eden Wallet not installed");
   }
 
   if (network !== "mainnet") {
@@ -102,9 +98,7 @@ async function signPsbt(
   }: SatsConnectSignPSBTOptions = { network: "mainnet", inputsToSign: [] },
 ): Promise<BrowserWalletSignResponse> {
   if (!isInstalled()) {
-    throw new BrowserWalletNotInstalledError(
-      "Magic Eden Wallet not installed.",
-    );
+    throw new BrowserWalletNotInstalledError("Magic Eden Wallet not installed");
   }
 
   if (network !== "mainnet") {
@@ -127,9 +121,7 @@ async function signMessage(
   network: BrowserWalletNetwork = "mainnet",
 ): Promise<BrowserWalletSignResponse> {
   if (!isInstalled()) {
-    throw new BrowserWalletNotInstalledError(
-      "Magic Eden Wallet not installed.",
-    );
+    throw new BrowserWalletNotInstalledError("Magic Eden Wallet not installed");
   }
 
   if (network !== "mainnet") {

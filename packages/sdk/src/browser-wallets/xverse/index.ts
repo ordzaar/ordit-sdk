@@ -27,7 +27,7 @@ function isInstalled(): boolean {
 
 async function getXverseWalletProvider(): Promise<BitcoinProvider> {
   if (!isInstalled()) {
-    throw new BrowserWalletNotInstalledError("Selected wallet not installed");
+    throw new BrowserWalletNotInstalledError("Xverse not installed");
   }
 
   return window.XverseProviders!.BitcoinProvider!;
@@ -37,7 +37,7 @@ async function getAddresses(
   network: BrowserWalletNetwork = "mainnet",
 ): Promise<WalletAddress[]> {
   if (!isInstalled()) {
-    throw new BrowserWalletNotInstalledError("Selected wallet not installed");
+    throw new BrowserWalletNotInstalledError("Xverse not installed");
   }
 
   return satsConnectWalletGetAddresses(getXverseWalletProvider, network);
@@ -53,7 +53,7 @@ async function signPsbt(
   }: SatsConnectSignPSBTOptions = { network: "mainnet", inputsToSign: [] },
 ): Promise<BrowserWalletSignResponse> {
   if (!isInstalled()) {
-    throw new BrowserWalletNotInstalledError("Selected wallet not installed");
+    throw new BrowserWalletNotInstalledError("Xverse not installed");
   }
 
   return satsConnectWalletSignPsbt(getXverseWalletProvider, psbt, {
@@ -70,7 +70,7 @@ async function signMessage(
   network: BrowserWalletNetwork = "mainnet",
 ): Promise<BrowserWalletSignResponse> {
   if (!isInstalled()) {
-    throw new BrowserWalletNotInstalledError("Selected wallet not installed");
+    throw new BrowserWalletNotInstalledError("Xverse not installed");
   }
 
   return satsConnectWalletSignMessage(
