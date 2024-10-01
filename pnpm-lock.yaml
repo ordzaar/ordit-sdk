@@ -152,8 +152,8 @@ importers:
         specifier: 2.1.0
         version: 2.1.0
       ethers:
-        specifier: 6.13.1
-        version: 6.13.1
+        specifier: 6.13.3
+        version: 6.13.3
       sats-connect:
         specifier: 2.6.0
         version: 2.6.0(typescript@5.5.3)(valibot@0.33.2)
@@ -3782,8 +3782,8 @@ packages:
     resolution: {integrity: sha512-aIL5Fx7mawVa300al2BnEE4iNvo1qETxLrPI/o05L7z6go7fCw1J6EQmbK4FmJ2AS7kgVF/KEZWufBfdClMcPg==}
     engines: {node: '>= 0.6'}
 
-  ethers@6.13.1:
-    resolution: {integrity: sha512-hdJ2HOxg/xx97Lm9HdCWk949BfYqYWpyw4//78SiwOLgASyfrNszfMUNB2joKjvGUdwhHfaiMMFFwacVVoLR9A==}
+  ethers@6.13.3:
+    resolution: {integrity: sha512-/DzbZOLVtoO4fKvvQwpEucHAQgIwBGWuRvBdwE/lMXgXvvHHTSkn7XqAQ2b+gjJzZDJjWA9OD05bVceVOsBHbg==}
     engines: {node: '>=14.0.0'}
 
   eval@0.1.8:
@@ -12240,7 +12240,7 @@ snapshots:
 
   etag@1.8.1: {}
 
-  ethers@6.13.1:
+  ethers@6.13.3:
     dependencies:
       '@adraffy/ens-normalize': 1.10.1
       '@noble/curves': 1.2.0
