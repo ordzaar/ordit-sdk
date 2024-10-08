@@ -67,7 +67,7 @@
     "cross-fetch": "4.0.0",
     "ecpair": "2.1.0",
     "ethers": "6.13.1",
-    "sats-connect": "2.6.0"
+    "sats-connect": "2.8.3"
   },
   "devDependencies": {
     "@ordzaar/standard-typescript": "^1.8.10",
