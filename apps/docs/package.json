@@ -28,7 +28,7 @@
   },
   "devDependencies": {
     "@docusaurus/module-type-aliases": "3.4.0",
-    "@ordzaar/standard-typescript": "^1.8.10",
+    "@ordzaar/standard-typescript": "^1.8.14",
     "@tsconfig/docusaurus": "^2.0.3"
   },
   "browserslist": {
