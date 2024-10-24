@@ -31,9 +31,11 @@ async function createAndPreparePsbt(psbtParams: PSBTBuilderOptions) {
 
 function Transactions({
   provider,
+  chain,
   connectedAddresses,
 }: {
   provider: WalletProvider;
+  chain: Chain;
   connectedAddresses: Address[];
 }) {
   const [inputAddressInfo, setInputAddress] = useState(connectedAddresses[0]);
@@ -53,7 +55,7 @@ function Transactions({
   const [amount, setAmount] = useState(600);
   const [error, setError] = useState<string | undefined>();
 
-  const psbtParams = useMemo(
+  const psbtParams: PSBTBuilderOptions = useMemo(
     () => ({
       address: inputAddressInfo.address,
       feeRate,
@@ -64,10 +66,12 @@ function Transactions({
           value: amount,
         },
       ],
-      NETWORK,
+      network: NETWORK,
+      chain,
     }),
     [
       amount,
+      chain,
       feeRate,
       inputAddressInfo.address,
       inputAddressInfo.publicKey,
@@ -367,6 +371,7 @@ function App() {
           </div>
           <Transactions
             provider={provider}
+            chain={chain}
             connectedAddresses={connectedAddresses}
           />
         </>

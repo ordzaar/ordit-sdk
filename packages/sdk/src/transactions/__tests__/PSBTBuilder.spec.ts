@@ -83,10 +83,18 @@ describe("PSBTBuilder", () => {
     };
     const mockJsonRpcReturnParams = {
       id: 1,
-      mainnet: mockJsonRpc,
-      testnet: mockJsonRpc,
-      regtest: mockJsonRpc,
-      signet: mockJsonRpc,
+      bitcoin: {
+        mainnet: mockJsonRpc,
+        testnet: mockJsonRpc,
+        regtest: mockJsonRpc,
+        signet: mockJsonRpc,
+      },
+      "fractal-bitcoin": {
+        mainnet: mockJsonRpc,
+        testnet: mockJsonRpc,
+        regtest: mockJsonRpc,
+        signet: mockJsonRpc,
+      },
     };
     afterAll(() => {
       vi.resetAllMocks();
@@ -95,9 +103,19 @@ describe("PSBTBuilder", () => {
       const jsonrpcSpy = vi.spyOn(jsonrpc, "rpc", "get");
       jsonrpcSpy.mockReturnValue({
         ...mockJsonRpcReturnParams,
-        testnet: {
-          ...mockJsonRpc,
-          call: mockCall,
+        bitcoin: {
+          ...mockJsonRpcReturnParams.bitcoin,
+          testnet: {
+            ...mockJsonRpc,
+            call: mockCall,
+          },
+        },
+        "fractal-bitcoin": {
+          ...mockJsonRpcReturnParams["fractal-bitcoin"],
+          testnet: {
+            ...mockJsonRpc,
+            call: mockCall,
+          },
         },
       });
     });
