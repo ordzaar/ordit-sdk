@@ -1,7 +1,7 @@
 import { Psbt, Transaction } from "bitcoinjs-lib";
 import reverseBuffer from "buffer-reverse";
 
-import type { Network } from "../config/types";
+import type { Chain, Network } from "../config/types";
 import {
   INSTANT_BUY_SELLER_INPUT_INDEX,
   MINIMUM_AMOUNT_IN_SATS,
@@ -23,6 +23,7 @@ export interface PSBTBuilderOptions {
   address: string;
   changeAddress?: string;
   feeRate: number;
+  chain?: Chain;
   network?: Network;
   outputs: Output[];
   publicKey: string;
@@ -121,6 +122,7 @@ export class PSBTBuilder extends FeeEstimator {
     changeAddress,
     datasource,
     feeRate,
+    chain = "bitcoin",
     network = "mainnet",
     publicKey,
     outputs,
@@ -129,19 +131,23 @@ export class PSBTBuilder extends FeeEstimator {
   }: PSBTBuilderOptions) {
     super({
       feeRate,
+      chain,
       network,
     });
     this.address = address;
     this.changeAddress = changeAddress;
     this.datasource =
-      datasource || new JsonRpcDatasource({ network: this.network });
+      datasource ||
+      new JsonRpcDatasource({ chain: this.chain, network: this.network });
     this.outputs = outputs;
     this.publicKey = publicKey;
 
     this.autoAdjustment = autoAdjustment;
     this.instantTradeMode = instantTradeMode;
 
-    this.psbt = new Psbt({ network: getNetwork(network) });
+    this.psbt = new Psbt({
+      network: getNetwork(chain === "fractal-bitcoin" ? "mainnet" : network),
+    });
   }
 
   toPSBT() {
@@ -205,7 +211,11 @@ export class PSBTBuilder extends FeeEstimator {
   }
 
   protected initPSBT() {
-    this.psbt = new Psbt({ network: getNetwork(this.network) }); // create new PSBT
+    this.psbt = new Psbt({
+      network: getNetwork(
+        this.chain === "fractal-bitcoin" ? "mainnet" : this.network,
+      ),
+    }); // create new PSBT
     this.psbt.setMaximumFeeRate(this.feeRate);
   }
 

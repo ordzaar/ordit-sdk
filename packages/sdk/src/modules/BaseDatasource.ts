@@ -10,18 +10,22 @@ import type {
   GetUnspentsResponse,
   RelayOptions,
 } from "../api/types";
-import type { Network } from "../config/types";
+import type { Chain, Network } from "../config/types";
 import type { Inscription } from "../inscription/types";
 import type { UTXO, UTXOLimited } from "../transactions/types";
 
 export interface BaseDatasourceOptions {
+  chain?: Chain;
   network: Network;
 }
 
 export abstract class BaseDatasource {
+  protected readonly chain: Chain;
+
   protected readonly network: Network;
 
-  constructor({ network }: BaseDatasourceOptions) {
+  constructor({ chain = "bitcoin", network }: BaseDatasourceOptions) {
+    this.chain = chain;
     this.network = network;
   }
 
