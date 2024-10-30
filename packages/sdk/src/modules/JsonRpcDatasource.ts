@@ -12,7 +12,7 @@ import type {
   GetUnspentsResponse,
   RelayOptions,
 } from "../api/types";
-import type { Network } from "../config/types";
+import type { Chain, Network } from "../config/types";
 import { OrditSDKError } from "../errors";
 import type { Inscription } from "../inscription/types";
 import type { Transaction, UTXO, UTXOLimited } from "../transactions/types";
@@ -25,12 +25,13 @@ import type {
 } from "./types";
 
 export interface JsonRpcDatasourceOptions {
+  chain?: Chain;
   network: Network;
 }
 
 export class JsonRpcDatasource extends BaseDatasource {
-  constructor({ network }: JsonRpcDatasourceOptions) {
-    super({ network });
+  constructor({ chain = "bitcoin", network }: JsonRpcDatasourceOptions) {
+    super({ chain, network });
   }
 
   async getBalance({ address }: GetBalanceOptions) {
@@ -38,7 +39,7 @@ export class JsonRpcDatasource extends BaseDatasource {
       throw new OrditSDKError("Invalid request");
     }
 
-    return rpc[this.network].call<number>(
+    return rpc[this.chain][this.network].call<number>(
       "Address.GetBalance",
       { address },
       rpc.id,
@@ -55,7 +56,7 @@ export class JsonRpcDatasource extends BaseDatasource {
 
     const id = outpointToIdFormat(_id);
 
-    const inscription = await rpc[this.network].call<Inscription>(
+    const inscription = await rpc[this.chain][this.network].call<Inscription>(
       "Ordinals.GetInscription",
       { id },
       rpc.id,
@@ -71,7 +72,7 @@ export class JsonRpcDatasource extends BaseDatasource {
 
     const id = outpointToIdFormat(_id);
 
-    return rpc[this.network].call<UTXO>(
+    return rpc[this.chain][this.network].call<UTXO>(
       "Ordinals.GetInscriptionUtxo",
       { id },
       rpc.id,
@@ -92,7 +93,7 @@ export class JsonRpcDatasource extends BaseDatasource {
     let inscriptions: Inscription[] = [];
     let next = _next;
     do {
-      const { inscriptions: _inscriptions, pagination } = await rpc[
+      const { inscriptions: _inscriptions, pagination } = await rpc[this.chain][
         this.network
       ].call<OrdinalsGetInscriptionsJsonRpcResponse>(
         "Ordinals.GetInscriptions",
@@ -123,7 +124,7 @@ export class JsonRpcDatasource extends BaseDatasource {
       throw new OrditSDKError("Invalid request");
     }
 
-    return rpc[this.network].call<UTXOLimited[]>(
+    return rpc[this.chain][this.network].call<UTXOLimited[]>(
       "Address.GetSpendables",
       {
         address,
@@ -148,7 +149,7 @@ export class JsonRpcDatasource extends BaseDatasource {
       throw new OrditSDKError("Invalid request");
     }
 
-    const tx = await rpc[this.network].call<Transaction>(
+    const tx = await rpc[this.chain][this.network].call<Transaction>(
       "Transactions.GetTransaction",
       {
         txid: txId,
@@ -189,7 +190,7 @@ export class JsonRpcDatasource extends BaseDatasource {
     let utxos: UTXO[] = [];
     let next = _next;
     do {
-      const { unspents, pagination } = await rpc[
+      const { unspents, pagination } = await rpc[this.chain][
         this.network
       ].call<AddressGetUnspentsJsonRpcResponse>(
         "Address.GetUnspents",
@@ -224,7 +225,7 @@ export class JsonRpcDatasource extends BaseDatasource {
       throw new OrditSDKError("Invalid max fee rate");
     }
 
-    return rpc[this.network].call<string>(
+    return rpc[this.chain][this.network].call<string>(
       "Transactions.Relay",
       { hex, maxFeeRate, validate },
       rpc.id,

@@ -1,6 +1,6 @@
 import { Psbt } from "bitcoinjs-lib";
 
-import type { Network } from "../config/types";
+import type { Chain, Network } from "../config/types";
 import { MAXIMUM_FEE } from "../constants";
 import { OrditSDKError } from "../errors";
 import { getNetwork, getScriptType } from "../utils";
@@ -18,6 +18,8 @@ class FeeEstimator {
    */
   protected feeRate: number;
 
+  protected chain: Chain;
+
   protected network: Network;
 
   protected psbt: Psbt;
@@ -28,16 +30,29 @@ class FeeEstimator {
 
   protected weight: number = 0;
 
-  constructor({ feeRate, network, psbt, witness }: FeeEstimatorOptions) {
+  constructor({
+    feeRate,
+    chain = "bitcoin",
+    network,
+    psbt,
+    witness,
+  }: FeeEstimatorOptions) {
     // feeRate can be 0 because a seller does not pay for network fees
     if (feeRate < 0 || !Number.isSafeInteger(feeRate)) {
       throw new OrditSDKError("Invalid feeRate");
     }
 
     this.feeRate = feeRate;
+    this.chain = chain;
     this.network = network;
     this.witness = witness || [];
-    this.psbt = psbt || new Psbt({ network: getNetwork(this.network) });
+    this.psbt =
+      psbt ||
+      new Psbt({
+        network: getNetwork(
+          chain === "fractal-bitcoin" ? "mainnet" : this.network,
+        ),
+      });
   }
 
   get data() {

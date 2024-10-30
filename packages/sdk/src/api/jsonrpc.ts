@@ -1,6 +1,7 @@
 import fetch from "cross-fetch";
 
 import { API_CONFIG } from "../config";
+import { Chain, Network } from "../config/types";
 import { OrditSDKError } from "../errors";
 
 type JsonRpcId = string | number | null;
@@ -109,12 +110,21 @@ class JsonRpc {
   }
 }
 
-export const rpc = {
+export const rpc: { id: number } & Record<Chain, Record<Network, JsonRpc>> = {
   get id() {
     return Math.floor(Math.random() * 100000);
   },
-  mainnet: new JsonRpc(getRpcUrl(API_CONFIG.apis.mainnet.batter)),
-  testnet: new JsonRpc(getRpcUrl(API_CONFIG.apis.testnet.batter)),
-  signet: new JsonRpc(getRpcUrl(API_CONFIG.apis.signet.batter)),
-  regtest: new JsonRpc(getRpcUrl(API_CONFIG.apis.regtest.batter)),
+  bitcoin: {
+    mainnet: new JsonRpc(getRpcUrl(API_CONFIG.apis.bitcoin.mainnet)),
+    testnet: new JsonRpc(getRpcUrl(API_CONFIG.apis.bitcoin.testnet)),
+    signet: new JsonRpc(getRpcUrl(API_CONFIG.apis.bitcoin.signet)),
+    regtest: new JsonRpc(getRpcUrl(API_CONFIG.apis.bitcoin.regtest)),
+  },
+  "fractal-bitcoin": {
+    mainnet: new JsonRpc(getRpcUrl(API_CONFIG.apis["fractal-bitcoin"].mainnet)),
+    testnet: new JsonRpc(getRpcUrl(API_CONFIG.apis["fractal-bitcoin"].testnet)),
+    // unused
+    signet: new JsonRpc(getRpcUrl(API_CONFIG.apis["fractal-bitcoin"].testnet)),
+    regtest: new JsonRpc(getRpcUrl(API_CONFIG.apis["fractal-bitcoin"].testnet)),
+  },
 } as const;

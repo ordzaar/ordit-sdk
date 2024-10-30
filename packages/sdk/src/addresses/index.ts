@@ -120,14 +120,19 @@ export function getAddressesFromPublicKey(
   publicKey: string | Buffer,
   network: Network = "mainnet",
   type: Exclude<AddressType, "p2wsh"> | "all" = "all",
+  chain: Chain = "bitcoin",
 ): Address[] {
   const publicKeyBuffer = Buffer.isBuffer(publicKey)
     ? publicKey
     : Buffer.from(publicKey, "hex");
+
+  // eslint-disable-next-line no-underscore-dangle
+  const _network = chain === "fractal-bitcoin" ? "mainnet" : network;
+
   const { publicKey: bip32PublicKey } = BIP32.fromPublicKey(
     publicKeyBuffer,
     CHAIN_CODE,
-    getNetwork(network),
+    getNetwork(_network),
   );
 
   if (type === "all") {
@@ -136,11 +141,11 @@ export function getAddressesFromPublicKey(
       Object.keys(ADDRESS_TYPE_TO_FORMAT) as AddressType[]
     ).filter((addressType) => addressType !== "p2wsh");
     return addressTypes.map((addressType) =>
-      getAddressFromBip32PublicKey(bip32PublicKey, network, addressType),
+      getAddressFromBip32PublicKey(bip32PublicKey, _network, addressType),
     );
   }
 
-  return [getAddressFromBip32PublicKey(bip32PublicKey, network, type)];
+  return [getAddressFromBip32PublicKey(bip32PublicKey, _network, type)];
 }
 
 export function getNetworkByAddress(address: string): Network {
