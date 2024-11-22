@@ -2,7 +2,7 @@
 
 # Ordit
 
-Ordit is an SDK project for Bitcoin Wallet, Ordinals and Inscriptions
+Ordit is an SDK project for Bitcoin Wallet, Ordinals and Inscriptions.
 
 ## Setup
 
