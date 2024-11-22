@@ -207,7 +207,7 @@ async function satsConnectWalletSignPsbt(
  *
  * @param message Message to be signed
  * @param address Address to sign with
- * @param network Network (mainnet or testnet)
+ * @param network Network (mainnet, testnet, signet)
  * @returns An object containing `base64` and `hex`.
  * @throws {BrowserWalletNotInstalledError} Wallet is not installed
  * @throws {BrowserWalletSigningError} Failed to sign with selected wallet
