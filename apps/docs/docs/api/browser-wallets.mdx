@@ -98,7 +98,7 @@ async function connectToWallet() {
     throw new Error("Wallet is not installed");
   }
 
-  const addresses = await getAddresses("mainnet"); // mainnet or testnet
+  const addresses = await getAddresses("mainnet"); // mainnet, testnet or signet
   console.log(addresses);
   // Example output of addresses:
   //
@@ -139,7 +139,7 @@ Gets a list of addresses for the browser wallet if authorized.
 
 **Parameters**:
 
-- `network` : `"mainnet" | "testnet"` (defaults to `mainnet`) - Network
+- `network` : `"mainnet" | "testnet" | "signet"` (defaults to `mainnet`) - Network
 - `chain` : `"bitcoin" | "fractal-bitcoin"` (defaults to `bitcoin`) - Chain
 - `options` : `object` (optional)
   - `readOnly` : `boolean` (defaults to `false`) - Read only. When set to `true`, the wallet modal appears for Unisat.
@@ -177,7 +177,7 @@ Signs a Partially Signed Bitcoin Transaction (PSBT) and returns a signature.
 - `options` : `object` (optional)
   - `extractTx` : Extract transaction (defaults to `true`)
   - `finalize` : Finalize signing (defaults to `true`)
-  - `network` (for Xverse only) : `"mainnet" | "testnet"` (defaults to `mainnet`)
+  - `network` (for Xverse only) : `"mainnet" | "testnet" | "signet"` (defaults to `mainnet`)
   - `inputsToSign` (for Xverse only) : List of inputs and signing indexes to sign
 
 Note: Extracting a transaction is only possible when all transactions on the PSBT are finalized. Hence, when `extractTx` is `true`, `finalize` must also be `true` and all other inputs must have been finalized.
@@ -227,7 +227,7 @@ Signs a message and returns a signature.
 
 - `message` : `string`
 - `address` (for Xverse only) : `string` - Wallet address to sign message
-- `network` (for Xverse only) : `"mainnet" | "testnet"` (defaults to `mainnet`) - Network
+- `network` (for Xverse only) : `"mainnet" | "testnet" | "signet"` (defaults to `mainnet`) - Network
 - `type` (for Unisat only) : `"bip322-simple" | "ecdsa"` (defaults to `ecdsa`)
 
 **Returns**: `Promise<BrowserWalletSignResponse>`

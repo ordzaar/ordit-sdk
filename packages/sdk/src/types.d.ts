@@ -12,6 +12,7 @@ type MessageSignatureTypes = "bip322-simple" | "ecdsa";
 type UnisatChainType =
   | "BITCOIN_MAINNET"
   | "BITCOIN_TESTNET"
+  | "BITCOIN_SIGNET"
   | "FRACTAL_BITCOIN_MAINNET"
   | "FRACTAL_BITCOIN_TESTNET";
 
