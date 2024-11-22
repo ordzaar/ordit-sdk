@@ -18,13 +18,13 @@
     "react-dom": "^18.3.1"
   },
   "devDependencies": {
-    "@ordzaar/standard-web": "^1.8.10",
-    "@ordzaar/standard-web-linter": "^1.8.10",
+    "@ordzaar/standard-web": "^2.2.0",
+    "@ordzaar/standard-web-linter": "^2.2.0",
     "@types/react": "^18.3.12",
     "@types/react-dom": "^18.3.1",
-    "@vitejs/plugin-react": "^4.3.1",
-    "eslint-plugin-react-hooks": "^4.6.0",
-    "eslint-plugin-react-refresh": "^0.4.6",
+    "@vitejs/plugin-react": "^4.3.3",
+    "eslint-plugin-react-hooks": "^5.0.0",
+    "eslint-plugin-react-refresh": "^0.4.14",
     "vite-plugin-node-polyfills": "^0.22.0"
   }
 }

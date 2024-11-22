@@ -56,7 +56,7 @@
   },
   "dependencies": {
     "@bitcoinerlab/secp256k1": "1.1.1",
-    "@wallet-standard/core": "^1.0.3",
+    "@wallet-standard/core": "^1.1.0",
     "bignumber.js": "9.1.2",
     "bip32": "4.0.0",
     "bip39": "3.1.0",
@@ -66,14 +66,14 @@
     "buffer-reverse": "1.0.1",
     "cross-fetch": "4.0.0",
     "ecpair": "2.1.0",
-    "ethers": "6.13.1",
-    "sats-connect": "2.8.3"
+    "ethers": "6.13.4",
+    "sats-connect": "3.0.1"
   },
   "devDependencies": {
-    "@ordzaar/standard-typescript": "^1.8.10",
-    "@types/node": "^20.14.10",
-    "happy-dom": "^15.0.0",
-    "vite-plugin-dts": "3.9.1",
+    "@ordzaar/standard-typescript": "^2.2.0",
+    "@types/node": "^22.9.1",
+    "happy-dom": "^15.11.6",
+    "vite-plugin-dts": "4.3.0",
     "vite-plugin-eslint": "^1.8.1",
     "vite-plugin-node-polyfills": "^0.22.0"
   }

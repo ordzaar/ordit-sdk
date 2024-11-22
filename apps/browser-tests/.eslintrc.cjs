@@ -9,5 +9,7 @@ module.exports = {
     "import/prefer-default-export": "off",
     "no-console": "off",
     "jsx-a11y/label-has-associated-control": "off",
+    "@typescript-eslint/lines-between-class-members": "off",
+    "@typescript-eslint/no-throw-literal": "off",
   },
 };
