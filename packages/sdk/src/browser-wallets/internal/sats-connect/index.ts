@@ -45,10 +45,6 @@ async function satsConnectWalletGetAddresses(
   getProvider: () => Promise<BitcoinProvider>,
   network: BrowserWalletNetwork = "mainnet",
 ): Promise<WalletAddress[]> {
-  if (network === "signet") {
-    throw new OrditSDKError("signet network is not supported");
-  }
-
   const result: WalletAddress[] = [];
 
   const handleOnFinish = (response: GetAddressResponse) => {
@@ -120,9 +116,6 @@ async function satsConnectWalletSignPsbt(
     inputsToSign,
   }: SatsConnectSignPSBTOptions = { network: "mainnet", inputsToSign: [] },
 ): Promise<BrowserWalletSignResponse> {
-  if (network === "signet") {
-    throw new OrditSDKError("signet network is not supported");
-  }
   if (!finalize && extractTx) {
     throw new BrowserWalletExtractTxFromNonFinalizedPsbtError();
   }
@@ -220,9 +213,6 @@ async function satsConnectWalletSignMessage(
   address: string,
   network: BrowserWalletNetwork = "mainnet",
 ): Promise<BrowserWalletSignResponse> {
-  if (network === "signet") {
-    throw new OrditSDKError("signet network is not supported");
-  }
   if (!message || !network || !address) {
     throw new OrditSDKError("Invalid options provided");
   }
