@@ -159,15 +159,57 @@ describe("Xverse Wallet", () => {
       expect(getAddresses("testnet")).resolves.toEqual(mockData);
     });
 
-    test("should throw error on signet", () => {
+    test("should return address from signet", () => {
+      const mockData: WalletAddress[] = [
+        {
+          address:
+            "tb1pygh40yljmeknedr3cgwgyyjnh20g6zghqkzufz5z7d5njjsgx8ts8x4kzs",
+          publicKey:
+            "02b9907521ddb85e0e6a37622b7c685efbdc8ae53a334928adbd12cf204ad4e717",
+          format: "taproot",
+        },
+        {
+          // https://allprivatekeys.com/bitcoin-address-format
+          address: "2MwFLsoQMCRKaXkwT7j2PZ4pdZfhH9jXhQz",
+          publicKey:
+            "028a045950a789ff01350b95cd17544c5574f8b023aedce30ba6d0893ec119092f",
+          format: "p2sh-p2wpkh",
+        },
+      ];
+      const mockResponse: GetAddressResponse = {
+        addresses: [
+          {
+            address:
+              "tb1pygh40yljmeknedr3cgwgyyjnh20g6zghqkzufz5z7d5njjsgx8ts8x4kzs",
+            publicKey:
+              "02b9907521ddb85e0e6a37622b7c685efbdc8ae53a334928adbd12cf204ad4e717",
+            purpose: satsConnect.AddressPurpose.Ordinals,
+            addressType: satsConnect.AddressType.p2tr,
+          },
+          {
+            address: "2MwFLsoQMCRKaXkwT7j2PZ4pdZfhH9jXhQz",
+            publicKey:
+              "028a045950a789ff01350b95cd17544c5574f8b023aedce30ba6d0893ec119092f",
+            purpose: satsConnect.AddressPurpose.Payment,
+            addressType: satsConnect.AddressType.p2wpkh,
+          },
+        ],
+      };
+
       vi.stubGlobal("window", {
         XverseProviders: {
           BitcoinProvider: {},
         },
       });
-      expect(getAddresses("signet")).rejects.toThrowError(
-        "signet network is not supported",
-      );
+
+      const getAddressSpy = vi.spyOn(satsConnect, "getAddress");
+
+      getAddressSpy.mockImplementation((options: GetAddressOptions) => {
+        options.onFinish(mockResponse);
+        return Promise.resolve();
+      });
+      expect(typeof window).not.toBeUndefined();
+      expect(getAddresses("signet")).resolves.toEqual(mockData);
     });
 
     test("should throw error on user cancel", () => {

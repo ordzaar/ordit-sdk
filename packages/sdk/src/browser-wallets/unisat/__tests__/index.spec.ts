@@ -76,10 +76,24 @@ describe("Unisat Wallet", () => {
       expect(getAddresses("testnet")).resolves.toEqual([mockData]);
     });
 
-    test("should return error from signet", () => {
-      expect(getAddresses("signet")).rejects.toThrowError(
-        "signet network is not supported",
-      );
+    test("should return address from signet", () => {
+      const mockData: WalletAddress = {
+        publicKey:
+          "02e522672eb584da7a5b5d61db1601584e7937471416388e4f43d69c720d62fe0f",
+        address:
+          "tb1p8mkym678ltgdyda5lkd0vqtqyps5mlthkpee6q43hhqmevjxzzyqrc4pfg",
+        format: "taproot",
+      };
+      const network = "signet";
+
+      vi.stubGlobal("unisat", {
+        getNetwork: vi
+          .fn()
+          .mockResolvedValue(NETWORK_TO_UNISAT_NETWORK[network]),
+        requestAccounts: vi.fn().mockResolvedValue([mockData.address]),
+        getPublicKey: vi.fn().mockResolvedValue(mockData.publicKey),
+      });
+      expect(getAddresses("signet")).resolves.toEqual([mockData]);
     });
 
     test("should return address from fractal bitcoin mainnet", () => {
