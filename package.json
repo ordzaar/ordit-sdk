@@ -22,7 +22,7 @@
     "@vitest/coverage-v8": "^2.1.1",
     "husky": "^9.1.7",
     "rimraf": "^6.0.1",
-    "semver": "^7.6.2",
+    "semver": "^7.6.3",
     "turbo": "^2.1.2",
     "typescript": "^5.5.3",
     "vite": "5.4.11",
