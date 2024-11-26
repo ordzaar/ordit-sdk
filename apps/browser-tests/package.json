@@ -22,7 +22,7 @@
     "@ordzaar/standard-web-linter": "^2.2.0",
     "@types/react": "^18.3.12",
     "@types/react-dom": "^18.3.1",
-    "@vitejs/plugin-react": "^4.3.3",
+    "@vitejs/plugin-react": "^4.3.4",
     "eslint-plugin-react-hooks": "^5.0.0",
     "eslint-plugin-react-refresh": "^0.4.14",
     "vite-plugin-node-polyfills": "^0.22.0"
