@@ -3,6 +3,7 @@ declare interface Window {
   LeatherProvider: LeatherProvider;
   ethereum: MetaMask;
   okxwallet: OKXWallet;
+  phantom: Phantom;
 }
 
 type UnisatNetwork = "livenet" | "testnet";
@@ -96,6 +97,35 @@ type OKXWallet = {
   bitcoin: OKXWalletProvider;
   bitcoinTestnet: OKXWalletProvider;
   bitcoinSignet: OKXWalletProvider;
+};
+
+type PhantomSignInput = {
+  sigHash?: number;
+  address: string;
+  signingIndexes?: number[];
+};
+
+type Phantom = {
+  bitcoin: {
+    requestAccounts: () => Promise<
+      {
+        address: string;
+        addressType: "p2tr" | "p2wpkh" | "p2sh" | "p2pkh";
+        publicKey: string;
+        purpose: "payment" | "ordinals";
+      }[]
+    >;
+    signMessage: (
+      address,
+      message: Uint8Array,
+    ) => Promise<{ signature: Uint8Array }>;
+    signPSBT: (
+      psbt: Uint8Array,
+      options: {
+        inputsToSign: PhantomSignInput[];
+      },
+    ) => Promise<Uint8Array>;
+  };
 };
 
 declare module "buffer-reverse" {
