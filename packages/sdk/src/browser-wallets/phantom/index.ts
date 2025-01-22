@@ -8,9 +8,10 @@ import {
   BrowserWalletNotInstalledError,
   OrditSDKError,
 } from "../../errors";
+import { BrowserWalletSignResponse, WalletAddress } from "../types";
 import { PhantomSignPSBTOptions } from "./types";
 
-function validateExtension(network: BrowserWalletNetwork = "mainnet") {
+function validateExtension(network: BrowserWalletNetwork = "mainnet"): void {
   if (!isInstalled()) {
     throw new BrowserWalletNotInstalledError("Phantom Wallet not installed");
   }
@@ -29,7 +30,9 @@ function isInstalled(): boolean {
   return typeof window.phantom !== "undefined";
 }
 
-async function getAddresses(network: BrowserWalletNetwork = "mainnet") {
+async function getAddresses(
+  network: BrowserWalletNetwork = "mainnet",
+): Promise<WalletAddress[]> {
   validateExtension(network);
   const bitcoinAccounts = await window.phantom.bitcoin.requestAccounts();
   return bitcoinAccounts.map((account) => ({
@@ -43,18 +46,24 @@ async function signMessage(
   message: string,
   address: string,
   network: BrowserWalletNetwork = "mainnet",
-) {
+): Promise<BrowserWalletSignResponse> {
   validateExtension(network);
 
-  const { signature } = await window.phantom.bitcoin.signMessage(
-    address,
-    new TextEncoder().encode(message),
-  );
+  try {
+    const { signature } = await window.phantom.bitcoin.signMessage(
+      address,
+      new TextEncoder().encode(message),
+    );
 
-  return {
-    hex: Buffer.from(signature).toString("hex"),
-    base64: Buffer.from(signature).toString("base64"),
-  };
+    return {
+      hex: Buffer.from(signature).toString("hex"),
+      base64: Buffer.from(signature).toString("base64"),
+    };
+  } catch (err) {
+    // eslint-disable-next-line no-console
+    console.error("Sign message error", err);
+    throw new OrditSDKError("Failed to sign message with Phantom Wallet");
+  }
 }
 
 async function signPsbt(
@@ -65,7 +74,7 @@ async function signPsbt(
     network,
     inputsToSign,
   }: PhantomSignPSBTOptions = { network: "mainnet", inputsToSign: [] },
-) {
+): Promise<BrowserWalletSignResponse> {
   validateExtension(network);
 
   if (extractTx && !finalize) {
@@ -81,6 +90,7 @@ async function signPsbt(
   });
 
   let signedPsbtBuffer: Uint8Array;
+  let signedPsbt: Psbt;
   try {
     signedPsbtBuffer = await window.phantom.bitcoin.signPSBT(
       Buffer.from(psbt.toHex(), "hex"),
@@ -88,11 +98,10 @@ async function signPsbt(
         inputsToSign: toSignInputs,
       },
     );
+    signedPsbt = Psbt.fromBuffer(Buffer.from(signedPsbtBuffer));
   } catch (err) {
     throw new OrditSDKError("Failed to sign psbt with Phantom Wallet");
   }
-
-  const signedPsbt = Psbt.fromBuffer(Buffer.from(signedPsbtBuffer));
 
   if (finalize) {
     toSignInputs.forEach((_input, index) => {
