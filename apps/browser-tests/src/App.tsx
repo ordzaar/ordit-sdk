@@ -10,11 +10,20 @@ import * as magiceden from "@ordzaar/ordit-sdk/magiceden";
 import * as okx from "@ordzaar/ordit-sdk/okx";
 import * as unisat from "@ordzaar/ordit-sdk/unisat";
 import * as xverse from "@ordzaar/ordit-sdk/xverse";
+import * as phantom from "@ordzaar/ordit-sdk/phantom";
+import * as oyl from "@ordzaar/ordit-sdk/oyl";
 
 import { RadioInput } from "./components/RadioInput";
 import { Select } from "./components/Select";
 
-type WalletProvider = "unisat" | "xverse" | "magiceden" | "leather";
+type WalletProvider =
+  | "unisat"
+  | "xverse"
+  | "magiceden"
+  | "leather"
+  | "okx"
+  | "phantom"
+  | "oyl";
 
 const NETWORK = "testnet" as const;
 
@@ -135,6 +144,26 @@ function Transactions({
             },
           ],
         });
+      } else if (provider === "phantom") {
+        signPsbtResponse = await phantom.signPsbt(psbt.toPSBT(), {
+          network: NETWORK,
+          inputsToSign: [
+            {
+              address: inputAddressInfo.address,
+              signingIndexes: [0],
+            },
+          ],
+        });
+      } else if (provider === "oyl") {
+        signPsbtResponse = await oyl.signPsbt(psbt.toPSBT(), {
+          network: NETWORK,
+          inputsToSign: [
+            {
+              address: inputAddressInfo.address,
+              signingIndexes: [0],
+            },
+          ],
+        });
       } else {
         throw new Error("Unknown provider");
       }
@@ -173,6 +202,18 @@ function Transactions({
         });
       } else if (provider === "okx") {
         signMessageResponse = await okx.signMessage(message, "ecdsa", NETWORK);
+      } else if (provider === "phantom") {
+        signMessageResponse = await phantom.signMessage(
+          message,
+          inputAddressInfo.address,
+          NETWORK,
+        );
+      } else if (provider === "oyl") {
+        signMessageResponse = await oyl.signMessage(
+          message,
+          inputAddressInfo.address,
+          NETWORK,
+        );
       } else {
         throw new Error("Unknown provider");
       }
@@ -291,6 +332,14 @@ function App() {
       const addresses = await okx.getAddresses(NETWORK);
       setConnectedAddresses(addresses);
       console.log("OKX Wallet Connected: ", addresses);
+    } else if (provider === "phantom") {
+      const addresses = await phantom.getAddresses(NETWORK);
+      setConnectedAddresses(addresses);
+      console.log("Phantom Wallet Connected: ", addresses);
+    } else if (provider === "oyl") {
+      const addresses = await oyl.getAddresses(NETWORK);
+      setConnectedAddresses(addresses);
+      console.log("Oyl Wallet Connected: ", addresses);
     } else {
       console.log("Unknown provider", provider);
     }
@@ -317,6 +366,8 @@ function App() {
           { name: "Leather", value: "leather" },
           { name: "Magic Eden", value: "magiceden" },
           { name: "OKX", value: "okx" },
+          { name: "Phantom", value: "phantom" },
+          { name: "Oyl", value: "oyl" },
         ]}
         value={provider}
         disabled={!!connectedAddresses || chain === "fractal-bitcoin"}

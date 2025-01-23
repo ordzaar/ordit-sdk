@@ -16,6 +16,8 @@ export default defineConfig({
         xverse: resolve(__dirname, "src/browser-wallets/xverse/index.ts"),
         leather: resolve(__dirname, "src/browser-wallets/leather/index.ts"),
         okx: resolve(__dirname, "src/browser-wallets/okx/index.ts"),
+        phantom: resolve(__dirname, "src/browser-wallets/phantom/index.ts"),
+        oyl: resolve(__dirname, "src/browser-wallets/oyl/index.ts"),
       },
       formats: ["es", "cjs"],
     },

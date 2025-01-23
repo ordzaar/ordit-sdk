@@ -4,6 +4,7 @@ declare interface Window {
   ethereum: MetaMask;
   okxwallet: OKXWallet;
   phantom: Phantom;
+  oyl: Oyl;
 }
 
 type UnisatNetwork = "livenet" | "testnet";
@@ -128,6 +129,42 @@ type Phantom = {
   };
 };
 
+type OylAddress = {
+  address: string;
+  publicKey: string;
+};
+
+type OylGetAddressResponse = {
+  nestedSegwit: OylAddress;
+  nativeSegwit: OylAddress;
+  taproot: OylAddress;
+  legacy: OylAddress;
+};
+
+type Oyl = {
+  getAddresses: () => Promise<OylGetAddressResponse>;
+  signMessage: ({
+    address,
+    message,
+  }: {
+    address: string;
+    message: string;
+  }) => Promise<{
+    address: string;
+    signature: string;
+  }>;
+  signPsbt: (prop: {
+    psbt: string;
+    finalize?: boolean;
+    broadcast?: boolean;
+  }) => Promise<{ psbt: string; txid?: string }>;
+};
+
+type OylSignInput = {
+  sigHash?: number;
+  address: string;
+  signingIndexes?: number[];
+};
 declare module "buffer-reverse" {
   export = (_: Buffer): Buffer => {};
 }
