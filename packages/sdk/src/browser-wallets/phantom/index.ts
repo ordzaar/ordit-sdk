@@ -48,7 +48,7 @@ async function getAddresses(
     walletAddresses.push({
       publicKey: account.publicKey,
       address: account.address,
-      format: getAddressFormat(account.address, network),
+      format: addressFormat,
     });
   });
 
