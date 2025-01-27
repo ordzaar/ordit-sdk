@@ -40,6 +40,11 @@ async function getAddresses(
 
   bitcoinAccounts.forEach((account) => {
     purposeList.push(account.purpose);
+    const addressFormat = getAddressFormat(account.address, network);
+    if (account.purpose === "ordinals" && addressFormat !== "taproot") {
+      throw new OrditSDKError("No taproot address found");
+    }
+
     walletAddresses.push({
       publicKey: account.publicKey,
       address: account.address,

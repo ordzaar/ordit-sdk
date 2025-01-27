@@ -77,7 +77,6 @@ describe("Phantom Wallet", () => {
         format: "segwit",
       };
       const mockAddressType = "p2wpkh";
-      const network = "mainnet";
 
       vi.stubGlobal("phantom", {
         bitcoin: {
@@ -88,6 +87,33 @@ describe("Phantom Wallet", () => {
               addressType: mockAddressType,
             },
           ]),
+        },
+      });
+    });
+
+    test("should throw error if non taproot address returned for ordinals", () => {
+      const mockData = [
+        {
+          publicKey:
+            "03db55561c8d7494a3c34cd9bd38f5093d3c8fa483fa3b2f29546df578b3552505",
+          address: "bc1qmv97nyamrj4e842ah28nw3p5xtv5ylc0rxtpx2",
+          addressType: "p2wpkh",
+          purpose: "payment",
+        },
+        {
+          publicKey:
+            "03db55561c8d7494a3c34cd9bd38f5093d3c8fa483fa3b2f29546df578b3552505",
+          address: "bc1qmv97nyamrj4e842ah28nw3p5xtv5ylc0rxtpx2",
+          addressType: "p2wpkh",
+          purpose: "ordinals",
+        },
+      ];
+
+      const network = "mainnet";
+
+      vi.stubGlobal("phantom", {
+        bitcoin: {
+          requestAccounts: vi.fn().mockResolvedValue(mockData),
         },
       });
 
