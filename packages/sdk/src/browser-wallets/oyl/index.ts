@@ -13,6 +13,13 @@ import {
 import { BrowserWalletSignResponse, WalletAddress } from "../types";
 import { OylSignPSBTOptions } from "./types";
 
+function isInstalled(): boolean {
+  if (typeof window === "undefined") {
+    throw new OrditSDKError("Cannot call this function outside a browser");
+  }
+  return typeof window.oyl !== "undefined";
+}
+
 function validateExtension(network: BrowserWalletNetwork = "mainnet"): void {
   if (!isInstalled()) {
     throw new BrowserWalletNotInstalledError("Oyl Wallet not installed");
@@ -25,13 +32,6 @@ function validateExtension(network: BrowserWalletNetwork = "mainnet"): void {
   }
 }
 
-function isInstalled(): boolean {
-  if (typeof window === "undefined") {
-    throw new OrditSDKError("Cannot call this function outside a browser");
-  }
-  return typeof window.oyl !== "undefined";
-}
-
 async function getAddresses(
   network: BrowserWalletNetwork = "mainnet",
 ): Promise<WalletAddress[]> {
@@ -40,6 +40,10 @@ async function getAddresses(
     await window.oyl.getAddresses();
 
   const result: WalletAddress[] = [];
+
+  if (!bitcoinAddresses.taproot) {
+    throw new OrditSDKError("No taproot address found");
+  }
 
   Object.keys(bitcoinAddresses).forEach((key) => {
     const addressType = key as keyof OylGetAddressResponse;

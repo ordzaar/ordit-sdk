@@ -4,6 +4,7 @@ import { networks, Psbt } from "bitcoinjs-lib";
 import {
   BrowserWalletExtractTxFromNonFinalizedPsbtError,
   BrowserWalletNetworkMismatchError,
+  getAddressFormat,
   OrditSDKError,
 } from "../../..";
 import { getAddresses, isInstalled, signMessage, signPsbt } from "..";
@@ -12,6 +13,8 @@ describe("Phantom Wallet", () => {
   afterEach(() => {
     vi.unstubAllGlobals();
   });
+
+  const NO_TAPROOT_ERROR = new OrditSDKError("No taproot address found");
 
   const PHANTOM_BITCOIN_PROVIDER_ERROR = new BrowserWalletNetworkMismatchError(
     "Phantom Wallet only supports mainnet",
@@ -33,6 +36,40 @@ describe("Phantom Wallet", () => {
 
   describe("getAddresses", () => {
     test("should return address from mainnet", () => {
+      const mockData = [
+        {
+          publicKey:
+            "03db55561c8d7494a3c34cd9bd38f5093d3c8fa483fa3b2f29546df578b3552505",
+          address: "bc1qmv97nyamrj4e842ah28nw3p5xtv5ylc0rxtpx2",
+          addressType: "p2wpkh",
+          purpose: "payment",
+        },
+        {
+          publicKey:
+            "03fbbf631024ac7a64772c0050141c0a77e004dc1c42fe42fd74bb085bf54e3ae9",
+          address:
+            "bc1psgyrv2ug85f9kez3755vn6ysks4c48nlddaahad82dlnlkhskwgq2ky09v",
+          addressType: "p2tr",
+          purpose: "ordinals",
+        },
+      ];
+
+      const network = "mainnet";
+      const mockResponse = mockData.map((data) => ({
+        address: data.address,
+        publicKey: data.publicKey,
+        format: getAddressFormat(data.address, network),
+      }));
+
+      vi.stubGlobal("phantom", {
+        bitcoin: {
+          requestAccounts: vi.fn().mockResolvedValue(mockData),
+        },
+      });
+      expect(getAddresses(network)).resolves.toEqual(mockResponse);
+    });
+
+    test("should throw error if no taproot address", () => {
       const mockData = {
         publicKey:
           "03db55561c8d7494a3c34cd9bd38f5093d3c8fa483fa3b2f29546df578b3552505",
@@ -53,7 +90,8 @@ describe("Phantom Wallet", () => {
           ]),
         },
       });
-      expect(getAddresses(network)).resolves.toEqual([mockData]);
+
+      expect(getAddresses(network)).rejects.toThrowError(NO_TAPROOT_ERROR);
     });
 
     test("should throw error if phantom wallet exists but bitcoin provider does not exist", () => {

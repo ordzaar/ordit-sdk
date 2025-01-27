@@ -13,6 +13,8 @@ describe("Oyl Wallet", () => {
     vi.unstubAllGlobals();
   });
 
+  const NO_TAPROOT_ERROR = new OrditSDKError("No taproot address found");
+
   const OYL_BITCOIN_PROVIDER_ERROR = new BrowserWalletNetworkMismatchError(
     "Oyl Wallet only supports mainnet",
   );
@@ -34,23 +36,46 @@ describe("Oyl Wallet", () => {
   describe("getAddresses", () => {
     test("should return address from mainnet", () => {
       const mockData = {
-        publicKey:
-          "03db55561c8d7494a3c34cd9bd38f5093d3c8fa483fa3b2f29546df578b3552505",
-        address: "bc1qmv97nyamrj4e842ah28nw3p5xtv5ylc0rxtpx2",
-        format: "segwit",
+        segwit: {
+          publicKey:
+            "03db55561c8d7494a3c34cd9bd38f5093d3c8fa483fa3b2f29546df578b3552505",
+          address: "bc1qmv97nyamrj4e842ah28nw3p5xtv5ylc0rxtpx2",
+          format: "segwit",
+        },
+        taproot: {
+          publicKey:
+            "03fbbf631024ac7a64772c0050141c0a77e004dc1c42fe42fd74bb085bf54e3ae9",
+          address:
+            "bc1psgyrv2ug85f9kez3755vn6ysks4c48nlddaahad82dlnlkhskwgq2ky09v",
+          format: "taproot",
+        },
       };
-      const mockAddressType = "p2wpkh";
       const network = "mainnet";
 
       vi.stubGlobal("oyl", {
-        getAddresses: vi.fn().mockResolvedValue({
-          segwit: {
-            address: mockData.address,
-            publicKey: mockData.publicKey,
-          },
-        }),
+        getAddresses: vi.fn().mockResolvedValue(mockData),
       });
-      expect(getAddresses(network)).resolves.toEqual([mockData]);
+      expect(getAddresses(network)).resolves.toEqual([
+        mockData.segwit,
+        mockData.taproot,
+      ]);
+    });
+
+    test("should throw error if no taproot address", () => {
+      const mockData = {
+        segwit: {
+          publicKey:
+            "03db55561c8d7494a3c34cd9bd38f5093d3c8fa483fa3b2f29546df578b3552505",
+          address: "bc1qmv97nyamrj4e842ah28nw3p5xtv5ylc0rxtpx2",
+          format: "segwit",
+        },
+      };
+      const network = "mainnet";
+
+      vi.stubGlobal("oyl", {
+        getAddresses: vi.fn().mockResolvedValue(mockData),
+      });
+      expect(getAddresses(network)).rejects.toThrowError(NO_TAPROOT_ERROR);
     });
 
     test("should throw error if oyl wallet exists but bitcoin provider does not exist", () => {

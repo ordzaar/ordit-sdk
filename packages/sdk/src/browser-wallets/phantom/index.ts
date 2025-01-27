@@ -11,6 +11,13 @@ import {
 import { BrowserWalletSignResponse, WalletAddress } from "../types";
 import { PhantomSignPSBTOptions } from "./types";
 
+function isInstalled(): boolean {
+  if (typeof window === "undefined") {
+    throw new OrditSDKError("Cannot call this function outside a browser");
+  }
+  return typeof window.phantom !== "undefined";
+}
+
 function validateExtension(network: BrowserWalletNetwork = "mainnet"): void {
   if (!isInstalled()) {
     throw new BrowserWalletNotInstalledError("Phantom Wallet not installed");
@@ -23,23 +30,28 @@ function validateExtension(network: BrowserWalletNetwork = "mainnet"): void {
   }
 }
 
-function isInstalled(): boolean {
-  if (typeof window === "undefined") {
-    throw new OrditSDKError("Cannot call this function outside a browser");
-  }
-  return typeof window.phantom !== "undefined";
-}
-
 async function getAddresses(
   network: BrowserWalletNetwork = "mainnet",
 ): Promise<WalletAddress[]> {
   validateExtension(network);
   const bitcoinAccounts = await window.phantom.bitcoin.requestAccounts();
-  return bitcoinAccounts.map((account) => ({
-    publicKey: account.publicKey,
-    address: account.address,
-    format: getAddressFormat(account.address, network),
-  }));
+  const walletAddresses: WalletAddress[] = [];
+  const purposeList: string[] = [];
+
+  bitcoinAccounts.forEach((account) => {
+    purposeList.push(account.purpose);
+    walletAddresses.push({
+      publicKey: account.publicKey,
+      address: account.address,
+      format: getAddressFormat(account.address, network),
+    });
+  });
+
+  if (!purposeList.includes("ordinals")) {
+    throw new OrditSDKError("No taproot address found");
+  }
+
+  return walletAddresses;
 }
 
 async function signMessage(
