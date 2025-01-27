@@ -3,6 +3,8 @@ declare interface Window {
   LeatherProvider: LeatherProvider;
   ethereum: MetaMask;
   okxwallet: OKXWallet;
+  phantom: Phantom;
+  oyl: Oyl;
 }
 
 type UnisatNetwork = "livenet" | "testnet";
@@ -98,6 +100,71 @@ type OKXWallet = {
   bitcoinSignet: OKXWalletProvider;
 };
 
+type PhantomSignInput = {
+  sigHash?: number;
+  address: string;
+  signingIndexes?: number[];
+};
+
+type Phantom = {
+  bitcoin: {
+    requestAccounts: () => Promise<
+      {
+        address: string;
+        addressType: "p2tr" | "p2wpkh" | "p2sh" | "p2pkh";
+        publicKey: string;
+        purpose: "payment" | "ordinals";
+      }[]
+    >;
+    signMessage: (
+      address,
+      message: Uint8Array,
+    ) => Promise<{ signature: Uint8Array }>;
+    signPSBT: (
+      psbt: Uint8Array,
+      options: {
+        inputsToSign: PhantomSignInput[];
+      },
+    ) => Promise<Uint8Array>;
+  };
+};
+
+type OylAddress = {
+  address: string;
+  publicKey: string;
+};
+
+type OylGetAddressResponse = {
+  nestedSegwit: OylAddress;
+  nativeSegwit: OylAddress;
+  taproot: OylAddress;
+  legacy: OylAddress;
+};
+
+type Oyl = {
+  getAddresses: () => Promise<OylGetAddressResponse>;
+  signMessage: ({
+    address,
+    message,
+  }: {
+    address: string;
+    message: string;
+  }) => Promise<{
+    address: string;
+    signature: string;
+  }>;
+  signPsbt: (prop: {
+    psbt: string;
+    finalize?: boolean;
+    broadcast?: boolean;
+  }) => Promise<{ psbt: string; txid?: string }>;
+};
+
+type OylSignInput = {
+  sigHash?: number;
+  address: string;
+  signingIndexes?: number[];
+};
 declare module "buffer-reverse" {
   export = (_: Buffer): Buffer => {};
 }

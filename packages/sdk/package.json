@@ -29,6 +29,14 @@
     "./okx": {
       "import": "./dist/okx.js",
       "require": "./dist/okx.cjs"
+    },
+    "./phantom": {
+      "import": "./dist/phantom.js",
+      "require": "./dist/phantom.cjs"
+    },
+    "./oyl": {
+      "import": "./dist/oyl.js",
+      "require": "./dist/oyl.cjs"
     }
   },
   "types": "./index.d.ts",
@@ -38,7 +46,9 @@
     "magiceden.d.ts",
     "unisat.d.ts",
     "xverse.d.ts",
-    "leather.d.ts"
+    "leather.d.ts",
+    "phantom.d.ts",
+    "oyl.d.ts"
   ],
   "keywords": [
     "ordit",
