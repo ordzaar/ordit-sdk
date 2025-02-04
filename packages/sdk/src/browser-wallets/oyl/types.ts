@@ -5,5 +5,4 @@ export type OylSignPSBTOptions = {
   finalize?: boolean;
   extractTx?: boolean;
   network: BrowserWalletNetwork;
-  inputsToSign: InputsToSign[];
 };

@@ -98,38 +98,18 @@ async function signPsbt(
     throw new BrowserWalletExtractTxFromNonFinalizedPsbtError();
   }
 
-  const toSignInputs: PhantomSignInput[] = [];
-  inputsToSign.forEach((input) => {
-    const { signingIndexes } = input;
-    signingIndexes.forEach(() => {
-      toSignInputs.push(input);
-    });
-  });
-
   let signedPsbtBuffer: Uint8Array;
   let signedPsbt: Psbt;
   try {
     signedPsbtBuffer = await window.phantom.bitcoin.signPSBT(
       Buffer.from(psbt.toHex(), "hex"),
       {
-        inputsToSign: toSignInputs,
+        inputsToSign,
       },
     );
     signedPsbt = Psbt.fromBuffer(Buffer.from(signedPsbtBuffer));
   } catch (err) {
     throw new OrditSDKError("Failed to sign psbt with Phantom Wallet");
-  }
-
-  if (finalize) {
-    toSignInputs.forEach((_input, index) => {
-      try {
-        signedPsbt.finalizeInput(index);
-      } catch (error) {
-        // eslint-disable-next-line no-console
-        console.error("Sign psbt error", error);
-        throw new OrditSDKError("Failed to finalize input");
-      }
-    });
   }
 
   if (extractTx) {

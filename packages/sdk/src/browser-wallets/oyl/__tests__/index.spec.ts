@@ -111,7 +111,7 @@ describe("Oyl Wallet", () => {
 
       expect(MOCK_SIGN_PSBT).toHaveBeenCalledWith({
         psbt: psbt.toHex(),
-        finalize: false,
+        finalize: true,
         broadcast: false,
       });
       expect(signedPsbtResponse).toEqual({
@@ -125,7 +125,6 @@ describe("Oyl Wallet", () => {
       const signedPsbtResponse = await signPsbt(psbt, {
         extractTx: true,
         network: "mainnet",
-        inputsToSign: [],
       });
 
       expect(signedPsbtResponse).toEqual({
@@ -139,7 +138,6 @@ describe("Oyl Wallet", () => {
       const signedPsbtResponse = await signPsbt(psbt, {
         extractTx: false,
         network: "mainnet",
-        inputsToSign: [],
       });
       expect(signedPsbtResponse).toEqual({
         base64: "cHNidP8BAAoCAAAAAAAAAAAAAAAA",
@@ -152,7 +150,6 @@ describe("Oyl Wallet", () => {
       const signedPsbtResponse = await signPsbt(psbt, {
         finalize: true,
         network: "mainnet",
-        inputsToSign: [],
       });
       expect(signedPsbtResponse).toEqual({
         base64: null,
@@ -166,7 +163,6 @@ describe("Oyl Wallet", () => {
         finalize: false,
         extractTx: false,
         network: "mainnet",
-        inputsToSign: [],
       });
       expect(signedPsbtResponse).toEqual({
         base64: "cHNidP8BAAoCAAAAAAAAAAAAAAAA",
@@ -182,7 +178,6 @@ describe("Oyl Wallet", () => {
         signPsbt(psbt, {
           finalize: false,
           network: "mainnet",
-          inputsToSign: [],
         }),
       ).rejects.toThrowError(EXTRACTION_TRANSACTION_NON_FINALIZED_PSBT_ERROR);
     });
@@ -201,7 +196,6 @@ describe("Oyl Wallet", () => {
         signPsbt(psbt, {
           finalize: true,
           network: "mainnet",
-          inputsToSign: [],
         }),
       ).rejects.toThrowError(EXTRACTION_TRANSACTION_NON_FINALIZED_PSBT_ERROR);
     });

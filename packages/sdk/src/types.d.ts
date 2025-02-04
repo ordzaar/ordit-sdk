@@ -160,11 +160,6 @@ type Oyl = {
   }) => Promise<{ psbt: string; txid?: string }>;
 };
 
-type OylSignInput = {
-  sigHash?: number;
-  address: string;
-  signingIndexes?: number[];
-};
 declare module "buffer-reverse" {
   export = (_: Buffer): Buffer => {};
 }

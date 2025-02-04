@@ -83,12 +83,9 @@ async function signMessage(
 
 async function signPsbt(
   psbt: Psbt,
-  {
-    finalize = true,
-    extractTx = true,
-    network,
-    inputsToSign,
-  }: OylSignPSBTOptions = { network: "mainnet", inputsToSign: [] },
+  { finalize = true, extractTx = true, network }: OylSignPSBTOptions = {
+    network: "mainnet",
+  },
 ): Promise<BrowserWalletSignResponse> {
   validateExtension(network);
 
@@ -96,36 +93,16 @@ async function signPsbt(
     throw new BrowserWalletExtractTxFromNonFinalizedPsbtError();
   }
 
-  const toSignInputs: OylSignInput[] = [];
-  inputsToSign.forEach((input) => {
-    const { signingIndexes } = input;
-    signingIndexes.forEach(() => {
-      toSignInputs.push(input);
-    });
-  });
-
   let signedPsbt: Psbt;
   try {
     const { psbt: signedPsbtInHex } = await window.oyl.signPsbt({
       psbt: psbt.toHex(),
-      finalize: false, // ordit-sdk will finalize it manually if there is any inputs to sign
+      finalize,
       broadcast: false, // ordit-sdk will not support broadcasting to keep implementation consistent across all wallets
     });
     signedPsbt = Psbt.fromHex(signedPsbtInHex);
   } catch (err) {
     throw new OrditSDKError("Failed to sign psbt with Oyl Wallet");
-  }
-
-  if (finalize) {
-    toSignInputs.forEach((_input, index) => {
-      try {
-        signedPsbt.finalizeInput(index);
-      } catch (error) {
-        // eslint-disable-next-line no-console
-        console.error("Sign psbt error", error);
-        throw new OrditSDKError("Failed to finalize input");
-      }
-    });
   }
 
   if (extractTx) {
