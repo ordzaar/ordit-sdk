@@ -112,6 +112,20 @@ async function signPsbt(
     throw new OrditSDKError("Failed to sign psbt with Phantom Wallet");
   }
 
+  if (finalize) {
+    inputsToSign.forEach((input) => {
+      input.signingIndexes.forEach((index) => {
+        try {
+          signedPsbt.finalizeInput(index);
+        } catch (error) {
+          // eslint-disable-next-line no-console
+          console.error("Sign psbt error", error);
+          throw new OrditSDKError("Failed to finalize input");
+        }
+      });
+    });
+  }
+
   if (extractTx) {
     try {
       return {
