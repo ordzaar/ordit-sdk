@@ -157,12 +157,6 @@ function Transactions({
       } else if (provider === "oyl") {
         signPsbtResponse = await oyl.signPsbt(psbt.toPSBT(), {
           network: NETWORK,
-          inputsToSign: [
-            {
-              address: inputAddressInfo.address,
-              signingIndexes: [0],
-            },
-          ],
         });
       } else {
         throw new Error("Unknown provider");
