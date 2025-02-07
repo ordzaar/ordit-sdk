@@ -65,7 +65,7 @@
     "lint": "eslint src --ext ts --report-unused-disable-directives"
   },
   "dependencies": {
-    "@bitcoinerlab/secp256k1": "1.1.1",
+    "@bitcoinerlab/secp256k1": "1.2.0",
     "@wallet-standard/core": "^1.1.0",
     "bignumber.js": "9.1.2",
     "bip32": "4.0.0",
