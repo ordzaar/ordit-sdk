@@ -124,7 +124,7 @@ type Phantom = {
       psbt: Uint8Array,
       options: {
         inputsToSign: PhantomSignInput[];
-        finalize?: boolean; // This prop is undocumented but were found in its chrome extension source code
+        // finalize?: boolean; // FYI: This prop is undocumented but were found in its chrome extension source code
       },
     ) => Promise<Uint8Array>;
   };

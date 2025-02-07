@@ -157,7 +157,6 @@ describe("Phantom Wallet", () => {
 
       expect(MOCK_SIGN_PSBT).toHaveBeenCalledWith(psbt.toBuffer(), {
         inputsToSign: [],
-        finalize: true,
       });
       expect(signedPsbtResponse).toEqual({
         base64: null,
