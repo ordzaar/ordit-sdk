@@ -80,7 +80,7 @@
     "sats-connect": "3.0.1"
   },
   "devDependencies": {
-    "@ordzaar/standard-typescript": "^2.2.0",
+    "@ordzaar/standard-typescript": "^2.3.0",
     "@types/node": "^22.9.1",
     "happy-dom": "^15.11.6",
     "vite-plugin-dts": "4.3.0",
