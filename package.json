@@ -19,7 +19,7 @@
   "devDependencies": {
     "@ordzaar/standard-linter": "^2.2.0",
     "@ordzaar/standard-typescript": "^2.2.0",
-    "@vitest/coverage-v8": "^2.1.6",
+    "@vitest/coverage-v8": "^2.1.9",
     "husky": "^9.1.7",
     "rimraf": "^6.0.1",
     "semver": "^7.6.3",
