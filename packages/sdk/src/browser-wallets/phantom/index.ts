@@ -105,6 +105,7 @@ async function signPsbt(
       Buffer.from(psbt.toHex(), "hex"),
       {
         inputsToSign,
+        finalize,
       },
     );
     signedPsbt = Psbt.fromBuffer(Buffer.from(signedPsbtBuffer));
